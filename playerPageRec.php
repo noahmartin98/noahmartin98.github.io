@@ -6,18 +6,7 @@
 <body>
 
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "football";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
+require 'databaseConnect.php';
 
 if (isset($_GET['playerid'])) {
     $playerid = $_GET['playerid'];
@@ -41,12 +30,68 @@ if ($result->num_rows > 0) {
 
 
 <nav>
-    <a href="/receivingLeaders.php" class="nav">Back to leaders</a> |
-    <a href="/teamPage.php" class="nav">Back to team</a> |
-    <a href="/home.html" class="nav">Back to home</a>
+    <a href="/football-app/receivingLeaders.php" class="nav">Back to leaders</a> |
+    <a href="/football-app/teamPage.php" class="nav">Back to team</a> |
+    <a href="/football-app/home.html" class="nav">Back to home</a>
 </nav>
 
-<h1><?php echo $playername?><span><b>Game Log</b></span></h1>
+<div class="header-container">
+    <h1><?php echo $playername?></h1>
+    <h3>Career</h3>
+</div>
+
+    <table class="player-years">
+        <tr>
+            <th>Season</th>
+            <th>Team</th>
+            <th>Gms</th>
+            <th>Rec</th>
+            <th>Yds</th>
+            <th>TD</th>
+            <th>Yds/Rec</th>
+            <th>Rec/Gm</th>
+            <th>Yds/Gm</th>
+        </tr>
+
+<?php
+
+$sql = "SELECT Game.Season, GROUP_CONCAT(DISTINCT Team.Abbr SEPARATOR ', ') AS Teams,
+    COUNT(*) as Gms, SUM(Rec), SUM(Yds), SUM(TD),
+    (SUM(Yds)/SUM(Rec)) AS Ypc,
+    (SUM(Rec)/count(*)) AS Rpg,
+    (SUM(Yds)/count(*)) AS Ypg
+    FROM Rec_Statline
+    INNER JOIN Team ON Rec_Statline.Team_ID = Team.Team_ID
+    INNER JOIN Pos ON Rec_Statline.Pos_ID = Pos.Pos_ID
+    INNER JOIN Game ON Rec_Statline.Game_ID = Game.Game_ID
+    WHERE Player_ID = $playerid
+    GROUP BY Game.Season;";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    // output data of each row
+    while($row = $result->fetch_assoc()) {
+        echo "<tr>";
+        echo "<td>". $row["Season"]."</td>";
+        echo "<td>". $row["Teams"]."</td>";
+        echo "<td>". $row["Gms"]."</td>";
+        echo "<td>". $row["SUM(Rec)"]."</td>";
+        echo "<td>". $row["SUM(Yds)"]."</td>";
+        echo "<td>". $row["SUM(TD)"]."</td>";
+        echo "<td>". sprintf('%.2f', $row["Ypc"])."</td>";
+        echo "<td>". sprintf('%.1f', $row["Rpg"])."</td>";
+        echo "<td>". sprintf('%.1f', $row["Ypg"])."</td>";
+        echo "</tr>";
+    }
+} else {
+    echo "0 results";
+}
+
+?>
+
+    </table>
+
+<h3>Game Log</h3>
 
     <table class="player">
         <tr>

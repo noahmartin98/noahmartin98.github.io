@@ -1,0 +1,150 @@
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4fdf4;
+  color: #1a1a1a;
+  padding: 40px;
+}
+
+
+.bracket {
+    display: grid;
+}
+
+.matchup {
+  background: white;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  margin: 10px auto;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width: 180px;
+  box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+  place-self: center;
+}
+
+.team {
+    display: flex;
+    padding: 2px 10px 2px 7px;
+}
+
+h3, h2 {
+    place-self: center;
+}
+
+span.score {
+  margin-left: auto;
+}
+
+.afc-title {
+    grid-row: 1;
+    grid-column: 1 / 4;
+}
+
+.nfc-title {
+    grid-row: 1;
+    grid-column: 5 / 8;
+}
+
+.wildcard1 {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.divisional1 {
+    grid-column: 2;
+    grid-row: 2;
+}
+
+.champ1 {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+.superbowl {
+    grid-column: 4;
+    grid-row: 2;
+}
+
+.champ2 {
+    grid-column: 5;
+    grid-row: 2;
+}
+
+.divisional2 {
+    grid-column: 6;
+    grid-row: 2;
+}
+
+.wildcard2 {
+    grid-column: 7;
+    grid-row: 2;
+}
+
+.afc27 {
+    grid-column: 1;
+    grid-row: 3;
+}
+
+.afc36 {
+    grid-column: 1;
+    grid-row: 4;
+}
+
+.afc45 {
+    grid-column: 1;
+    grid-row: 5;
+}
+
+.nfc27 {
+    grid-column: 7;
+    grid-row: 3;
+}
+
+.nfc36 {
+    grid-column: 7;
+    grid-row: 4;
+}
+
+.nfc45 {
+    grid-column: 7;
+    grid-row: 5;
+}
+
+.afcd1 {
+    grid-column: 2;
+    grid-row: 3 / 5;
+}
+
+.afcd2 {
+    grid-column: 2;
+    grid-row: 4 / 6;
+}
+
+.nfcd1 {
+    grid-column: 6;
+    grid-row: 3 / 5;
+}
+
+.nfcd2 {
+    grid-column: 6;
+    grid-row: 4 / 6;
+}
+
+.afccg {
+    grid-column: 3;
+    grid-row: 3 / 6;
+}
+
+.nfccg {
+    grid-column: 5;
+    grid-row: 3 / 7;
+}
+
+.sb {
+    grid-column: 4;
+    grid-row: 3 / 7;
+}
+

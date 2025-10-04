@@ -1,7 +1,13 @@
 
 
 table.player {
-    width: 50%;
+  width: 50%;
+}
+table.player-years {
+  width: 65%;
+}
+table.player-years-pass {
+  width: 75%;
 }
 
 
@@ -21,6 +27,8 @@ nav {
     padding-bottom: 10px;
 }
 
+
+/*Home page Leaders links*/
 a:link.home, a:visited.home {
   background-color: #04AA6D;
   color: white;
@@ -32,9 +40,17 @@ a:link.home, a:visited.home {
   transition: background-color 0.3s ease;
 }
 
-a:hover.home {
-    background-color: #0056b3;
+/*Playoff brackets link only*/
+a:link.home2, a:visited.home2 {
+  margin-left: 15rem;
+  background-color: #047f04;
+  transition: background-color 0.3s ease;
 }
+
+a:hover.home, a:hover.home2 {
+  background-color: #0056b3;
+}
+
 
 .teamgrid {
   display: grid;
@@ -141,7 +157,7 @@ td.link > a {
     display: flex;
     align-items: baseline;
     gap: 50px;           
-    margin-bottom: 10px;
+    margin-bottom: 0px;
 }
 
 /*Season Select element*/
@@ -149,7 +165,7 @@ select.season-select {
   background-color: #ffffff;
   border: 1px solid #a5d6a7;
   border-radius: 4px;
-  padding: 10px 14px;
+  padding: 10px 10px;
   font-size: 16px;
   color: #1b5e20;
   cursor: pointer;
@@ -167,7 +183,7 @@ select.season-select:hover {
   box-shadow: 0 0 0 2px rgba(102, 187, 106, 0.2);
 }
 
-span b{
-    padding-left: 2rem;
-    font-size: 60%;
+/*DataTables search bar*/
+#leaders_filter input {
+  margin: 0px 50px 5px 30px;
 }

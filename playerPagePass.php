@@ -6,18 +6,7 @@
 <body>
 
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "football";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
+require 'databaseConnect.php';
 
 if (isset($_GET['playerid'])) {
     $playerid = $_GET['playerid'];
@@ -41,9 +30,9 @@ if ($result->num_rows > 0) {
 
 
 <nav>
-    <a href="/passingLeaders.php" class="nav">Back to leaders</a> |
-    <a href="/teamPage.php" class="nav">Back to team</a> |
-    <a href="/home.html" class="nav">Back to home</a>
+    <a href="/football-app/passingLeaders.php" class="nav">Back to leaders</a> |
+    <a href="/football-app/teamPage.php" class="nav">Back to team</a> |
+    <a href="/football-app/home.html" class="nav">Back to home</a>
 </nav>
 
 <div class="header-container">
@@ -54,7 +43,7 @@ if ($result->num_rows > 0) {
 
 </table>
 
-    <table class="player">
+    <table class="player-years-pass">
         <tr>
             <th>Season</th>
             <th>Team</th>

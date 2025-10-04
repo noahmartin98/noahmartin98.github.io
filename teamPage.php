@@ -6,18 +6,7 @@
 <body>
 
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "football";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
+require 'databaseConnect.php';
 
 if (isset($_GET['teamid'])) {
     $teamid = $_GET['teamid'];
@@ -43,9 +32,11 @@ $season = $_GET['season'] ?? '2015';
 
 
 <nav>
-    <a href="/home.html" class="nav">Back to home</a>
+    <a href="/football-app/home.html" class="nav">Back to home</a>
 </nav>
 
+
+<!--Header with team name and season select-->
 <div class="header-container">
 
     <h1><?php echo $teamname?></h1>
@@ -161,7 +152,7 @@ if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
         $playerid = $row["Player_ID"];
         echo "<tr>";
-        echo "<td class='link'><a class='leader' href='/playerPagePass.php?playerid=" . $playerid . "'>" . $row["Player_Name"]."</td>";
+        echo "<td class='link'><a class='leader' href='/football-app/playerPagePass.php?playerid=" . $playerid . "'>" . $row["Player_Name"]."</td>";
         echo "<td>". $row["Poss"]."</td>";
         echo "<td>". $row["Gms"]."</td>";
         echo "<td>". $row["SUM(Comp)"]."</td>";
@@ -206,7 +197,7 @@ if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
         $playerid = $row["Player_ID"];
         echo "<tr>";
-        echo "<td class='link'><a class='leader' href='/playerPageRush.php?playerid=" . $playerid . "'>" . $row["Player_Name"]."</td>";
+        echo "<td class='link'><a class='leader' href='/football-app/playerPageRush.php?playerid=" . $playerid . "'>" . $row["Player_Name"]."</td>";
         echo "<td>". $row["Poss"]."</td>";
         echo "<td>". $row["Gms"]."</td>";
         echo "<td>". $row["SUM(Att)"]."</td>";
@@ -248,7 +239,7 @@ if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
         $playerid = $row["Player_ID"];
         echo "<tr>";
-        echo "<td class='link'><a class='leader' href='/playerPageRec.php?playerid=" . $playerid . "'>" . $row["Player_Name"]."</td>";
+        echo "<td class='link'><a class='leader' href='/football-app/playerPageRec.php?playerid=" . $playerid . "'>" . $row["Player_Name"]."</td>";
         echo "<td>". $row["Poss"]."</td>";
         echo "<td>". $row["Gms"]."</td>";
         echo "<td>". $row["SUM(Rec)"]."</td>";
