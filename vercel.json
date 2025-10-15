@@ -1,14 +1,14 @@
 
 {
     "functions": {
-    "api/**/*.php": {
+    "football-app/**/*.php": {
         "runtime": "vercel-php@0.6.0" 
     }
     },
     "routes": [
     {
         "src": "/(.*)",
-        "dest": "/api/index.php"
+        "dest": "/football-app/index.php"
     }
     ]
 }
