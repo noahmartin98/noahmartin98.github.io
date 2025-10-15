@@ -8,7 +8,7 @@
     "routes": [
     {
         "src": "/(.*)",
-        "dest": "/football-app/index.php"
+        "dest": "/football-app/passingLeaders.php"
     }
     ]
 }
