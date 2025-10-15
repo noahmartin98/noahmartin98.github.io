@@ -3,7 +3,7 @@
 $servername = "football-db.cnsw24uw47hg.us-east-2.rds.amazonaws.com";
 $username = "admin";
 $password = "Almostdone2025";
-$dbname = "football-db";
+$dbname = "football_db";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
