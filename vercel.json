@@ -11,4 +11,13 @@
         "dest": "/api/home.html"
     }
     ]
+
+    {
+          "rewrites": [
+            {
+              "source": "/(.*)",
+              "destination": "/"
+            }
+          ]
+        }
 }
