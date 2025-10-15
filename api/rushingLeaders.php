@@ -56,16 +56,16 @@ $season = $_GET['season'] ?? '2015';
 
 <?php
 
-$sql = "SELECT Game.Season, Player.Player_Name, GROUP_CONCAT(DISTINCT Pos.Pos_Abbr SEPARATOR ', ') AS Poss, GROUP_CONCAT(DISTINCT Team.Abbr SEPARATOR ', ') AS Teams, 
-	Rush_Statline.Player_ID, COUNT(*) as Gms, SUM(Att), SUM(Yds), SUM(TD),
+$sql = "SELECT game.Season, player.Player_Name, GROUP_CONCAT(DISTINCT pos.Pos_Abbr SEPARATOR ', ') AS Poss, GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS Teams, 
+	rush_statline.Player_ID, COUNT(*) as Gms, SUM(Att), SUM(Yds), SUM(TD),
     (SUM(Yds)/SUM(Att)) AS Ypc,
     (SUM(Att)/count(*)) AS Apg,
     (SUM(Yds)/count(*)) AS Ypg
-    FROM Rush_Statline
-    INNER JOIN Player ON Rush_Statline.Player_ID = Player.Player_ID
-    INNER JOIN Team ON Rush_Statline.Team_ID = Team.Team_ID
-    INNER JOIN Pos ON Rush_Statline.Pos_ID = Pos.Pos_ID
-    INNER JOIN Game ON Rush_Statline.Game_ID = Game.Game_ID";
+    FROM rush_statline
+    INNER JOIN player ON rush_statline.Player_ID = player.Player_ID
+    INNER JOIN team ON rush_statline.Team_ID = team.Team_ID
+    INNER JOIN pos ON rush_statline.Pos_ID = pos.Pos_ID
+    INNER JOIN game ON rush_statline.Game_ID = game.Game_ID";
 
 if ($season !== "Total") {
     $sql .= " WHERE Season = $season";
