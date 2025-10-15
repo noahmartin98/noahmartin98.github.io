@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>NFL Playoff Bracket</title>
-  <link rel="stylesheet" href="bracketStyle.css">
-  <link rel="stylesheet" href="mystyle.css">
+  <link rel="stylesheet" href="../bracketStyle.css">
+  <link rel="stylesheet" href="../mystyle.css">
 </head>
 <body>
 
