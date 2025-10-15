@@ -1,9 +1,9 @@
 
 <?php
-$servername = "127.0.0.1";
-$username = "root";
-$password = "";
-$dbname = "football";
+$servername = "football-db.cnsw24uw47hg.us-east-2.rds.amazonaws.com";
+$username = "admin";
+$password = "Almostdone2025";
+$dbname = "football_db";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
