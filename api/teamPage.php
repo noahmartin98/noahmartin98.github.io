@@ -152,7 +152,7 @@ if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
         $playerid = $row["Player_ID"];
         echo "<tr>";
-        echo "<td class='link'><a class='leader' href='/playerPagePass.php?playerid=" . $playerid . "'>" . $row["Player_Name"]."</td>";
+        echo "<td class='link'><a class='leader' href='/api/playerPagePass.php?playerid=" . $playerid . "'>" . $row["Player_Name"]."</td>";
         echo "<td>". $row["Poss"]."</td>";
         echo "<td>". $row["Gms"]."</td>";
         echo "<td>". $row["SUM(Comp)"]."</td>";
@@ -197,7 +197,7 @@ if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
         $playerid = $row["Player_ID"];
         echo "<tr>";
-        echo "<td class='link'><a class='leader' href='/playerPageRush.php?playerid=" . $playerid . "'>" . $row["Player_Name"]."</td>";
+        echo "<td class='link'><a class='leader' href='/api/playerPageRush.php?playerid=" . $playerid . "'>" . $row["Player_Name"]."</td>";
         echo "<td>". $row["Poss"]."</td>";
         echo "<td>". $row["Gms"]."</td>";
         echo "<td>". $row["SUM(Att)"]."</td>";
@@ -239,7 +239,7 @@ if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
         $playerid = $row["Player_ID"];
         echo "<tr>";
-        echo "<td class='link'><a class='leader' href='/playerPageRec.php?playerid=" . $playerid . "'>" . $row["Player_Name"]."</td>";
+        echo "<td class='link'><a class='leader' href='/api/playerPageRec.php?playerid=" . $playerid . "'>" . $row["Player_Name"]."</td>";
         echo "<td>". $row["Poss"]."</td>";
         echo "<td>". $row["Gms"]."</td>";
         echo "<td>". $row["SUM(Rec)"]."</td>";
