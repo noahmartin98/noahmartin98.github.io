@@ -10,7 +10,7 @@
 <body>
 
 <nav>
-    <a href="/football-app/home.html" class="nav">Back to home</a>
+    <a href="../home.html" class="nav">Back to home</a>
 </nav>
 
 <?php
@@ -23,9 +23,9 @@ $season = $_GET['season'] ?? '2015';
 
 
 $sql = "SELECT Game_ID, Week_Round, AwayTeam.Short AS Away, HomeTeam.Short AS Home, Away_Seed, Home_Seed, Away_Score, Home_Score
-FROM Game
-JOIN Team AS AwayTeam ON Game.Away_Team_ID = AwayTeam.Team_ID
-JOIN Team AS HomeTeam ON Game.Home_Team_ID = HomeTeam.Team_ID
+FROM game
+JOIN team AS AwayTeam ON game.Away_Team_ID = AwayTeam.Team_ID
+JOIN team AS HomeTeam ON game.Home_Team_ID = HomeTeam.Team_ID
 WHERE Season = $season AND 
 	(Week_Round = 'WC' OR Week_Round = 'DIV' OR Week_Round = 'CC' OR Week_Round = 'SB')
 ORDER BY Game_ID asc;";
