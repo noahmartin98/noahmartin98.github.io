@@ -1,0 +1,77 @@
+
+:root {
+  --primary-color: #006400;
+  --secondary-color: #e8f5e9;
+  --text-color: #333;
+}
+body {
+  font-family: 'Segoe UI', 'Noto Sans', sans-serif;
+  color: var(--text-color);
+  background-color: #f9f9f9;
+}
+h1, h2, h3 {
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+  color: var(--primary-color);
+}
+
+section {
+  background: white;
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+iframe {
+  display: block;
+  margin: 20px auto;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+header {
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, hsl(120, 70%, 30%), hsl(140, 70%, 50%));
+  text-align: center;
+  padding: 50px 20px;
+  border-radius: 0 0 20px 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+header h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  color: white;
+}
+
+header h2 {
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin: 0;
+  opacity: 0.9;
+  color: white;
+}
+
+.logo {
+  width: 100px;
+  float: right;
+  padding-right: 10px;
+}
+
+.buttons {
+  display: inline-flex;
+  align-items: center;     
+  justify-content: center;
+}
+
+.eport {
+  margin-right: 30px;
+  width: 250px;
+}
