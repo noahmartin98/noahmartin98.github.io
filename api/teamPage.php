@@ -13,7 +13,7 @@ if (isset($_GET['teamid'])) {
 }
 
 $sql = "SELECT Team_Name
-    FROM Team 
+    FROM team 
     WHERE Team_ID = $teamid;";
 $result = $conn->query($sql);
 
@@ -32,7 +32,7 @@ $season = $_GET['season'] ?? '2015';
 
 
 <nav>
-    <a href="/football-app/home.html" class="nav">Back to home</a>
+    <a href="../home.html" class="nav">Back to home</a>
 </nav>
 
 
@@ -95,9 +95,9 @@ CASE
 	THEN 'L'
 	ELSE 'T'
 END AS Result
-FROM Game 
-JOIN Team AS AwayTeam ON Game.Away_Team_ID = AwayTeam.Team_ID
-JOIN Team AS HomeTeam ON Game.Home_Team_ID = HomeTeam.Team_ID
+FROM game 
+JOIN team AS AwayTeam ON game.Away_Team_ID = AwayTeam.Team_ID
+JOIN team AS HomeTeam ON game.Home_Team_ID = HomeTeam.Team_ID
 WHERE Season = $season AND (Away_Team_ID = $teamid OR Home_Team_ID = $teamid);";
 $result = $conn->query($sql);
 
@@ -136,12 +136,12 @@ if ($result->num_rows > 0) {
         </tr>
 
 <?php
-$sql = "SELECT Game.Season, Player.Player_Name, GROUP_CONCAT(DISTINCT Pos.Pos_Abbr SEPARATOR ', ') AS Poss, GROUP_CONCAT(DISTINCT Team.Abbr SEPARATOR ', ') AS Teams, Pass_Statline.Player_ID, COUNT(*) as Gms, SUM(Comp), SUM(Att), SUM(Yds), SUM(TD), SUM(INTR)
-    FROM Pass_Statline
-    INNER JOIN Player ON Pass_Statline.Player_ID = Player.Player_ID
-    INNER JOIN Team ON Pass_Statline.Team_ID = Team.Team_ID
-    INNER JOIN Pos ON Pass_Statline.Pos_ID = Pos.Pos_ID
-    INNER JOIN Game ON Pass_Statline.Game_ID = Game.Game_ID
+$sql = "SELECT game.Season, player.Player_Name, GROUP_CONCAT(DISTINCT pos.Pos_Abbr SEPARATOR ', ') AS Poss, GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS Teams, pass_statline.Player_ID, COUNT(*) as Gms, SUM(Comp), SUM(Att), SUM(Yds), SUM(TD), SUM(INTR)
+    FROM pass_statline
+    INNER JOIN player ON pass_statline.Player_ID = player.Player_ID
+    INNER JOIN team ON pass_statline.Team_ID = team.Team_ID
+    INNER JOIN pos ON pass_statline.Pos_ID = pos.Pos_ID
+    INNER JOIN game ON pass_statline.Game_ID = game.Game_ID
     WHERE Team.Team_ID = $teamid AND Season = $season
     GROUP BY Player_ID
     ORDER BY SUM(Yds) desc;";
@@ -152,7 +152,7 @@ if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
         $playerid = $row["Player_ID"];
         echo "<tr>";
-        echo "<td class='link'><a class='leader' href='/football-app/playerPagePass.php?playerid=" . $playerid . "'>" . $row["Player_Name"]."</td>";
+        echo "<td class='link'><a class='leader' href='/playerPagePass.php?playerid=" . $playerid . "'>" . $row["Player_Name"]."</td>";
         echo "<td>". $row["Poss"]."</td>";
         echo "<td>". $row["Gms"]."</td>";
         echo "<td>". $row["SUM(Comp)"]."</td>";
@@ -181,13 +181,13 @@ if ($result->num_rows > 0) {
         </tr>
 
 <?php
-$sql = "SELECT Player.Player_Name, GROUP_CONCAT(DISTINCT Pos.Pos_Abbr SEPARATOR ', ') AS Poss, GROUP_CONCAT(DISTINCT Team.Abbr SEPARATOR ', ') AS Teams, Rush_Statline.Player_ID, COUNT(*) as Gms, SUM(Att), SUM(Yds), SUM(TD)
-    FROM Rush_Statline
-    INNER JOIN Player ON Rush_Statline.Player_ID = Player.Player_ID
-    INNER JOIN Team ON Rush_Statline.Team_ID = Team.Team_ID
-    INNER JOIN Pos ON Rush_Statline.Pos_ID = Pos.Pos_ID
-    INNER JOIN Game ON Rush_Statline.Game_ID = Game.Game_ID
-    WHERE Team.Team_ID = $teamid  AND Season = $season
+$sql = "SELECT player.Player_Name, GROUP_CONCAT(DISTINCT pos.Pos_Abbr SEPARATOR ', ') AS Poss, GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS Teams, rush_statline.Player_ID, COUNT(*) as Gms, SUM(Att), SUM(Yds), SUM(TD)
+    FROM rush_statline
+    INNER JOIN player ON rush_statline.Player_ID = player.Player_ID
+    INNER JOIN team ON rush_statline.Team_ID = team.Team_ID
+    INNER JOIN pos ON rush_statline.Pos_ID = pos.Pos_ID
+    INNER JOIN game ON rush_statline.Game_ID = game.Game_ID
+    WHERE team.Team_ID = $teamid  AND Season = $season
     GROUP BY Player_ID
     ORDER BY SUM(Yds) desc;";
 $result = $conn->query($sql);
@@ -197,7 +197,7 @@ if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
         $playerid = $row["Player_ID"];
         echo "<tr>";
-        echo "<td class='link'><a class='leader' href='/football-app/playerPageRush.php?playerid=" . $playerid . "'>" . $row["Player_Name"]."</td>";
+        echo "<td class='link'><a class='leader' href='/playerPageRush.php?playerid=" . $playerid . "'>" . $row["Player_Name"]."</td>";
         echo "<td>". $row["Poss"]."</td>";
         echo "<td>". $row["Gms"]."</td>";
         echo "<td>". $row["SUM(Att)"]."</td>";
@@ -223,13 +223,13 @@ if ($result->num_rows > 0) {
         </tr>
 
 <?php
-$sql = "SELECT Player.Player_Name, GROUP_CONCAT(DISTINCT Pos.Pos_Abbr SEPARATOR ', ') AS Poss, GROUP_CONCAT(DISTINCT Team.Abbr SEPARATOR ', ') AS Teams, Rec_Statline.Player_ID, COUNT(*) as Gms, SUM(Rec), SUM(Yds), SUM(TD)
-    FROM Rec_Statline
-    INNER JOIN Player ON Rec_Statline.Player_ID = Player.Player_ID
-    INNER JOIN Team ON Rec_Statline.Team_ID = Team.Team_ID
-    INNER JOIN Pos ON Rec_Statline.Pos_ID = Pos.Pos_ID
-    INNER JOIN Game ON Rec_Statline.Game_ID = Game.Game_ID
-    WHERE Team.Team_ID = $teamid  AND Season = $season
+$sql = "SELECT player.Player_Name, GROUP_CONCAT(DISTINCT pos.Pos_Abbr SEPARATOR ', ') AS Poss, GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS Teams, rec_statline.Player_ID, COUNT(*) as Gms, SUM(Rec), SUM(Yds), SUM(TD)
+    FROM rec_statline
+    INNER JOIN player ON rec_statline.Player_ID = player.Player_ID
+    INNER JOIN team ON rec_statline.Team_ID = team.Team_ID
+    INNER JOIN pos ON rec_statline.Pos_ID = pos.Pos_ID
+    INNER JOIN game ON rec_statline.Game_ID = game.Game_ID
+    WHERE team.Team_ID = $teamid  AND Season = $season
     GROUP BY Player_ID
     ORDER BY SUM(Yds) desc;";
 $result = $conn->query($sql);
@@ -239,7 +239,7 @@ if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
         $playerid = $row["Player_ID"];
         echo "<tr>";
-        echo "<td class='link'><a class='leader' href='/football-app/playerPageRec.php?playerid=" . $playerid . "'>" . $row["Player_Name"]."</td>";
+        echo "<td class='link'><a class='leader' href='/playerPageRec.php?playerid=" . $playerid . "'>" . $row["Player_Name"]."</td>";
         echo "<td>". $row["Poss"]."</td>";
         echo "<td>". $row["Gms"]."</td>";
         echo "<td>". $row["SUM(Rec)"]."</td>";
