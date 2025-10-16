@@ -13,7 +13,7 @@ if (isset($_GET['playerid'])) {
 }
 
 $sql = "SELECT Player_Name
-    FROM Player 
+    FROM player 
     WHERE Player_ID = $playerid;";
 $result = $conn->query($sql);
 
@@ -30,9 +30,9 @@ if ($result->num_rows > 0) {
 
 
 <nav>
-    <a href="/football-app/passingLeaders.php" class="nav">Back to leaders</a> |
-    <a href="/football-app/teamPage.php" class="nav">Back to team</a> |
-    <a href="/football-app/home.html" class="nav">Back to home</a>
+    <a href="/passingLeaders.php" class="nav">Back to leaders</a> |
+    <a href="/teamPage.php" class="nav">Back to team</a> |
+    <a href="/home.html" class="nav">Back to home</a>
 </nav>
 
 <div class="header-container">
@@ -61,16 +61,16 @@ if ($result->num_rows > 0) {
 
 <?php
 
-$sql = "SELECT Game.Season, Team.Abbr, count(*) as Gms, SUM(Comp) as Comp, SUM(Att) as Att, SUM(Yds) as Yds, SUM(TD) as TD, SUM(INTR) as INTR,
+$sql = "SELECT game.Season, team.Abbr, count(*) as Gms, SUM(Comp) as Comp, SUM(Att) as Att, SUM(Yds) as Yds, SUM(TD) as TD, SUM(INTR) as INTR,
     (SUM(Comp)/SUM(Att)) AS CompPct,
     (SUM(Yds)/count(*)) AS Ypg,
     (SUM(Yds)/SUM(Att)) AS Ypa,
     (SUM(TD)/SUM(INTR)) AS TDINT
-    FROM Pass_Statline
-    INNER JOIN Game ON Pass_Statline.Game_ID = Game.Game_ID
-    INNER JOIN Team ON Pass_Statline.Team_ID = Team.Team_ID
+    FROM pass_statline
+    INNER JOIN game ON pass_statline.Game_ID = game.Game_ID
+    INNER JOIN team ON pass_statline.Team_ID = team.Team_ID
     WHERE Player_ID = $playerid
-    GROUP BY Game.Season;";
+    GROUP BY game.Season;";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
@@ -119,10 +119,10 @@ if ($result->num_rows > 0) {
 
 <?php
 
-$sql = "SELECT Game.Season, Team.Abbr, Game.Week_Round, Game.Game_Date, Comp, Att, Yds, TD, INTR
-    FROM Pass_Statline
-    INNER JOIN Game ON Pass_Statline.Game_ID = Game.Game_ID
-    INNER JOIN Team ON Pass_Statline.Team_ID = Team.Team_ID
+$sql = "SELECT game.Season, team.Abbr, game.Week_Round, game.Game_Date, Comp, Att, Yds, TD, INTR
+    FROM pass_statline
+    INNER JOIN game ON pass_statline.Game_ID = game.Game_ID
+    INNER JOIN team ON pass_statline.Team_ID = team.Team_ID
     WHERE Player_ID = $playerid;";
 $result = $conn->query($sql);
 
