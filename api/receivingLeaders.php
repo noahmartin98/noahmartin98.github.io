@@ -64,7 +64,7 @@ $sql = "SELECT game.Season, player.Player_Name, GROUP_CONCAT(DISTINCT pos.Pos_Ab
     FROM rec_statline
     INNER JOIN player ON rec_statline.Player_ID = player.Player_ID
     INNER JOIN team ON rec_statline.Team_ID = team.Team_ID
-    INNER JOIN Pos ON rec_statline.Pos_ID = pos.Pos_ID
+    INNER JOIN pos ON rec_statline.Pos_ID = pos.Pos_ID
     INNER JOIN Game ON rec_statline.Game_ID = game.Game_ID";
 
 if ($season !== "Total") {
