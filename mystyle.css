@@ -42,7 +42,7 @@ a:link.home, a:visited.home {
 
 /*Playoff brackets link only*/
 a:link.home2, a:visited.home2 {
-  margin-left: 15rem;
+  margin-left: 10rem;
   background-color: #047f04;
   transition: background-color 0.3s ease;
 }
