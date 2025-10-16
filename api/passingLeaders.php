@@ -9,19 +9,19 @@
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
-<script src="myjavascript.js"></script>
+<script src="../myjavascript.js"></script>
 </head>
 <body>
 
 <?php
-//require 'databaseConnect.php';
+require 'databaseConnect.php';
 
 $season = $_GET['season'] ?? '2015';
 
 ?>
 
 <nav>
-    <a href="/football-app/home.html" class="nav">Back to home</a>
+    <a href="../home.html" class="nav">Back to home</a>
 </nav>
 
 <div class="header-container">
@@ -63,17 +63,17 @@ $season = $_GET['season'] ?? '2015';
 
 <?php
 
-$sql = "SELECT Game.Season, Player.Player_Name, GROUP_CONCAT(DISTINCT Pos.Pos_Abbr SEPARATOR ', ') AS Poss, GROUP_CONCAT(DISTINCT Team.Abbr SEPARATOR ', ') AS Teams, 
-	Pass_Statline.Player_ID, COUNT(*) as Gms, SUM(Comp), SUM(Att), SUM(Yds), SUM(TD), SUM(INTR),
+$sql = "SELECT game.Season, player.Player_Name, GROUP_CONCAT(DISTINCT pos.Pos_Abbr SEPARATOR ', ') AS Poss, GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS Teams, 
+	pass_statline.Player_ID, COUNT(*) as Gms, SUM(Comp), SUM(Att), SUM(Yds), SUM(TD), SUM(INTR),
 	(SUM(Comp)/SUM(Att)) AS CompPct,
     (SUM(Yds)/count(*)) AS Ypg,
     (SUM(Yds)/SUM(Att)) AS Ypa,
     (SUM(TD)/SUM(INTR)) AS TDINT
-    FROM Pass_Statline
-    INNER JOIN Player ON Pass_Statline.Player_ID = Player.Player_ID
-    INNER JOIN Team ON Pass_Statline.Team_ID = Team.Team_ID
-    INNER JOIN Pos ON Pass_Statline.Pos_ID = Pos.Pos_ID
-    INNER JOIN Game ON Pass_Statline.Game_ID = Game.Game_ID";
+    FROM pass_statline
+    INNER JOIN player ON pass_statline.Player_ID = player.Player_ID
+    INNER JOIN team ON pass_statline.Team_ID = team.Team_ID
+    INNER JOIN pos ON pass_statline.Pos_ID = pos.Pos_ID
+    INNER JOIN game ON pass_statline.Game_ID = game.Game_ID";
 
 if ($season !== "Total") {
     $sql .= " WHERE Season = $season";
@@ -92,7 +92,7 @@ if ($result->num_rows > 0) {
         $playerid = $row["Player_ID"];
         echo "<tr>";
         echo "<td>".$cur_rank."</td>";
-        echo "<td class='link'><a class='leader' href='/football-app/playerPagePass.php?playerid=" . $playerid . "'>" . $row["Player_Name"] . "</a></td>";
+        echo "<td class='link'><a class='leader' href='/playerPagePass.php?playerid=" . $playerid . "'>" . $row["Player_Name"] . "</a></td>";
         echo "<td>". $row["Poss"]."</td>";
         echo "<td>". $row["Teams"]."</td>";
         echo "<td>". $row["Gms"]."</td>";
