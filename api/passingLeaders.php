@@ -92,7 +92,7 @@ if ($result->num_rows > 0) {
         $playerid = $row["Player_ID"];
         echo "<tr>";
         echo "<td>".$cur_rank."</td>";
-        echo "<td class='link'><a class='leader' href='/playerPagePass.php?playerid=" . $playerid . "'>" . $row["Player_Name"] . "</a></td>";
+        echo "<td class='link'><a class='leader' href='/api/playerPagePass.php?playerid=" . $playerid . "'>" . $row["Player_Name"] . "</a></td>";
         echo "<td>". $row["Poss"]."</td>";
         echo "<td>". $row["Teams"]."</td>";
         echo "<td>". $row["Gms"]."</td>";
