@@ -142,7 +142,7 @@ $sql = "SELECT game.Season, player.Player_Name, GROUP_CONCAT(DISTINCT pos.Pos_Ab
     INNER JOIN team ON pass_statline.Team_ID = team.Team_ID
     INNER JOIN pos ON pass_statline.Pos_ID = pos.Pos_ID
     INNER JOIN game ON pass_statline.Game_ID = game.Game_ID
-    WHERE Team.Team_ID = $teamid AND Season = $season
+    WHERE team.Team_ID = $teamid AND Season = $season
     GROUP BY Player_ID
     ORDER BY SUM(Yds) desc;";
 $result = $conn->query($sql);
