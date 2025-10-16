@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
 
 <!DOCTYPE html>
-<html>
+<!--<html>
 <head>
 <link rel="stylesheet" href="mystyle.css">
 </head>
@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 <h3><a href="/api/home.html" class="home">Enter</a></h3>
 
 
-</body>
+</body>-->
 </html>
 
 
