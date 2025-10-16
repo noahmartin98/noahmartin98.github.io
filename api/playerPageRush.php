@@ -13,7 +13,7 @@ if (isset($_GET['playerid'])) {
 }
 
 $sql = "SELECT Player_Name
-    FROM Player 
+    FROM player 
     WHERE Player_ID = $playerid;";
 $result = $conn->query($sql);
 
@@ -30,9 +30,9 @@ if ($result->num_rows > 0) {
 
 
 <nav>
-    <a href="/football-app/rushingLeaders.php" class="nav">Back to leaders</a> |
-    <a href="/football-app/teamPage.php" class="nav">Back to team</a> |
-    <a href="/football-app/home.html" class="nav">Back to home</a>
+    <a href="/api/rushingLeaders.php" class="nav">Back to leaders</a> |
+    <a href="/api/teamPage.php" class="nav">Back to team</a> |
+    <a href="/../home.html" class="nav">Back to home</a>
 </nav>
 
 <div class="header-container">
@@ -56,17 +56,17 @@ if ($result->num_rows > 0) {
 
 <?php
 
-$sql = "SELECT Game.Season, GROUP_CONCAT(DISTINCT Team.Abbr SEPARATOR ', ') AS Teams, 
+$sql = "SELECT game.Season, GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS Teams, 
 	COUNT(*) as Gms, SUM(Att), SUM(Yds), SUM(TD),
     (SUM(Yds)/SUM(Att)) AS Ypc,
     (SUM(Att)/count(*)) AS Apg,
     (SUM(Yds)/count(*)) AS Ypg
-    FROM Rush_Statline
-    INNER JOIN Team ON Rush_Statline.Team_ID = Team.Team_ID
-    INNER JOIN Pos ON Rush_Statline.Pos_ID = Pos.Pos_ID
-    INNER JOIN Game ON Rush_Statline.Game_ID = Game.Game_ID
+    FROM rush_statline
+    INNER JOIN team ON rush_statline.Team_ID = team.Team_ID
+    INNER JOIN pos ON rush_statline.Pos_ID = pos.Pos_ID
+    INNER JOIN game ON rush_statline.Game_ID = game.Game_ID
     WHERE Player_ID = $playerid
-    GROUP BY Game.Season;";
+    GROUP BY game.Season;";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
@@ -109,10 +109,10 @@ if ($result->num_rows > 0) {
 
 <?php
 
-$sql = "SELECT Game.Season, Team.Abbr, Game.Week_Round, Game.Game_Date, Att, Yds, TD
-    FROM Rush_Statline
-    INNER JOIN Game ON Rush_Statline.Game_ID = Game.Game_ID
-    INNER JOIN Team ON Rush_Statline.Team_ID = Team.Team_ID
+$sql = "SELECT game.Season, team.Abbr, game.Week_Round, game.Game_Date, Att, Yds, TD
+    FROM rush_statline
+    INNER JOIN game ON rush_statline.Game_ID = game.Game_ID
+    INNER JOIN team ON rush_statline.Team_ID = team.Team_ID
     WHERE Player_ID = $playerid;";
 $result = $conn->query($sql);
 
