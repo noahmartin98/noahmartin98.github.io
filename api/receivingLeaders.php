@@ -8,7 +8,7 @@
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
-<script src="myjavascript.js"></script>
+<script src="../myjavascript.js"></script>
 </head>
 <body>
 
@@ -20,7 +20,7 @@ $season = $_GET['season'] ?? '2015';
 ?>
 
 <nav>
-    <a href="/football-app/home.html" class="nav">Back to home</a>
+    <a href="/../home.html" class="nav">Back to home</a>
 </nav>
 
 <div class="header-container">
@@ -56,16 +56,16 @@ $season = $_GET['season'] ?? '2015';
 
 <?php
 
-$sql = "SELECT Game.Season, Player.Player_Name, GROUP_CONCAT(DISTINCT Pos.Pos_Abbr SEPARATOR ', ') AS Poss, GROUP_CONCAT(DISTINCT Team.Abbr SEPARATOR ', ') AS Teams,
-	Rec_Statline.Player_ID, COUNT(*) as Gms, SUM(Rec), SUM(Yds), SUM(TD),
+$sql = "SELECT game.Season, player.Player_Name, GROUP_CONCAT(DISTINCT pos.Pos_Abbr SEPARATOR ', ') AS Poss, GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS Teams,
+	rec_statline.Player_ID, COUNT(*) as Gms, SUM(Rec), SUM(Yds), SUM(TD),
 	(SUM(Yds)/SUM(Rec)) AS Ypc,
     (SUM(Rec)/count(*)) AS Rpg,
     (SUM(Yds)/count(*)) AS Ypg
-    FROM Rec_Statline
-    INNER JOIN Player ON Rec_Statline.Player_ID = Player.Player_ID
-    INNER JOIN Team ON Rec_Statline.Team_ID = Team.Team_ID
-    INNER JOIN Pos ON Rec_Statline.Pos_ID = Pos.Pos_ID
-    INNER JOIN Game ON Rec_Statline.Game_ID = Game.Game_ID";
+    FROM rec_statline
+    INNER JOIN player ON rec_statline.Player_ID = player.Player_ID
+    INNER JOIN team ON rec_statline.Team_ID = team.Team_ID
+    INNER JOIN Pos ON rec_statline.Pos_ID = pos.Pos_ID
+    INNER JOIN Game ON rec_statline.Game_ID = game.Game_ID";
 
 if ($season !== "Total") {
     $sql .= " WHERE Season = $season";
@@ -84,7 +84,7 @@ if ($result->num_rows > 0) {
         $playerid = $row["Player_ID"];
         echo "<tr>";
         echo "<td>".$cur_rank."</td>";
-        echo "<td  class='link'><a class='leader' href='/football-app/playerPageRec.php?playerid=" . $playerid . "'>" . $row["Player_Name"]."</td>";
+        echo "<td  class='link'><a class='leader' href='/api/playerPageRec.php?playerid=" . $playerid . "'>" . $row["Player_Name"]."</td>";
         echo "<td>". $row["Poss"]."</td>";
         echo "<td>". $row["Teams"]."</td>";
         echo "<td>". $row["Gms"]."</td>";
