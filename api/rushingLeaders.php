@@ -20,7 +20,7 @@ $season = $_GET['season'] ?? '2015';
 ?>
 
 <nav>
-    <a href="/api/home.html" class="nav">Back to home</a>
+    <a href="/../home.html" class="nav">Back to home</a>
 </nav>
 
 <div class="header-container">
