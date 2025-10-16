@@ -71,7 +71,19 @@ header h2 {
   justify-content: center;
 }
 
-.eport {
+a:link.eport, a:visited.eport {
   margin-right: 30px;
   width: 250px;
+  background-color: #04AA6D;
+  color: white;
+  border-radius: 5px;
+  padding: 14px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.3s ease;
+}
+
+a:hover.eport {
+  background-color: #0056b3;
 }
