@@ -20,7 +20,7 @@ $season = $_GET['season'] ?? '2015';
 ?>
 
 <nav>
-    <a href="/football-app/home.html" class="nav">Back to home</a>
+    <a href="/api/home.html" class="nav">Back to home</a>
 </nav>
 
 <div class="header-container">
@@ -84,7 +84,7 @@ if ($result->num_rows > 0) {
         $playerid = $row["Player_ID"];
         echo "<tr>";
         echo "<td>".$cur_rank."</td>";
-        echo "<td class='link'><a class='leader' href='/football-app/playerPageRush.php?playerid=" . $playerid . "'>" . $row["Player_Name"]."</td>";
+        echo "<td class='link'><a class='leader' href='/api/playerPageRush.php?playerid=" . $playerid . "'>" . $row["Player_Name"]."</td>";
         echo "<td>". $row["Poss"]."</td>";
         echo "<td>". $row["Teams"]."</td>";
         echo "<td>". $row["Gms"]."</td>";
