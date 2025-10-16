@@ -30,6 +30,7 @@ nav {
 
 /*Home page Leaders links*/
 a:link.home, a:visited.home {
+  width: 200px;
   background-color: #04AA6D;
   color: white;
   border-radius: 5px;
