@@ -30,9 +30,9 @@ if ($result->num_rows > 0) {
 
 
 <nav>
-    <a href="/passingLeaders.php" class="nav">Back to leaders</a> |
-    <a href="/teamPage.php" class="nav">Back to team</a> |
-    <a href="/home.html" class="nav">Back to home</a>
+    <a href="/api/passingLeaders.php" class="nav">Back to leaders</a> |
+    <a href="/api/teamPage.php" class="nav">Back to team</a> |
+    <a href="../home.html" class="nav">Back to home</a>
 </nav>
 
 <div class="header-container">
