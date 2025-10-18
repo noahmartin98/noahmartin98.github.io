@@ -28,11 +28,14 @@ if ($result->num_rows > 0) {
 
 ?>
 
-
-<nav>
-    <a href="/api/passingLeaders.php" class="nav">Back to leaders</a> |
-    <a href="/api/teamPage.php" class="nav">Back to team</a> |
-    <a href="../home.html" class="nav">Back to home</a>
+<nav class="navbar">
+    <ul class="nav-links">
+        <li><a href="../home.html">Home</a></li>
+        <li><a href="/api/passingLeaders.php">Passing Leaders</a></li>
+        <li><a href="/api/rushingLeaders.php">Rushing Leaders</a></li>
+        <li><a href="/api/receivingLeaders.php">Receiving Leaders</a></li>
+        <li><a href="/api/bracket.php">Playoff Brackets</a></li>
+    </ul>
 </nav>
 
 <div class="header-container">
