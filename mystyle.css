@@ -192,7 +192,7 @@ select.season-select:hover {
 .navbar {
   display: flex;
   justify-content: space-between;
-  background-color: #93a593;
+  background-color: #7d927d;
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
