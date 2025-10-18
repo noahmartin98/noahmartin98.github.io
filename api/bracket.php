@@ -33,7 +33,7 @@ FROM game
 JOIN team AS AwayTeam ON game.Away_Team_ID = AwayTeam.Team_ID
 JOIN team AS HomeTeam ON game.Home_Team_ID = HomeTeam.Team_ID
 WHERE Season = $season AND 
-	(Week_Round = 'WC' OR Week_Round = 'DIV' OR Week_Round = 'CC' OR Week_Round = 'SB')
+	Week_Round IN ('WC', 'DIV', 'CC', 'SB')
 ORDER BY Game_ID asc;";
     
 $result = $conn->query($sql);
@@ -45,14 +45,25 @@ if ($result->num_rows > 0) {
     echo "0 results";
 }
 
-$games = [];
+$gamesByRound = [];
 
-while ($game = $result->fetch_assoc()) {
-    $games[] = $game;
+while ($row = $result -> fetch_assoc()) {
+  $gamesByRound[$row['Week_Round']][] = $row;
 }
 
-$round = 'WC';
+function renderMatchup(&$games, $round, $filter = null) {
+  foreach ($games[$round] as $key => $game) {
+    if ($filter && !$filter($game)) continue;
 
+    echo '<div class="team">' . $game['Away_Seed'] . ' ' . $game['Away'] . 
+      '<span class="score">' . $game['Away_Score'] . '</span></div>';
+    echo '<div class="team">' . $game['Home_Seed'] . ' ' . $game['Home'] . 
+      '<span class="score">' . $game['Home_Score'] . '</span></div>';
+    unset($games[$round][$key]);
+    return;
+  }
+  echo '<div class="team"><br></div><div class="team"><br></div>';
+}
 
 ?>
 
@@ -79,30 +90,7 @@ $round = 'WC';
         <h3 class="wildcard1">Wild Card</h3>
 
         <div class="matchup afc27">
-            <?php
-                $round = 'WC';
-                $currentHome = "";
-                $currentAway = "";
-                $currentHomeScore = 99;
-                $currentAwayScore = 99;
-                foreach ($games as $key => $game) {
-                    if ($game['Week_Round'] === $round && $game['Away_Seed'] === "5.") {
-                        $currentHome = $game['Home_Seed'] ." ". $game['Home'];
-                        $currentAway = $game['Away_Seed'] ." ". $game['Away'];
-                        $currentHomeScore = $game['Home_Score'];
-                        $currentAwayScore = $game['Away_Score'];
-
-                        unset($games[$key]);
-                        break;
-                    }
-                }
-            ?>
-          <div class="team"> <?php echo "$currentAway"; ?>
-            <span class="score"> <?php echo "$currentAwayScore"; ?> </span>
-          </div>
-          <div class="team"> <?php echo "$currentHome"; ?>
-            <span class="score"> <?php echo "$currentHomeScore"; ?> </span>
-          </div>
+            <?php renderMatchup($gamesByRound, 'WC', fn($g) => $g['Away_Seed'] === '5.'); ?>
         </div>
 
         <div class="afc36">
@@ -111,143 +99,28 @@ $round = 'WC';
         </div>
 
         <div class="matchup afc45">
-            <?php
-                $round = 'WC';
-                $currentHome = "";
-                $currentAway = "";
-                $currentHomeScore = 99;
-                $currentAwayScore = 99;
-                foreach ($games as $key => $game) {
-                    if ($game['Week_Round'] === $round && $game['Away_Seed'] === "6.") {
-                        $currentHome = $game['Home_Seed'] ." ". $game['Home'];
-                        $currentAway = $game['Away_Seed'] ." ". $game['Away'];
-                        $currentHomeScore = $game['Home_Score'];
-                        $currentAwayScore = $game['Away_Score'];
-
-                        unset($games[$key]);
-                        break;
-                    }
-                }
-            ?>
-          <div class="team"> <?php echo "$currentAway"; ?>
-            <span class="score"> <?php echo "$currentAwayScore"; ?> </span>
-          </div>
-          <div class="team"> <?php echo "$currentHome"; ?>
-            <span class="score"> <?php echo "$currentHomeScore"; ?> </span>
-          </div>
+            <?php renderMatchup($gamesByRound, 'WC', fn($g) => $g['Away_Seed'] === '6.'); ?>
         </div>
 
         <h3 class="divisional1">Divisional</h3>
 
         <div class="matchup afcd1">
-          <?php
-                $round = 'DIV';
-                $currentHome = "";
-                $currentAway = "";
-                $currentHomeScore = 99;
-                $currentAwayScore = 99;
-                foreach ($games as $key => $game) {
-                    if ($game['Week_Round'] === $round && ($game['Away_Seed'] === "5." || $game['Away_Seed'] === "4.")) {
-                        $currentHome = $game['Home_Seed'] ." ". $game['Home'];
-                        $currentAway = $game['Away_Seed'] ." ". $game['Away'];
-                        $currentHomeScore = $game['Home_Score'];
-                        $currentAwayScore = $game['Away_Score'];
-
-                        unset($games[$key]);
-                        break;
-                    }
-                }
-            ?>
-          <div class="team"> <?php echo "$currentAway"; ?>
-            <span class="score"> <?php echo "$currentAwayScore"; ?> </span>
-          </div>
-          <div class="team"> <?php echo "$currentHome"; ?>
-            <span class="score"> <?php echo "$currentHomeScore"; ?> </span>
-          </div>
+          <?php renderMatchup($gamesByRound, 'DIV', fn($g) => in_array($g['Away_Seed'], ['5.', '4.'])); ?>
         </div>
 
         <div class="matchup afcd2">
-          <?php
-                $round = 'DIV';
-                $currentHome = "";
-                $currentAway = "";
-                $currentHomeScore = 99;
-                $currentAwayScore = 99;
-                foreach ($games as $key => $game) {
-                    if ($game['Week_Round'] === $round && ($game['Away_Seed'] === "6." || $game['Away_Seed'] === "3.")) {
-                        $currentHome = $game['Home_Seed'] ." ". $game['Home'];
-                        $currentAway = $game['Away_Seed'] ." ". $game['Away'];
-                        $currentHomeScore = $game['Home_Score'];
-                        $currentAwayScore = $game['Away_Score'];
-
-                        unset($games[$key]);
-                        break;
-                    }
-                }
-            ?>
-          <div class="team"> <?php echo "$currentAway"; ?>
-            <span class="score"> <?php echo "$currentAwayScore"; ?> </span>
-          </div>
-          <div class="team"> <?php echo "$currentHome"; ?>
-            <span class="score"> <?php echo "$currentHomeScore"; ?> </span>
-          </div>
+          <?php renderMatchup($gamesByRound, 'DIV', fn($g) => in_array($g['Away_Seed'], ['6.', '3.'])); ?>
         </div>
 
         <h3 class="champ1">Championship</h3>
         <div class="matchup afccg">
-          <?php
-                $round = 'CC';
-                $currentHome = "";
-                $currentAway = "";
-                $currentHomeScore = 99;
-                $currentAwayScore = 99;
-                foreach ($games as $key => $game) {
-                    if ($game['Week_Round'] === $round) {
-                        $currentHome = $game['Home_Seed'] ." ". $game['Home'];
-                        $currentAway = $game['Away_Seed'] ." ". $game['Away'];
-                        $currentHomeScore = $game['Home_Score'];
-                        $currentAwayScore = $game['Away_Score'];
-
-                        unset($games[$key]);
-                        break;
-                    }
-                }
-            ?>
-          <div class="team"> <?php echo "$currentAway"; ?>
-            <span class="score"> <?php echo "$currentAwayScore"; ?> </span>
-          </div>
-          <div class="team"> <?php echo "$currentHome"; ?>
-            <span class="score"> <?php echo "$currentHomeScore"; ?> </span>
-          </div>
+          <?php renderMatchup($gamesByRound, 'CC'); ?>
         </div>
 
     <!-- Super Bowl -->
       <h2 class="superbowl">Super Bowl</h2>
         <div class="matchup sb">
-          <?php
-                $round = 'SB';
-                $currentHome = "";
-                $currentAway = "";
-                $currentHomeScore = 99;
-                $currentAwayScore = 99;
-                foreach ($games as $key => $game) {
-                    if ($game['Week_Round'] === $round) {
-                        $currentHome = $game['Home_Seed'] ." ". $game['Home'];
-                        $currentAway = $game['Away_Seed'] ." ". $game['Away'];
-                        $currentHomeScore = $game['Home_Score'];
-                        $currentAwayScore = $game['Away_Score'];
-
-                        unset($games[$key]);
-                        break;
-                    }
-                }
-            ?>
-          <div class="team"> <?php echo "$currentAway"; ?>
-            <span class="score"> <?php echo "$currentAwayScore"; ?> </span>
-          </div>
-          <div class="team"> <?php echo "$currentHome"; ?>
-            <span class="score"> <?php echo "$currentHomeScore"; ?> </span>
-          </div>
+          <?php renderMatchup($gamesByRound, 'SB'); ?>
         </div>
 
     <!-- NFC Bracket -->
@@ -255,30 +128,7 @@ $round = 'WC';
         <h3 class="wildcard2">Wild Card</h3>
 
         <div class="matchup nfc27">
-          <?php
-                $round = 'WC';
-                $currentHome = "";
-                $currentAway = "";
-                $currentHomeScore = 99;
-                $currentAwayScore = 99;
-                foreach ($games as $key => $game) {
-                    if ($game['Week_Round'] === $round && $game['Away_Seed'] === "5.") {
-                        $currentHome = $game['Home_Seed'] ." ". $game['Home'];
-                        $currentAway = $game['Away_Seed'] ." ". $game['Away'];
-                        $currentHomeScore = $game['Home_Score'];
-                        $currentAwayScore = $game['Away_Score'];
-
-                        unset($games[$key]);
-                        break;
-                    }
-                }
-            ?>
-          <div class="team"> <?php echo "$currentAway"; ?>
-            <span class="score"> <?php echo "$currentAwayScore"; ?> </span>
-          </div>
-          <div class="team"> <?php echo "$currentHome"; ?>
-            <span class="score"> <?php echo "$currentHomeScore"; ?> </span>
-          </div>
+          <?php renderMatchup($gamesByRound, 'WC', fn($g) => $g['Away_Seed'] === '5.'); ?>
         </div>
 
         <div class="nfc36">
@@ -287,114 +137,22 @@ $round = 'WC';
         </div>
 
         <div class="matchup nfc45">
-          <?php
-                $round = 'WC';
-                $currentHome = "";
-                $currentAway = "";
-                $currentHomeScore = 99;
-                $currentAwayScore = 99;
-                foreach ($games as $key => $game) {
-                    if ($game['Week_Round'] === $round && $game['Away_Seed'] === "6.") {
-                        $currentHome = $game['Home_Seed'] ." ". $game['Home'];
-                        $currentAway = $game['Away_Seed'] ." ". $game['Away'];
-                        $currentHomeScore = $game['Home_Score'];
-                        $currentAwayScore = $game['Away_Score'];
-
-                        unset($games[$key]);
-                        break;
-                    }
-                }
-            ?>
-          <div class="team"> <?php echo "$currentAway"; ?>
-            <span class="score"> <?php echo "$currentAwayScore"; ?> </span>
-          </div>
-          <div class="team"> <?php echo "$currentHome"; ?>
-            <span class="score"> <?php echo "$currentHomeScore"; ?> </span>
-          </div>
+          <?php renderMatchup($gamesByRound, 'WC', fn($g) => $g['Away_Seed'] === '6.'); ?>
         </div>
 
         <h3 class="divisional2">Divisional</h3>
 
         <div class="matchup nfcd1">
-          <?php
-                $round = 'DIV';
-                $currentHome = "";
-                $currentAway = "";
-                $currentHomeScore = 99;
-                $currentAwayScore = 99;
-                foreach ($games as $key => $game) {
-                    if ($game['Week_Round'] === $round && ($game['Away_Seed'] === "5." || $game['Away_Seed'] === "4.")) {
-                        $currentHome = $game['Home_Seed'] ." ". $game['Home'];
-                        $currentAway = $game['Away_Seed'] ." ". $game['Away'];
-                        $currentHomeScore = $game['Home_Score'];
-                        $currentAwayScore = $game['Away_Score'];
-
-                        unset($games[$key]);
-                        break;
-                    }
-                }
-            ?>
-          <div class="team"> <?php echo "$currentAway"; ?>
-            <span class="score"> <?php echo "$currentAwayScore"; ?> </span>
-          </div>
-          <div class="team"> <?php echo "$currentHome"; ?>
-            <span class="score"> <?php echo "$currentHomeScore"; ?> </span>
-          </div>
+          <?php renderMatchup($gamesByRound, 'DIV', fn($g) => in_array($g['Away_Seed'], ['5.', '4.'])); ?>
         </div>
 
         <div class="matchup nfcd2">
-          <?php
-                $round = 'DIV';
-                $currentHome = "";
-                $currentAway = "";
-                $currentHomeScore = 99;
-                $currentAwayScore = 99;
-                foreach ($games as $key => $game) {
-                    if ($game['Week_Round'] === $round && ($game['Away_Seed'] === "6." || $game['Away_Seed'] === "3.")) {
-                        $currentHome = $game['Home_Seed'] ." ". $game['Home'];
-                        $currentAway = $game['Away_Seed'] ." ". $game['Away'];
-                        $currentHomeScore = $game['Home_Score'];
-                        $currentAwayScore = $game['Away_Score'];
-
-                        unset($games[$key]);
-                        break;
-                    }
-                }
-            ?>
-          <div class="team"> <?php echo "$currentAway"; ?>
-            <span class="score"> <?php echo "$currentAwayScore"; ?> </span>
-          </div>
-          <div class="team"> <?php echo "$currentHome"; ?>
-            <span class="score"> <?php echo "$currentHomeScore"; ?> </span>
-          </div>
+          <?php renderMatchup($gamesByRound, 'DIV', fn($g) => in_array($g['Away_Seed'], ['6.', '3.'])); ?>
         </div>
 
         <h3 class="champ2">Championship</h3>
         <div class="matchup nfccg">
-          <?php
-                $round = 'CC';
-                $currentHome = "";
-                $currentAway = "";
-                $currentHomeScore = 99;
-                $currentAwayScore = 99;
-                foreach ($games as $key => $game) {
-                    if ($game['Week_Round'] === $round) {
-                        $currentHome = $game['Home_Seed'] ." ". $game['Home'];
-                        $currentAway = $game['Away_Seed'] ." ". $game['Away'];
-                        $currentHomeScore = $game['Home_Score'];
-                        $currentAwayScore = $game['Away_Score'];
-
-                        unset($games[$key]);
-                        break;
-                    }
-                }
-            ?>
-          <div class="team"> <?php echo "$currentAway"; ?>
-            <span class="score"> <?php echo "$currentAwayScore"; ?> </span>
-          </div>
-          <div class="team"> <?php echo "$currentHome"; ?>
-            <span class="score"> <?php echo "$currentHomeScore"; ?> </span>
-          </div>
+          <?php renderMatchup($gamesByRound, 'CC'); ?>
         </div>
 
   </div>

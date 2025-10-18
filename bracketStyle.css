@@ -146,5 +146,6 @@ span.score {
 .sb {
     grid-column: 4;
     grid-row: 3 / 7;
+    border: 7px solid #ccc;
 }
 
