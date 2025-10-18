@@ -187,3 +187,30 @@ select.season-select:hover {
 #leaders_filter input {
   margin: 0px 50px 5px 30px;
 }
+
+/* Navbar styling */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  background-color: #93a593;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* Nav links */
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 2.5rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #e2e8f0;
+  font-weight: 500;
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.nav-links a:hover {
+  color: #117213;
+  transform: translateY(-2px);
+}
