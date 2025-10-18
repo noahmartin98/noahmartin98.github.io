@@ -30,11 +30,15 @@ $season = $_GET['season'] ?? '2015';
 
 ?>
 
-
-<nav>
-    <a href="../home.html" class="nav">Back to home</a>
+<nav class="navbar">
+    <ul class="nav-links">
+        <li><a href="../home.html">Home</a></li>
+        <li><a href="/api/passingLeaders.php">Passing Leaders</a></li>
+        <li><a href="/api/rushingLeaders.php">Rushing Leaders</a></li>
+        <li><a href="/api/receivingLeaders.php">Receiving Leaders</a></li>
+        <li><a href="/api/bracket.php">Playoff Brackets</a></li>
+    </ul>
 </nav>
-
 
 <!--Header with team name and season select-->
 <div class="header-container">
