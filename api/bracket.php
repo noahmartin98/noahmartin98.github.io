@@ -75,7 +75,7 @@ function renderMatchup(&$games, $round, $filter = null) {
     <form method="get" action="bracket.php">
         <select class="season-select" name="season" onchange="this.form.submit()">
             <option value="2015" <?php if ($season == '2015') echo 'selected'; ?>>2015</option>
-            <option value="2013" <?php if ($season == '2013') echo 'selected'; ?>>2013</option>
+            <option value="2012" <?php if ($season == '2012') echo 'selected'; ?>>2012</option>
         </select>
     </form>
 </div>
