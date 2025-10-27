@@ -16,7 +16,7 @@
 <?php
 require 'databaseConnect.php';
 
-$season = $_GET['season'] ?? '2015';
+$season = $_GET['season'] ?? '2024';
 
 ?>
 
@@ -39,6 +39,7 @@ $season = $_GET['season'] ?? '2015';
         <select class="season-select" name="season" onchange="this.form.submit()">
             <option value="2015" <?php if ($season == '2015') echo 'selected'; ?>>2015</option>
             <option value="2013" <?php if ($season == '2013') echo 'selected'; ?>>2013</option>
+			<option value="2024" <?php if ($season == '2024') echo 'selected'; ?>>2024</option>
             <option value="Total" <?php if ($season == 'Total') echo 'selected'; ?>>Total</option>
         </select>
     </form>
