@@ -37,7 +37,7 @@ $season = $_GET['season'] ?? '2024';
     <form method="get" action="rushingLeaders.php">
         <select class="season-select" name="season" onchange="this.form.submit()">
             <option value="2015" <?php if ($season == '2015') echo 'selected'; ?>>2015</option>
-            <option value="2013" <?php if ($season == '2013') echo 'selected'; ?>>2013</option>
+            <option value="2012" <?php if ($season == '2012') echo 'selected'; ?>>2012</option>
 			<option value="2024" <?php if ($season == '2024') echo 'selected'; ?>>2024</option>
             <option value="Total" <?php if ($season == 'Total') echo 'selected'; ?>>Total</option>
         </select>
