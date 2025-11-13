@@ -1,6 +1,9 @@
 
 
 table.player {
+  width: 50%;
+}
+table.player-passing {
   width: 60%;
 }
 table.player-years {
