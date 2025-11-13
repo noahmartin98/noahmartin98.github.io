@@ -128,7 +128,7 @@ if ($result->num_rows > 0) {
 
 
 <h2>Passing</h2>
-<table class="player">
+<table class="player-passing">
         <tr>
             <th>Player</th>
             <th>Position</th>
