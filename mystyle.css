@@ -1,7 +1,7 @@
 
 
 table.player {
-  width: 50%;
+  width: 60%;
 }
 table.player-years {
   width: 65%;
@@ -77,7 +77,7 @@ a:hover.home, a:hover.home2 {
 
 h1 {
   color: #2e7d32;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 h3 {
   color: #2e7d32;
