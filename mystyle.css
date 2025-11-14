@@ -80,10 +80,11 @@ a:hover.home, a:hover.home2 {
 
 h1 {
   color: #2e7d32;
-  margin-bottom: 0px;
+  margin: 5px 0 10px 0;
 }
 h3 {
   color: #2e7d32;
+  margin: 10px 0 4px 0;
 }
 
 /* Table Styles */
@@ -98,6 +99,7 @@ table {
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   border-radius: 8px;
   overflow: hidden;
+  margin: 5px 0 20px 0;
 }
 
 table thead {
@@ -111,12 +113,12 @@ table th, table td {
 }
 
 th {
-  padding: 3px 16px;
+  padding: 2px 8px
   background-color: #27db99;
 }
 
 td {
-  padding: 4px 16px;
+  padding: 2px 8px
   transition: background-color 0.3s ease;
 }
 
