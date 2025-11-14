@@ -113,12 +113,12 @@ table th, table td {
 }
 
 th {
-  padding: 2px 8px
+  padding: 2px 8px;
   background-color: #27db99;
 }
 
 td {
-  padding: 2px 8px
+  padding: 2px 8px;
   transition: background-color 0.3s ease;
 }
 
