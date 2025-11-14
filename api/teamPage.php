@@ -57,7 +57,7 @@ $season = $_GET['season'] ?? '2024';
 </div>
 
 
-<h2>Games</h2>
+<h3>Games</h3>
 
     <table>
         <tr>
@@ -127,7 +127,7 @@ if ($result->num_rows > 0) {
     </table> 
 
 
-<h2>Passing</h2>
+<h3>Passing</h3>
 <table class="player-passing">
         <tr>
             <th>Player</th>
@@ -174,7 +174,7 @@ if ($result->num_rows > 0) {
 
 
 
-<h2>Rushing</h2>
+<h3>Rushing</h3>
 <table class="player">
         <tr>
             <th>Player</th>
@@ -216,7 +216,7 @@ if ($result->num_rows > 0) {
 </table>
 
 
-<h2>Receiving</h2>
+<h3>Receiving</h3>
 <table class="player">
         <tr>
             <th>Player</th>
