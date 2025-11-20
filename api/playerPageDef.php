@@ -79,7 +79,7 @@ if ($result->num_rows > 0) {
         echo "<td>". $row["Abbr"]."</td>";
         echo "<td>". $row["Gms"]."</td>";
         echo "<td>". $row["Sack"]."</td>";
-        echo "<td>". $row["INT"]."</td>";
+        echo "<td>". $row["INTR"]."</td>";
         echo "<td>". $row["FF"]."</td>";
         echo "<td>". $row["FR"]."</td>";
         echo "<td>". $row["TD"]."</td>";
@@ -116,7 +116,7 @@ if ($result->num_rows > 0) {
 
 <?php
 
-$sql = "SELECT game.Season, team.Abbr, game.Week_Round, game.Game_Date, Sack, INT, FF, FR, TD, TFL, PDEF
+$sql = "SELECT game.Season, team.Abbr, game.Week_Round, game.Game_Date, Sack, INTR, FF, FR, TD, TFL, PDEF
     FROM def_statline
     INNER JOIN game ON def_statline.Game_ID = game.Game_ID
     INNER JOIN team ON def_statline.Team_ID = team.Team_ID
@@ -133,7 +133,7 @@ if ($result->num_rows > 0) {
         echo "<td>". $row["Week_Round"]."</td>";
         echo "<td>". $row["Game_Date"]."</td>";
         echo "<td>". $row["Sack"]."</td>";
-        echo "<td>". $row["INT"]."</td>";
+        echo "<td>". $row["INTR"]."</td>";
         echo "<td>". $row["FF"]."</td>";
         echo "<td>". $row["FR"]."</td>";
         echo "<td>". $row["TD"]."</td>";
