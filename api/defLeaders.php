@@ -69,7 +69,7 @@ $season = $_GET['season'] ?? '2024';
 <?php
 
 $sql = "SELECT game.Season, player.Player_Name, GROUP_CONCAT(DISTINCT pos.Pos_Abbr SEPARATOR ', ') AS Poss, GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS Teams, 
-	def_statline.Player_ID, COUNT(*) as Gms, SUM(Sack), SUM(INTR), SUM(FF), SUM(FR), SUM(TD), SUM(TFL), SUM(PDEF),
+	def_statline.Player_ID, COUNT(*) as Gms, SUM(Sack), SUM(INTR), SUM(FF), SUM(FR), SUM(TD), SUM(TFL), SUM(PDEF)
     FROM def_statline
     INNER JOIN player ON def_statline.Player_ID = player.Player_ID
     INNER JOIN team ON def_statline.Team_ID = team.Team_ID
