@@ -83,6 +83,7 @@ if ($result->num_rows > 0) {
         echo "<td>". $row["FF"]."</td>";
         echo "<td>". $row["FR"]."</td>";
         echo "<td>". $row["TD"]."</td>";
+		echo "<td>". $row["TFL"]."</td>";
         echo "<td>". $row["PDEF"]."</td>";
         echo "</tr>";
     }
@@ -137,6 +138,7 @@ if ($result->num_rows > 0) {
         echo "<td>". $row["FF"]."</td>";
         echo "<td>". $row["FR"]."</td>";
         echo "<td>". $row["TD"]."</td>";
+		echo "<td>". $row["TFL"]."</td>";
         echo "<td>". $row["PDEF"]."</td>";
         echo "</tr>";
         $cur_rank++;
