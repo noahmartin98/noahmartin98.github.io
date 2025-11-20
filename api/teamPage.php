@@ -273,7 +273,7 @@ if ($result->num_rows > 0) {
         </tr>
 
 <?php
-$sql = "SELECT game.Season, player.Player_Name, GROUP_CONCAT(DISTINCT pos.Pos_Abbr SEPARATOR ', ') AS Poss, GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS Teams, pass_statline.Player_ID, COUNT(*) as Gms,
+$sql = "SELECT game.Season, player.Player_Name, GROUP_CONCAT(DISTINCT pos.Pos_Abbr SEPARATOR ', ') AS Poss, GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS Teams, def_statline.Player_ID, COUNT(*) as Gms,
 	SUM(Sack) as Sack, SUM(INTR) as INTR, SUM(FF) as FF, SUM(FR) as FR, SUM(TD) as TD, SUM(TFL) as TFL, SUM(PDEF) as PDEF
     FROM def_statline
     INNER JOIN player ON def_statline.Player_ID = player.Player_ID
@@ -290,7 +290,7 @@ if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
         $playerid = $row["Player_ID"];
         echo "<tr>";
-        echo "<td class='link'><a class='leader' href='/api/playerPagePass.php?playerid=" . $playerid . "'>" . $row["Player_Name"]."</td>";
+        echo "<td class='link'><a class='leader' href='/api/playerPagePDef.php?playerid=" . $playerid . "'>" . $row["Player_Name"]."</td>";
         echo "<td>". $row["Poss"]."</td>";
         echo "<td>". $row["Gms"]."</td>";
         echo "<td>". $row["Sack"]."</td>";
