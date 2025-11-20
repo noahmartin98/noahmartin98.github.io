@@ -290,7 +290,7 @@ if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
         $playerid = $row["Player_ID"];
         echo "<tr>";
-        echo "<td class='link'><a class='leader' href='/api/playerPagePDef.php?playerid=" . $playerid . "'>" . $row["Player_Name"]."</td>";
+        echo "<td class='link'><a class='leader' href='/api/playerPageDef.php?playerid=" . $playerid . "'>" . $row["Player_Name"]."</td>";
         echo "<td>". $row["Poss"]."</td>";
         echo "<td>". $row["Gms"]."</td>";
         echo "<td>". $row["Sack"]."</td>";
