@@ -26,6 +26,7 @@ $season = $_GET['season'] ?? '2024';
         <li><a href="/api/passingLeaders.php">Passing Leaders</a></li>
         <li><a href="/api/rushingLeaders.php">Rushing Leaders</a></li>
         <li><a href="/api/receivingLeaders.php">Receiving Leaders</a></li>
+		<li><a href="/api/defLeaders.php">Defensive Leaders</a></li>
         <li><a href="/api/bracket.php">Playoff Brackets</a></li>
     </ul>
 </nav>
