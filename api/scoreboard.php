@@ -31,14 +31,14 @@ for ($week = 1; $week <= 18; $week++) {
         echo "<h3>Week $week</h3>";
         
         
-        echo "<table class="player-passing">
+        echo '<table class="player-passing">
                 <tr>
                     <th>Date</th>
                     <th>Away Team</th>
                     <th>Score</th>
                     <th>Score</th>
                     <th>Home Team</th>
-                </tr>";
+                </tr>';
         
         
         $sql = "SELECT Game_Date,  AwayTeam.Team_Name AS AwayName, Away_Seed, Away_Score, Home_Score, HomeTeam.Team_Name AS HomeName, Home_Seed
