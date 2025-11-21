@@ -8,12 +8,10 @@
 <?php
 require 'databaseConnect.php';
 
-if (isset($_GET['teamid'])) {
-    $teamid = $_GET['teamid'];
-}
+?>
 
 <h3>Week 2</h3>
-<table">
+<table>
         <tr>
             <th>Date</th>
             <th>Away Team</th>
@@ -37,7 +35,7 @@ if ($result->num_rows > 0) {
         echo "<tr>";
         echo "<td>". $row["Game_Date"]."</td>";
         echo "<td>". $row["AwayTeam.Team_Name"].$row["Away_Seed"]."</td>";
-        echo "<td>". $row["Away_Score)"]."</td>";
+        echo "<td>". $row["Away_Score"]."</td>";
         echo "<td>". $row["Home_Score"]."</td>";
         echo "<td>". $row["HomeTeam.Team_Name"].$row["Home_Seed"]."</td>";
         echo "</tr>";
