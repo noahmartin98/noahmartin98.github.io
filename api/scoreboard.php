@@ -11,7 +11,7 @@ require 'databaseConnect.php';
 ?>
 
 <h3>Week 2</h3>
-<table>
+<table class="player-passing">
         <tr>
             <th>Date</th>
             <th>Away Team</th>
@@ -34,10 +34,10 @@ if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
         echo "<tr>";
         echo "<td>". $row["Game_Date"]."</td>";
-        echo "<td>". $row["AwayName"] . $row["Away_Seed"]."</td>";
+        echo "<td>". $row["AwayName"] . " (" . $row["Away_Seed"] . ")" . "</td>";
         echo "<td>". $row["Away_Score"]."</td>";
         echo "<td>". $row["Home_Score"]."</td>";
-        echo "<td>". $row["HomeName"].$row["Home_Seed"]."</td>";
+        echo "<td>". $row["HomeName"] . " (" . $row["Home_Seed"] . ")" . "</td>";
         echo "</tr>";
     }
 } else {
