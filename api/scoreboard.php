@@ -78,7 +78,7 @@ for ($week = 1; $week <= 18; $week++) {
         } else {
             echo "<tr><td colspan='5'>No games this week</td></tr>";
         }
-        echo "</table><br><br>";
+        echo "</table>";
 }
 ?>
 
