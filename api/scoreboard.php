@@ -90,7 +90,7 @@ $playoffsWeeks = ["WC", "DIV", "CC", "SB"];
 
 foreach ($playoffsWeeks as $weekCode) {
 	
-	echo "<h3>Week $week</h3>";
+	echo "<h3>Week $weekCode</h3>";
 	
 	
 	echo '<table class="player-passing">
