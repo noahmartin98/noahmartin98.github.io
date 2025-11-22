@@ -141,7 +141,7 @@ foreach ($playoffsWeeks as $weekCode) {
 
 
 
-<?php
+
     $conn->close();
 ?>
 
