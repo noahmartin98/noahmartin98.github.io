@@ -8,6 +8,7 @@
 <?php
 require 'databaseConnect.php';
 
+$season = $_GET['season'] ?? '2024';
 ?>
 
 <nav class="navbar">
@@ -20,6 +21,20 @@ require 'databaseConnect.php';
         <li><a href="/api/bracket.php">Playoff Brackets</a></li>
     </ul>
 </nav>
+
+<div class="header-container">
+
+    <h1>Scores</h1>
+
+    <form method="get" action="scoreboard.php">
+        <select class="season-select" name="season" onchange="this.form.submit()">
+            <option value="2015" <?php if ($season == '2015') echo 'selected'; ?>>2015</option>
+            <option value="2012" <?php if ($season == '2012') echo 'selected'; ?>>2012</option>
+			<option value="2024" <?php if ($season == '2024') echo 'selected'; ?>>2024</option>
+        </select>
+    </form>
+
+</div>
         
 
 <?php
@@ -45,7 +60,7 @@ for ($week = 1; $week <= 18; $week++) {
         from game
         JOIN team AS AwayTeam ON game.Away_Team_ID = AwayTeam.Team_ID
         JOIN team AS HomeTeam ON game.Home_Team_ID = HomeTeam.Team_ID
-        WHERE Season = 2024 and Week_Round = '$weekCode';";
+        WHERE Season = $season and Week_Round = '$weekCode';";
         
         $result = $conn->query($sql);
         
