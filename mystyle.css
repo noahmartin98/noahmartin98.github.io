@@ -12,6 +12,9 @@ table.player-years {
 table.player-years-pass {
   width: 75%;
 }
+table.scores {
+   max-width: 500px;
+}
 
 
 body {
