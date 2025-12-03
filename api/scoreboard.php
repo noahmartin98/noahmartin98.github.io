@@ -46,7 +46,7 @@ for ($week = 1; $week <= 18; $week++) {
         echo "<h3>Week $week</h3>";
         
         
-        echo '<table class="player-passing">
+        echo '<table>
                 <tr>
                     <th>Date</th>
                     <th>Away Team</th>
@@ -93,7 +93,7 @@ foreach ($playoffsWeeks as $weekCode) {
 	echo "<h3>Week $weekCode</h3>";
 	
 	
-	echo '<table class="player-passing">
+	echo '<table>
 			<tr>
 				<th>Date</th>
 				<th>Away Team</th>
