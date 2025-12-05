@@ -64,6 +64,7 @@ $season = $_GET['season'] ?? '2024';
         <tr>
             <th>Week</th>
             <th>Date</th>
+			<th>User</th>
             <th>H/A</th>
             <th>Opponent</th>
             <th>Score</th>
@@ -73,7 +74,7 @@ $season = $_GET['season'] ?? '2024';
 
 <?php
 
-$sql = "SELECT game.season, game.week_round, game.game_date, t1.home_away, 
+$sql = "SELECT game.season, game.week_round, game.game_date, t1.home_away, t1.team_user,
 t1.team_id AS team,
 t1.score AS team_score,
 
@@ -105,10 +106,11 @@ if ($result->num_rows > 0) {
         echo "<tr>";
         echo "<td>". $row["week_round"]."</td>";
         echo "<td>". $row["game_date"]."</td>";
+		echo "<td>". $row["team_user"]."</td>";
         echo "<td>". $row["home_away"]."</td>";
         echo "<td>". $row["opponent"]."</td>";
         echo "<td>". $row["team_score"]."</td>";
-        echo "<td>". $row["opp_Score"]."</td>";
+        echo "<td>". $row["opp_score"]."</td>";
         echo "<td>". $row["result"]."</td>";
         echo "</tr>";
     }
