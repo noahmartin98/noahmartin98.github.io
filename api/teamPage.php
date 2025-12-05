@@ -128,7 +128,7 @@ if ($result->num_rows > 0) {
             <th>Player</th>
             <th>Position</th>
             <th>Gms</th>
-            <th>Comp</th>
+            <th>Cmp</th>
             <th>Att</th>
             <th>Yds</th>
             <th>TD</th>
