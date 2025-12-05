@@ -96,7 +96,7 @@ JOIN team_statline t2
     AND t1.team_id <> t2.team_id
 JOIN game ON t1.game_id = game.game_id
 JOIN team opp ON t2.team_id = opp.team_id
-WHERE t1.team_id = 2
+WHERE t1.team_id = $teamid
 ;";
 $result = $conn->query($sql);
 
