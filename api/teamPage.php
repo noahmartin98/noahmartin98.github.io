@@ -73,51 +73,43 @@ $season = $_GET['season'] ?? '2024';
 
 <?php
 
-$sql = "SELECT Season, Week_Round, Game_Date,
-CASE 
-	WHEN Away_Team_ID = $teamid THEN 'Away'
-	ELSE 'Home'
-    END AS Location,
+$sql = "SELECT game.season, game.week_round, game.game_date, t1.home_away, 
+t1.team_id AS team,
+t1.score AS team_score,
+
+t2.team_id AS opponent,
+opp.Team_Name AS opponent,
+t2.score AS opp_score,
+
 CASE
-	WHEN Away_Team_ID = $teamid THEN HomeTeam.Team_Name
-    ELSE AwayTeam.Team_Name
-    END AS Opponent,
-CASE
-	WHEN Away_Team_ID = $teamid THEN Away_Score
-    ELSE Home_Score
-    END AS Score,
-CASE
-	WHEN Away_Team_ID = $teamid THEN Home_Score
-    ELSE Away_Score
-    END AS Opp_Score,
-CASE 
-	WHEN 
-		(Away_Team_ID = $teamid AND Away_Score > Home_Score) OR
-		(Home_Team_ID = $teamid AND Home_Score > Away_Score)
+	WHEN (t1.score > t2.score)
 	THEN 'W'
-	WHEN 
-		(Away_Team_ID = $teamid AND Away_Score < Home_Score) OR
-		(Home_Team_ID = $teamid AND Home_Score < Away_Score)
+	WHEN (t2.score > t1.score)
 	THEN 'L'
 	ELSE 'T'
-END AS Result
-FROM game 
-JOIN team AS AwayTeam ON game.Away_Team_ID = AwayTeam.Team_ID
-JOIN team AS HomeTeam ON game.Home_Team_ID = HomeTeam.Team_ID
-WHERE Season = $season AND (Away_Team_ID = $teamid OR Home_Team_ID = $teamid);";
+END AS result
+
+from team_statline t1
+JOIN team_statline t2
+	ON t1.game_id = t2.game_id
+    AND t1.team_id <> t2.team_id
+JOIN game ON t1.game_id = game.game_id
+JOIN team opp ON t2.team_id = opp.team_id
+WHERE t1.team_id = 2
+;";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
     // output data of each row
     while($row = $result->fetch_assoc()) {
         echo "<tr>";
-        echo "<td>". $row["Week_Round"]."</td>";
-        echo "<td>". $row["Game_Date"]."</td>";
-        echo "<td>". $row["Location"]."</td>";
-        echo "<td>". $row["Opponent"]."</td>";
-        echo "<td>". $row["Score"]."</td>";
-        echo "<td>". $row["Opp_Score"]."</td>";
-        echo "<td>". $row["Result"]."</td>";
+        echo "<td>". $row["week_round"]."</td>";
+        echo "<td>". $row["game_date"]."</td>";
+        echo "<td>". $row["home_away"]."</td>";
+        echo "<td>". $row["opponent"]."</td>";
+        echo "<td>". $row["team_score"]."</td>";
+        echo "<td>". $row["opp_Score"]."</td>";
+        echo "<td>". $row["result"]."</td>";
         echo "</tr>";
     }
 } else {
