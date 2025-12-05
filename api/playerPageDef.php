@@ -106,6 +106,9 @@ if ($result->num_rows > 0) {
             <th>Team</th>
             <th>Week</th>
             <th>Date</th>
+			<th>User</th>
+			<th></th>
+			<th>Opp</th>
             <th>Sack</th>
             <th>INT</th>
             <th>FF</th>
@@ -118,10 +121,25 @@ if ($result->num_rows > 0) {
 
 <?php
 
-$sql = "SELECT game.Season, team.Abbr, game.Week_Round, game.Game_Date, Sack, INTR, FF, FR, TD, TFL, PDEF
+$sql = "SELECT game.Season, team.Abbr, game.Week_Round, game.Game_Date, t1.team_user, 
+		CASE
+			WHEN (t1.home_away = 'Home')
+				THEN 'vs.'
+			WHEN (t1.home_away = 'Away')
+				THEN '@'
+			ELSE ''
+		END AS loc,
+    opp.Abbr, Sack, INTR, FF, FR, TD, TFL, PDEF
     FROM def_statline
     INNER JOIN game ON def_statline.Game_ID = game.Game_ID
     INNER JOIN team ON def_statline.Team_ID = team.Team_ID
+    	JOIN team_statline t1
+		ON t1.game_id = def_statline.game_id
+		AND t1.team_id = def_statline.team_id
+	JOIN team_statline t2
+		ON t2.game_id = def_statline.game_id
+		AND t2.team_id <> def_statline.team_id
+	JOIN team opp ON t2.team_id = opp.team_id
     WHERE Player_ID = $playerid;";
 $result = $conn->query($sql);
 
@@ -134,6 +152,9 @@ if ($result->num_rows > 0) {
         echo "<td>". $row["Abbr"]."</td>";
         echo "<td>". $row["Week_Round"]."</td>";
         echo "<td>". $row["Game_Date"]."</td>";
+		 echo "<td>". $row["team_user"]."</td>";
+		echo "<td>". $row["loc"]."</td>";
+		echo "<td>". $row["Abbr"]."</td>";
         echo "<td>". $row["Sack"]."</td>";
         echo "<td>". $row["INTR"]."</td>";
         echo "<td>". $row["FF"]."</td>";
