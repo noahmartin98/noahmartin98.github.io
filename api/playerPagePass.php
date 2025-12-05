@@ -52,7 +52,7 @@ if ($result->num_rows > 0) {
             <th>Season</th>
             <th>Team</th>
             <th>Gms</th>
-            <th>Comp</th>
+            <th>Cmp</th>
             <th>Att</th>
             <th>Yds</th>
             <th>TD</th>
@@ -116,7 +116,7 @@ if ($result->num_rows > 0) {
             <th>User</th>
 			<th></th>
 			<th>Opp</th>
-            <th>Comp</th>
+            <th>Cmp</th>
             <th>Att</th>
             <th>Yds</th>
             <th>TD</th>
