@@ -56,7 +56,7 @@ $season = $_GET['season'] ?? '2024';
             <th>Position</th>
             <th>Team</th>
             <th>Gms</th>
-            <th>Comp</th>
+            <th>Cmp</th>
             <th>Att</th>
             <th>Yds</th>
             <th>TD</th>
