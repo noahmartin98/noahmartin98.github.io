@@ -126,7 +126,7 @@ if ($result->num_rows > 0) {
 
 <?php
 
-$sql = "SELECT game.Season, opp.Abbr, game.Week_Round, game.Game_Date, t1.team_user, 
+$sql = "SELECT game.Season, team.Abbr, game.Week_Round, game.Game_Date, t1.team_user, 
 		CASE
 			WHEN (t1.home_away = 'Home')
 				THEN 'vs.'
