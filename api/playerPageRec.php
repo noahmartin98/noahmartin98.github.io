@@ -114,7 +114,7 @@ if ($result->num_rows > 0) {
 
 <?php
 
-$sql = "SELECT game.Season, team.Abbr, game.Week_Round, game.Game_Date, t1.team_user, 
+$sql = "SELECT game.Season, tm.Abbr, game.Week_Round, game.Game_Date, t1.team_user, 
 		CASE
 			WHEN (t1.home_away = 'Home')
 				THEN 'vs.'
@@ -125,13 +125,13 @@ $sql = "SELECT game.Season, team.Abbr, game.Week_Round, game.Game_Date, t1.team_
     opp.Abbr, Rec, Yds, TD
     FROM rec_statline
     INNER JOIN game ON rec_statline.Game_ID = game.Game_ID
-    INNER JOIN team ON rec_statline.Team_ID = team.Team_ID
 	JOIN team_statline t1
 		ON t1.game_id = rec_statline.game_id
 		AND t1.team_id = rec_statline.team_id
 	JOIN team_statline t2
 		ON t2.game_id = rec_statline.game_id
 		AND t2.team_id <> rec_statline.team_id
+	JOIN team tm ON t1.team_id = tm.team_id
 	JOIN team opp ON t2.team_id = opp.team_id
     WHERE Player_ID = $playerid;";
 $result = $conn->query($sql);
