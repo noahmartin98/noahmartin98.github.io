@@ -137,7 +137,6 @@ $sql = "SELECT game.Season, tm.Abbr, game.Week_Round, game.Game_Date, t1.team_us
     opp.Abbr, Comp, Att, Yds, TD, INTR
     FROM pass_statline
     INNER JOIN game ON pass_statline.Game_ID = game.Game_ID
-    INNER JOIN team ON pass_statline.Team_ID = team.Team_ID
     JOIN team_statline t1
 		ON t1.game_id = pass_statline.game_id
 		AND t1.team_id = pass_statline.team_id
