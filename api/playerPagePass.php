@@ -126,7 +126,7 @@ if ($result->num_rows > 0) {
 
 <?php
 
-$sql = "SELECT game.Season, team.Abbr, game.Week_Round, game.Game_Date, t1.team_user, 
+$sql = "SELECT game.Season, tm.Abbr, game.Week_Round, game.Game_Date, t1.team_user, 
 		CASE
 			WHEN (t1.home_away = 'Home')
 				THEN 'vs.'
@@ -144,8 +144,9 @@ $sql = "SELECT game.Season, team.Abbr, game.Week_Round, game.Game_Date, t1.team_
 	JOIN team_statline t2
 		ON t2.game_id = pass_statline.game_id
 		AND t2.team_id <> pass_statline.team_id
+	JOIN team tm ON t1.team_id = tm.team_ID
 	JOIN team opp ON t2.team_id = opp.team_id
-    WHERE Player_ID = $playerid";
+    WHERE Player_ID = $playerid;";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
