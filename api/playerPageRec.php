@@ -114,7 +114,7 @@ if ($result->num_rows > 0) {
 
 <?php
 
-$sql = "SELECT game.Season, tm.Abbr, game.Week_Round, game.Game_Date, t1.team_user, 
+$sql = "SELECT game.Season, tm.Abbr AS Tm, game.Week_Round, game.Game_Date, t1.team_user, 
 		CASE
 			WHEN (t1.home_away = 'Home')
 				THEN 'vs.'
@@ -122,7 +122,7 @@ $sql = "SELECT game.Season, tm.Abbr, game.Week_Round, game.Game_Date, t1.team_us
 				THEN '@'
 			ELSE ''
 		END AS loc,
-    opp.Abbr, Rec, Yds, TD
+    opp.Abbr AS Opp, Rec, Yds, TD
     FROM rec_statline
     INNER JOIN game ON rec_statline.Game_ID = game.Game_ID
 	JOIN team_statline t1
@@ -141,12 +141,12 @@ if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
         echo "<tr>";
         echo "<td>". $row["Season"]."</td>";
-        echo "<td>". $row["Abbr"]."</td>";
+        echo "<td>". $row["Tm"]."</td>";
         echo "<td>". $row["Week_Round"]."</td>";
         echo "<td>". $row["Game_Date"]."</td>";
         echo "<td>". $row["team_user"]."</td>";
 		echo "<td>". $row["loc"]."</td>";
-		echo "<td>". $row["Abbr"]."</td>";
+		echo "<td>". $row["Opp"]."</td>";
         echo "<td>". $row["Rec"]."</td>";
         echo "<td>". $row["Yds"]."</td>";
         echo "<td>". $row["TD"]."</td>";
