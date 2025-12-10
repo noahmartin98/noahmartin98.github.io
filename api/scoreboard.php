@@ -133,10 +133,10 @@ foreach ($playoffsWeeks as $weekCode) {
 		while($row = $result->fetch_assoc()) {
 			echo "<tr>";
 			echo "<td>". $row["game_date"]."</td>";
-			echo "<td>".  "(" . $row["awaySeed"] . ") " $row["awayName"] . "</td>";
+			echo "<td>".  "(" . $row["awaySeed"] . ") " . $row["awayName"] . "</td>";
 			echo "<td>". $row["awayScore"]."</td>";
 			echo "<td>". $row["homeScore"]."</td>";
-			echo "<td>".  "(" . $row["homeSeed"] . ") " $row["homeName"] . "</td>";
+			echo "<td>".  "(" . $row["homeSeed"] . ") " . $row["homeName"] . "</td>";
 			echo "</tr>";
 		}
 	} else {
@@ -175,10 +175,10 @@ foreach ($playoffsWeeks as $weekCode) {
 		while($row = $result->fetch_assoc()) {
 			echo "<tr>";
 			echo "<td>". $row["game_date"]."</td>";
-			echo "<td>".  "(" . $row["team1Seed"] . ") " $row["team1Name"] . "</td>";
+			echo "<td>".  "(" . $row["team1Seed"] . ") " . $row["team1Name"] . "</td>";
 			echo "<td>". $row["team1Score"]."</td>";
 			echo "<td>". $row["team2Score"]."</td>";
-			echo "<td>".  "(" . $row["team2Seed"] . ") " $row["team2Name"] . "</td>";
+			echo "<td>".  "(" . $row["team2Seed"] . ") " . $row["team2Name"] . "</td>";
 			echo "</tr>";
 		}
 	} else {
