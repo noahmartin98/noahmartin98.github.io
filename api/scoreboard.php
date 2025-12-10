@@ -63,7 +63,7 @@ for ($week = 1; $week <= 18; $week++) {
         JOIN team_statline AS t2 ON game.game_id = t2.game_id AND t2.home_away = 'Home'
         JOIN team AS AwayTeam ON t1.team_id = AwayTeam.team_id
         JOIN team AS HomeTeam ON t2.team_id = HomeTeam.team_id
-        WHERE Season = $season and Week_Round = '$weekCode';";
+        WHERE Season = $season and week = '$weekCode';";
         
         $result = $conn->query($sql);
         
@@ -113,7 +113,7 @@ foreach ($playoffsWeeks as $weekCode) {
         JOIN team_statline AS t2 ON game.game_id = t2.game_id AND t2.home_away = 'Home'
         JOIN team AS AwayTeam ON t1.team_id = AwayTeam.team_id
         JOIN team AS HomeTeam ON t2.team_id = HomeTeam.team_id
-	WHERE Season = $season and Week_Round = '$weekCode';";
+	WHERE Season = $season and week = '$weekCode';";
 	
 	$result = $conn->query($sql);
 	
