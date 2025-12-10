@@ -42,7 +42,7 @@ $season = $_GET['season'] ?? '2024';
 // Find last week with any games
 $lastWeekQuery = "SELECT MAX(CAST(SUBSTRING(week, 2) AS UNSIGNED)) AS lastWeek
                   FROM game
-                  WHERE Season = 2015 AND week LIKE 'W%';";
+                  WHERE season = $season AND week LIKE 'W%';";
 $lastWeekResult = $conn->query($lastWeekQuery);
 $lastWeekRow = $lastWeekResult->fetch_assoc();
 
