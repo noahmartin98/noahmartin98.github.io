@@ -100,7 +100,7 @@ for ($week = 1; $week <= $lastWeek; $week++) {
 <h1>Playoffs</h1>
 
 <?php
-$playoffsWeeks = ["WC", "DIV", "CC", "SB"];
+$playoffsWeeks = ["WC", "DIV", "CC"];
 
 foreach ($playoffsWeeks as $weekCode) {
 	
@@ -133,10 +133,10 @@ foreach ($playoffsWeeks as $weekCode) {
 		while($row = $result->fetch_assoc()) {
 			echo "<tr>";
 			echo "<td>". $row["game_date"]."</td>";
-			echo "<td>". $row["awayName"] . " (" . $row["awaySeed"] . ")" . "</td>";
+			echo "<td>".  "(" . $row["awaySeed"] . ") " $row["awayName"] . "</td>";
 			echo "<td>". $row["awayScore"]."</td>";
 			echo "<td>". $row["homeScore"]."</td>";
-			echo "<td>". $row["homeName"] . " (" . $row["homeSeed"] . ")" . "</td>";
+			echo "<td>".  "(" . $row["homeSeed"] . ") " $row["homeName"] . "</td>";
 			echo "</tr>";
 		}
 	} else {
@@ -150,7 +150,6 @@ foreach ($playoffsWeeks as $weekCode) {
 	
 	echo "<h3>Super Bowl</h3>";
 	
-	
 	echo '<table class="scores">
 			<tr>
 				<th>Date</th>
@@ -160,7 +159,6 @@ foreach ($playoffsWeeks as $weekCode) {
 				<th>Team</th>
 			</tr>';
 	
-	
 	$sql = "SELECT game_date,  Team1.team_name AS team1Name, t1.seed AS team1Seed, t1.score AS team1Score,
  	t2.score AS team2Score, Team2.team_name AS team2Name, t2.seed AS team2Seed
         from game
@@ -169,9 +167,6 @@ foreach ($playoffsWeeks as $weekCode) {
         JOIN team AS Team1 ON t1.team_id = Team1.team_id
         JOIN team AS Team2 ON t2.team_id = Team2.team_id
 	WHERE season = $season and week = '$weekCode';";
-
-
-
 	
 	$result = $conn->query($sql);
 	
@@ -180,29 +175,16 @@ foreach ($playoffsWeeks as $weekCode) {
 		while($row = $result->fetch_assoc()) {
 			echo "<tr>";
 			echo "<td>". $row["game_date"]."</td>";
-			echo "<td>". $row["team1Name"] . " (" . $row["team1Seed"] . ")" . "</td>";
+			echo "<td>".  "(" . $row["team1Seed"] . ") " $row["team1Name"] . "</td>";
 			echo "<td>". $row["team1Score"]."</td>";
 			echo "<td>". $row["team2Score"]."</td>";
-			echo "<td>". $row["team2Name"] . " (" . $row["team2Seed"] . ")" . "</td>";
+			echo "<td>".  "(" . $row["team2Seed"] . ") " $row["team2Name"] . "</td>";
 			echo "</tr>";
 		}
 	} else {
 		echo "<tr><td colspan='5'>Not yet played</td></tr>";
 	}
 	echo "</table>";
-	
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
