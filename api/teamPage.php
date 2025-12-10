@@ -74,7 +74,7 @@ $season = $_GET['season'] ?? '2024';
 
 <?php
 
-$sql = "SELECT game.season, game.week_round, game.game_date, t1.home_away, t1.team_user,
+$sql = "SELECT game.season, game.week, game.game_date, t1.home_away, t1.team_user,
 t1.team_id AS team,
 t1.score AS team_score,
 
