@@ -107,7 +107,7 @@ if ($result->num_rows > 0) {
 
 
 
-    <table class="player">
+    <table class="scores">
         <tr>
             <th>Season</th>
             <th>Team</th>
