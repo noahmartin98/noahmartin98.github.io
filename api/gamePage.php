@@ -23,7 +23,7 @@ $gameID = $_GET['gameID'] ?? '538';
 </nav>
 
 <?php
-  $sql = "SELECT awayTeam.team_name AS awayName, homeTeam.team_name AS homeTeam
+  $sql = "SELECT awayTeam.team_name AS awayName, homeTeam.team_name AS homeName
 from game
 JOIN team_statline t1 ON game.game_id = t1.game_id AND t1.home_away = 'Away'
 JOIN team_statline t2 ON game.game_id = t2.game_id AND t2.home_away = 'Home'
