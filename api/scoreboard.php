@@ -56,10 +56,13 @@ for ($week = 1; $week <= 18; $week++) {
                 </tr>';
         
         
-        $sql = "SELECT Game_Date,  AwayTeam.Team_Name AS AwayName, Away_Seed, Away_Score, Home_Score, HomeTeam.Team_Name AS HomeName, Home_Seed
+        $sql = "SELECT game_date,  AwayTeam.team_name AS awayName, t1.seed AS awaySeed, t1.score AS awayScore,
+ 	t2.score AS homeScore, HomeTeam.team_name AS homeName, t2.seed AS homeSeed
         from game
-        JOIN team AS AwayTeam ON game.Away_Team_ID = AwayTeam.Team_ID
-        JOIN team AS HomeTeam ON game.Home_Team_ID = HomeTeam.Team_ID
+        JOIN team_statline AS t1 ON game.game_id = t1.game_id AND t1.home_away = 'Away'
+        JOIN team_statline AS t2 ON game.game_id = t2.game_id AND t2.home_away = 'Home'
+        JOIN team AS AwayTeam ON t1.team_id = AwayTeam.team_id
+        JOIN team AS HomeTeam ON t2.team_id = HomeTeam.team_id
         WHERE Season = $season and Week_Round = '$weekCode';";
         
         $result = $conn->query($sql);
@@ -68,11 +71,11 @@ for ($week = 1; $week <= 18; $week++) {
             // output data of each row
             while($row = $result->fetch_assoc()) {
                 echo "<tr>";
-                echo "<td>". $row["Game_Date"]."</td>";
-                echo "<td>". $row["AwayName"] . " (" . $row["Away_Seed"] . ")" . "</td>";
-                echo "<td>". $row["Away_Score"]."</td>";
-                echo "<td>". $row["Home_Score"]."</td>";
-                echo "<td>". $row["HomeName"] . " (" . $row["Home_Seed"] . ")" . "</td>";
+                echo "<td>". $row["game_date"]."</td>";
+                echo "<td>". $row["awayName"] . " (" . $row["awaySeed"] . ")" . "</td>";
+                echo "<td>". $row["awayScore"]."</td>";
+                echo "<td>". $row["homeScore"]."</td>";
+                echo "<td>". $row["homeName"] . " (" . $row["homeSeed"] . ")" . "</td>";
                 echo "</tr>";
             }
         } else {
@@ -103,10 +106,13 @@ foreach ($playoffsWeeks as $weekCode) {
 			</tr>';
 	
 	
-	$sql = "SELECT Game_Date,  AwayTeam.Team_Name AS AwayName, Away_Seed, Away_Score, Home_Score, HomeTeam.Team_Name AS HomeName, Home_Seed
-	from game
-	JOIN team AS AwayTeam ON game.Away_Team_ID = AwayTeam.Team_ID
-	JOIN team AS HomeTeam ON game.Home_Team_ID = HomeTeam.Team_ID
+	$sql = "SELECT game_date,  AwayTeam.team_name AS awayName, t1.seed AS awaySeed, t1.score AS awayScore,
+ 	t2.score AS homeScore, HomeTeam.team_name AS homeName, t2.seed AS homeSeed
+        from game
+        JOIN team_statline AS t1 ON game.game_id = t1.game_id AND t1.home_away = 'Away'
+        JOIN team_statline AS t2 ON game.game_id = t2.game_id AND t2.home_away = 'Home'
+        JOIN team AS AwayTeam ON t1.team_id = AwayTeam.team_id
+        JOIN team AS HomeTeam ON t2.team_id = HomeTeam.team_id
 	WHERE Season = $season and Week_Round = '$weekCode';";
 	
 	$result = $conn->query($sql);
@@ -115,11 +121,11 @@ foreach ($playoffsWeeks as $weekCode) {
 		// output data of each row
 		while($row = $result->fetch_assoc()) {
 			echo "<tr>";
-			echo "<td>". $row["Game_Date"]."</td>";
-			echo "<td>". $row["AwayName"] . " (" . $row["Away_Seed"] . ")" . "</td>";
-			echo "<td>". $row["Away_Score"]."</td>";
-			echo "<td>". $row["Home_Score"]."</td>";
-			echo "<td>". $row["HomeName"] . " (" . $row["Home_Seed"] . ")" . "</td>";
+			echo "<td>". $row["game_date"]."</td>";
+			echo "<td>". $row["awayName"] . " (" . $row["awaySeed"] . ")" . "</td>";
+			echo "<td>". $row["awayScore"]."</td>";
+			echo "<td>". $row["homeScore"]."</td>";
+			echo "<td>". $row["homeName"] . " (" . $row["homeSeed"] . ")" . "</td>";
 			echo "</tr>";
 		}
 	} else {
