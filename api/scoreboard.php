@@ -125,6 +125,20 @@ foreach ($playoffsWeeks as $weekCode) {
         JOIN team AS AwayTeam ON t1.team_id = AwayTeam.team_id
         JOIN team AS HomeTeam ON t2.team_id = HomeTeam.team_id
 	WHERE season = $season and week = '$weekCode';";
+
+	
+	if ($weekCode = "SB") {
+		$sql = "SELECT game_date,  Team1.team_name AS team1Name, t1.seed AS team1Seed, t1.score AS team1Score,
+ 	t2.score AS team2Score, Team2.team_name AS team2Name, t2.seed AS team2Seed
+        from game
+        JOIN team_statline AS t1 ON game.game_id = t1.game_id AND t1.team_user = 'CPU'
+        JOIN team_statline AS t2 ON game.game_id = t2.game_id AND t2.team_user = 'shady'
+        JOIN team AS Team1 ON t1.team_id = Team1.team_id
+        JOIN team AS Team2 ON t2.team_id = Team2.team_id
+	WHERE season = $season and week = '$weekCode';";
+	}
+
+
 	
 	$result = $conn->query($sql);
 	
