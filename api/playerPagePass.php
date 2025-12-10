@@ -65,7 +65,7 @@ if ($result->num_rows > 0) {
 
 <?php
 
-$sql = "SELECT game.Season, team.Abbr, count(*) as Gms, SUM(Comp) as Comp, SUM(Att) as Att, SUM(Yds) as Yds, SUM(TD) as TD, SUM(INTR) as INTR,
+$sql = "SELECT game.season, team.Abbr, count(*) as Gms, SUM(Comp) as Comp, SUM(Att) as Att, SUM(Yds) as Yds, SUM(TD) as TD, SUM(INTR) as INTR,
     (SUM(Comp)/SUM(Att)) AS CompPct,
     (SUM(Yds)/count(*)) AS Ypg,
     (SUM(Yds)/SUM(Att)) AS Ypa,
@@ -81,7 +81,7 @@ if ($result->num_rows > 0) {
     // output data of each row
     while($row = $result->fetch_assoc()) {
         echo "<tr>";
-        echo "<td>". $row["Season"]."</td>";
+        echo "<td>". $row["season"]."</td>";
         echo "<td>". $row["Abbr"]."</td>";
         echo "<td>". $row["Gms"]."</td>";
         echo "<td>". $row["Comp"]."</td>";
@@ -153,10 +153,10 @@ if ($result->num_rows > 0) {
     $cur_rank = 1;
     while($row = $result->fetch_assoc()) {
         echo "<tr>";
-        echo "<td>". $row["Season"]."</td>";
+        echo "<td>". $row["season"]."</td>";
         echo "<td>". $row["Tm"]."</td>";
-        echo "<td>". $row["Week_Round"]."</td>";
-        echo "<td>". $row["Game_Date"]."</td>";
+        echo "<td>". $row["week"]."</td>";
+        echo "<td>". $row["game_date"]."</td>";
         echo "<td>". $row["team_user"]."</td>";
 		echo "<td>". $row["loc"]."</td>";
 		echo "<td>". $row["Opp"]."</td>";
