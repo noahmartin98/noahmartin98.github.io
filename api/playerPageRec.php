@@ -59,7 +59,7 @@ if ($result->num_rows > 0) {
 
 <?php
 
-$sql = "SELECT game.Season, GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS Teams,
+$sql = "SELECT game.season, GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS Teams,
     COUNT(*) as Gms, SUM(Rec), SUM(Yds), SUM(TD),
     (SUM(Yds)/SUM(Rec)) AS Ypc,
     (SUM(Rec)/count(*)) AS Rpg,
@@ -114,7 +114,7 @@ if ($result->num_rows > 0) {
 
 <?php
 
-$sql = "SELECT game.Season, tm.Abbr AS Tm, game.Week_Round, game.Game_Date, t1.team_user, 
+$sql = "SELECT game.season, tm.Abbr AS Tm, game.week, game.game_date, t1.team_user, 
 		CASE
 			WHEN (t1.home_away = 'Home')
 				THEN 'vs.'
@@ -124,7 +124,7 @@ $sql = "SELECT game.Season, tm.Abbr AS Tm, game.Week_Round, game.Game_Date, t1.t
 		END AS loc,
     opp.Abbr AS Opp, Rec, Yds, TD
     FROM rec_statline
-    INNER JOIN game ON rec_statline.Game_ID = game.Game_ID
+    INNER JOIN game ON rec_statline.game_id = game.game_id
 	JOIN team_statline t1
 		ON t1.game_id = rec_statline.game_id
 		AND t1.team_id = rec_statline.team_id
