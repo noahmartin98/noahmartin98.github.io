@@ -30,7 +30,7 @@ $season = $_GET['season'] ?? '2015';
 
 
 $sql = "SELECT Game_ID, Week_Round, AwayTeam.Short AS Away, HomeTeam.Short AS Home, Away_Seed, Home_Seed, Away_Score, Home_Score
-FROM game
+FROM gameO
 JOIN team AS AwayTeam ON game.Away_Team_ID = AwayTeam.Team_ID
 JOIN team AS HomeTeam ON game.Home_Team_ID = HomeTeam.Team_ID
 WHERE Season = $season AND 
