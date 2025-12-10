@@ -104,7 +104,7 @@ if ($result->num_rows > 0) {
     // output data of each row
     while($row = $result->fetch_assoc()) {
         echo "<tr>";
-        echo "<td>". $row["week_round"]."</td>";
+        echo "<td>". $row["week"]."</td>";
         echo "<td>". $row["game_date"]."</td>";
 		echo "<td>". $row["team_user"]."</td>";
         echo "<td>". $row["home_away"]."</td>";
