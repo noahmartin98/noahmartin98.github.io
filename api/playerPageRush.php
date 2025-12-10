@@ -77,7 +77,7 @@ if ($result->num_rows > 0) {
     // output data of each row
     while($row = $result->fetch_assoc()) {
         echo "<tr>";
-        echo "<td>". $row["Season"]."</td>";
+        echo "<td>". $row["season"]."</td>";
         echo "<td>". $row["Teams"]."</td>";
         echo "<td>". $row["Gms"]."</td>";
         echo "<td>". $row["SUM(Att)"]."</td>";
@@ -142,10 +142,10 @@ if ($result->num_rows > 0) {
     // output data of each row
     while($row = $result->fetch_assoc()) {
         echo "<tr>";
-        echo "<td>". $row["Season"]."</td>";
+        echo "<td>". $row["season"]."</td>";
         echo "<td>". $row["Tm"]."</td>";
-        echo "<td>". $row["Week_Round"]."</td>";
-        echo "<td>". $row["Game_Date"]."</td>";
+        echo "<td>". $row["week"]."</td>";
+        echo "<td>". $row["game_date"]."</td>";
 		echo "<td>". $row["team_user"]."</td>";
 		echo "<td>". $row["loc"]."</td>";
 		echo "<td>". $row["Opp"]."</td>";
