@@ -149,6 +149,7 @@ foreach ($playoffsWeeks as $weekCode) {
 //Super Bowl
 	
 	echo "<h3>Super Bowl</h3>";
+	$weekCode = "SB";
 	
 	echo '<table class="scores">
 			<tr>
