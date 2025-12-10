@@ -48,7 +48,7 @@ if ($result->num_rows > 0) {
 
 <div class="header-container">
 
-    <h1>{$awayName} @ {$homeName}</h1>
+    <h1><?php echo $awayName . " @ " . $homeName; ?></h1>
 
     <h2>Box Score</h2>
 
