@@ -38,7 +38,18 @@ $season = $_GET['season'] ?? '2024';
         
 
 <?php
-for ($week = 1; $week <= 18; $week++) { 
+
+// Find last week with any games
+$lastWeekQuery = "SELECT MAX(CAST(SUBSTRING(week, 2) AS UNSIGNED)) AS lastWeek
+                  FROM game
+                  WHERE Season = 2015 AND week LIKE 'W%';";
+$lastWeekResult = $conn->query($lastWeekQuery);
+$lastWeekRow = $lastWeekResult->fetch_assoc();
+
+$lastWeek = $lastWeekRow['lastWeek'] ?? 0;
+
+
+for ($week = 1; $week <= $lastWeek; $week++) { 
 
         // Format week label (W1, W2, ...)
         $weekCode = "W" . $week;
