@@ -126,7 +126,7 @@ if ($result->num_rows > 0) {
 
 <?php
 
-$sql = "SELECT game.Season, tm.Abbr AS Tm, game.Week_Round, game.Game_Date, t1.team_user, 
+$sql = "SELECT game.season, tm.Abbr AS Tm, game.week, game.game_date, t1.team_user, 
 		CASE
 			WHEN (t1.home_away = 'Home')
 				THEN 'vs.'
@@ -136,7 +136,7 @@ $sql = "SELECT game.Season, tm.Abbr AS Tm, game.Week_Round, game.Game_Date, t1.t
 		END AS loc,
     opp.Abbr AS Opp, Comp, Att, Yds, TD, INTR
     FROM pass_statline
-    INNER JOIN game ON pass_statline.Game_ID = game.Game_ID
+    INNER JOIN game ON pass_statline.game_id = game.game_id
     JOIN team_statline t1
 		ON t1.game_id = pass_statline.game_id
 		AND t1.team_id = pass_statline.team_id
