@@ -95,22 +95,22 @@ if ($result->num_rows > 0) {
 		<th>F</th>
 	</tr>
 	<tr>
-		<td><?php echo $awayAbbr ?></td>
-		<td><?php echo $awayScores[0] ?></td>
-		<td><?php echo $awayScores[1] ?></td>
-		<td><?php echo $awayScores[2] ?></td>
-		<td><?php echo $awayScores[3] ?></td>
-		<td><?php echo $awayScores[4] ?></td>
-		<td><?php echo $awayScores[5] ?></td>
+		<td><?php echo $away["abbr"] ?></td>
+		<td><?php echo $away["q1"] ?></td>
+		<td><?php echo $away["q2"] ?></td>
+		<td><?php echo $away["q3"] ?></td>
+		<td><?php echo $away["q4"] ?></td>
+		<td><?php echo $away["ot"] ?></td>
+		<td><?php echo $away["score"]] ?></td>
 	</tr>
 	<tr>
-		<td><?php echo $homeAbbr ?></td>
-		<td><?php echo $homeScores[0] ?></td>
-		<td><?php echo $homeScores[1] ?></td>
-		<td><?php echo $homeScores[2] ?></td>
-		<td><?php echo $homeScores[3] ?></td>
-		<td><?php echo $homeScores[4] ?></td>
-		<td><?php echo $homeScores[5] ?></td>
+		<td><?php echo $home["abbr"] ?></td>
+		<td><?php echo $home["q1"] ?></td>
+		<td><?php echo $home["q2"] ?></td>
+		<td><?php echo $home["q3"] ?></td>
+		<td><?php echo $home["q4"] ?></td>
+		<td><?php echo $home["ot"] ?></td>
+		<td><?php echo $home["score"]] ?></td>
 	</tr>
 </table>
 
