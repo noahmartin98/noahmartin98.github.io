@@ -80,7 +80,7 @@ if ($result->num_rows > 0) {
 
 <div class="header-container">
 
-    <h1><?php echo $away["team_name] . " @ " . $home["team_name]; ?></h1>
+    <h1><?php echo $away["team_name"] . " @ " . $home["team_name"]; ?></h1>
 
     <h2>Box Score</h2>
 
