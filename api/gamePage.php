@@ -24,8 +24,8 @@ $gameID = $_GET['gameID'] ?? '538';
 
 <?php
   $sql = "SELECT awayTeam.team_name AS awayName, awayTeam.abbr AS awayAbbr, homeTeam.team_name AS homeName, homeTeam.abbr AS homeAbbr,
-  t1.q1 AS awayQ1, t1.q2 AS awayQ2, t1.q3 AS awayQ3, t1.q4 AS awayQ4, t1.score AS awayF,   
-  t2.q1 AS homeQ1, t1.q2 AS homeQ2, t2.q3 AS homeQ3, t2.q4 AS homeQ4, t2.score AS homeF
+  t1.q1 AS awayQ1, t1.q2 AS awayQ2, t1.q3 AS awayQ3, t1.q4 AS awayQ4, t1.ot AS awayOT, t1.score AS awayF,   
+  t2.q1 AS homeQ1, t1.q2 AS homeQ2, t2.q3 AS homeQ3, t2.q4 AS homeQ4, t2.ot AS homeOT, t2.score AS homeF
 from game
 JOIN team_statline t1 ON game.game_id = t1.game_id AND t1.home_away = 'Away'
 JOIN team_statline t2 ON game.game_id = t2.game_id AND t2.home_away = 'Home'
@@ -44,8 +44,8 @@ if ($result->num_rows > 0) {
         $homeName = $row["homeName"];
 		$awayAbbr = $row["awayAbbr"];
 		$homeAbbr = $row["homeAbbr"];
-		$awayScores = [$row["awayQ1"], $row["awayQ2"], $row["awayQ3"], $row["awayQ4"], $row["awayF"]];
-		$awayScores = [$row["homeQ1"], $row["homeQ2"], $row["homeQ3"], $row["homeQ4"], $row["homeF"]];
+		$awayScores = [$row["awayQ1"], $row["awayQ2"], $row["awayQ3"], $row["awayQ4"], $row["awayOT"], $row["awayF"]];
+		$awayScores = [$row["homeQ1"], $row["homeQ2"], $row["homeQ3"], $row["homeQ4"], $row["homeOT"], $row["homeF"]];
     }
 } else {
     echo "0 results";
@@ -75,6 +75,16 @@ if ($result->num_rows > 0) {
 		<td><?php echo $awayScores[2] ?></td>
 		<td><?php echo $awayScores[3] ?></td>
 		<td><?php echo $awayScores[4] ?></td>
+		<td><?php echo $awayScores[5] ?></td>
+	</tr>
+	<tr>
+		<td><?php echo $homeAbbr ?></td>
+		<td><?php echo $homeScores[0] ?></td>
+		<td><?php echo $homeScores[1] ?></td>
+		<td><?php echo $homeScores[2] ?></td>
+		<td><?php echo $homeScores[3] ?></td>
+		<td><?php echo $homeScores[4] ?></td>
+		<td><?php echo $homeScores[5] ?></td>
 	</tr>
 </table>
 
