@@ -17,23 +17,23 @@ table.scores {
 }
 
 table.team-stats {
-  width: 225px;
+  width: 350px;
   table-layout: fixed;
 }
 
 .team-stats th:nth-child(1),
 .team-stats td:nth-child(1) {
-  width: 30%;
+  width: 20%;
 }
 
 .team-stats th:nth-child(2),
 .team-stats td:nth-child(2) {
-  width: 40%;
+  width: 60%;
 }
 
 .team-stats th:nth-child(3),
 .team-stats td:nth-child(3) {
-  width: 30%;
+  width: 20%;
 }
 
 
