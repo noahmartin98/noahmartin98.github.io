@@ -32,7 +32,33 @@ JOIN team_statline t2 ON game.game_id = t2.game_id AND t2.home_away = 'Home'
 JOIN team awayTeam ON awayTeam.team_id = t1.team_id
 JOIN team homeTeam ON homeTeam.team_id = t2.team_id
 WHERE game.game_id = 538;";
+
+$sql = "SELECT 
+    g.game_id,
+    t.team_name,
+    t.abbr,
+    ts.home_away,
+    ts.q1, ts.q2, ts.q3, ts.q4, ts.ot, ts.score
+FROM game g
+JOIN team_statline ts ON g.game_id = ts.game_id
+JOIN team t ON ts.team_id = t.team_id
+WHERE g.game_id = $gameID;";
+
 $result = $conn->query($sql);
+
+$home = [];
+$away = [];
+
+while ($row = $result->fetch_assoc()) {
+    if ($row["home_away"] === "Home") {
+        $home = $row;
+    } else {
+        $away = $row;
+    }
+}
+
+
+/*$result = $conn->query($sql);
 
 $awayName = '';
 $homeName = '';
@@ -49,12 +75,12 @@ if ($result->num_rows > 0) {
     }
 } else {
     echo "0 results";
-}
+}*/
 ?>
 
 <div class="header-container">
 
-    <h1><?php echo $awayName . " @ " . $homeName; ?></h1>
+    <h1><?php echo $away["team_name] . " @ " . $home["team_name]; ?></h1>
 
     <h2>Box Score</h2>
 
