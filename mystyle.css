@@ -21,7 +21,7 @@ table.team-stats {
   table-layout: fixed;
 }
 
-.team-stats td {
+.team-stats td, th {
   text-align: center;
 }
 
