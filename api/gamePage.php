@@ -117,7 +117,7 @@ if ($result->num_rows > 0) {
 </div>
 
 <div>
-	<table>
+	<table class="team-stats">
 		<tr>
 			<th><?php echo $away["abbr"] ?></th>
 			<th></th>
