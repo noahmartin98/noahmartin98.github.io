@@ -16,6 +16,26 @@ table.scores {
    max-width: 800px;
 }
 
+table.team-stats {
+  width: 225px;
+  table-layout: fixed;
+}
+
+.team-stats th:nth-child(1),
+.team-stats td:nth-child(1) {
+  width: 30%;
+}
+
+.team-stats th:nth-child(2),
+.team-stats td:nth-child(2) {
+  width: 40%;
+}
+
+.team-stats th:nth-child(3),
+.team-stats td:nth-child(3) {
+  width: 30%;
+}
+
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
