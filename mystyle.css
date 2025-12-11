@@ -21,6 +21,10 @@ table.team-stats {
   table-layout: fixed;
 }
 
+.team-stats td {
+  text-align: center;
+}
+
 .team-stats th:nth-child(1),
 .team-stats td:nth-child(1) {
   width: 20%;
