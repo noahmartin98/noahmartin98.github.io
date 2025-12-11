@@ -45,7 +45,7 @@ if ($result->num_rows > 0) {
 		$awayAbbr = $row["awayAbbr"];
 		$homeAbbr = $row["homeAbbr"];
 		$awayScores = [$row["awayQ1"], $row["awayQ2"], $row["awayQ3"], $row["awayQ4"], $row["awayOT"], $row["awayF"]];
-		$awayScores = [$row["homeQ1"], $row["homeQ2"], $row["homeQ3"], $row["homeQ4"], $row["homeOT"], $row["homeF"]];
+		$homeScores = [$row["homeQ1"], $row["homeQ2"], $row["homeQ3"], $row["homeQ4"], $row["homeOT"], $row["homeF"]];
     }
 } else {
     echo "0 results";
