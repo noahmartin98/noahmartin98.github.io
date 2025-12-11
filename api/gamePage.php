@@ -38,7 +38,7 @@ $sql = "SELECT
     t.team_name,
     t.abbr,
     ts.home_away,
-    ts.q1, ts.q2, ts.q3, ts.q4, ts.ot, ts.score
+    ts.q1, ts.q2, ts.q3, ts.q4, ts.ot, ts.score, ts.rush+ts.pass AS total
 FROM game g
 JOIN team_statline ts ON g.game_id = ts.game_id
 JOIN team t ON ts.team_id = t.team_id
@@ -114,6 +114,21 @@ if ($result->num_rows > 0) {
 	</tr>
 </table>
 
+</div>
+
+<div>
+	<table>
+		<tr>
+			<th><?php echo $away["abbr"] ?></th>
+			<th></th>
+			<th><?php echo $home["abbr"] ?></th>
+		</tr>
+		<tr>
+			<td><?php echo $away["total"] ?></td>
+			<td>Total Yards</td>
+			<td><?php echo $home["total"] ?></td>
+		</tr>
+	</table>
 </div>
         
 
