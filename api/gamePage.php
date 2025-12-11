@@ -101,7 +101,7 @@ if ($result->num_rows > 0) {
 		<td><?php echo $away["q3"] ?></td>
 		<td><?php echo $away["q4"] ?></td>
 		<td><?php echo $away["ot"] ?></td>
-		<td><?php echo $away["score"]] ?></td>
+		<td><?php echo $away["score"] ?></td>
 	</tr>
 	<tr>
 		<td><?php echo $home["abbr"] ?></td>
@@ -110,7 +110,7 @@ if ($result->num_rows > 0) {
 		<td><?php echo $home["q3"] ?></td>
 		<td><?php echo $home["q4"] ?></td>
 		<td><?php echo $home["ot"] ?></td>
-		<td><?php echo $home["score"]] ?></td>
+		<td><?php echo $home["score"] ?></td>
 	</tr>
 </table>
 
