@@ -168,6 +168,7 @@ while ($row = $result->fetch_assoc()) {
 
 </div>
 
+<div class="main-box">
 <div class="box-score-container">
 	<div class="left-side-box">
 		<h3>Team Stats</h3>
@@ -306,6 +307,7 @@ while ($row = $result->fetch_assoc()) {
 		</table>
 		
 	</div>
+</div>
 </div>
 
 
