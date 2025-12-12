@@ -22,7 +22,7 @@ table.team-stats {
 }
 
 div.box-score {
-  display: flex;
+  display: grid;
 }
 
 .team-stats td, .team-stats th {
