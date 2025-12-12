@@ -28,7 +28,7 @@ if (isset($_GET['gameid'])) {
 
 // Team stats query
 $sql = "SELECT 
-    g.game_id, g.game_date, g.difficulty, g.week,
+    g.game_id, g.season, g.game_date, g.difficulty, g.week,
     t.team_name,
     t.abbr,
     ts.seed, ts.home_away, ts.team_user,
@@ -145,7 +145,7 @@ while ($row = $result->fetch_assoc()) {
 
 	<div class="box-score-top2">
 		<h2><?php echo $away["game_date"] ?></h2>
-		<h2><?php echo $away["week"] ?></h2>
+		<h2><?php echo $away["season"] . " " . $away["week"] ?></h2>
 		<h3><?php echo "Difficulty: " . $away["difficulty"] ?></h3>
 
 	    <h3>Box Score</h3>
