@@ -139,7 +139,7 @@ while ($row = $result->fetch_assoc()) {
 
 ?>
 
-<div class="header-container">
+<div class="box-score-top">
 
     <h1><?php echo $away["team_name"] . "   (". $away["seed"] . ") @ " . $home["team_name"] . "   (" . $home["seed"] . ")"; ?></h1>
 	<h2><?php echo $away["game_date"] ?></h2>
