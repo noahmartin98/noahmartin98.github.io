@@ -21,6 +21,10 @@ table.team-stats {
   table-layout: fixed;
 }
 
+div.box-score {
+  display: flex;
+}
+
 .team-stats td, .team-stats th {
   text-align: center;
 }
