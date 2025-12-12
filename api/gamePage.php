@@ -177,7 +177,7 @@ if ($result->num_rows > 0) {
 		<?php
 
 	
-		if ($result->num_rows > 0) {
+		/*if ($result->num_rows > 0) {
 	    // output data of each row
 	    while($row = $result->fetch_assoc()) {
 	        $playerid = $row["player_id"];
@@ -194,8 +194,8 @@ if ($result->num_rows > 0) {
 	    }
 		} else {
 		    echo "0 results";
-		}
-		echo $playerPass;
+		}*/
+		
 		
 		foreach ($playerPass as $player) {
 			$playerid = $player["player_id"];
