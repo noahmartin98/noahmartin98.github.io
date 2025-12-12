@@ -84,10 +84,14 @@ $sql = "SELECT p.player_id, p.player_name, pos.pos_abbr, t.abbr, rs.att, rs.yds,
 		    ORDER BY yds desc;";
 		
 		$result = $conn->query($sql);
-$playerRush = [];
-
+$homeRush = [];
+$awayRush = [];
 while ($row = $result->fetch_assoc()) {
-    $playerRush[] = $row;
+    if ($row["abbr"] === $home["abbr"]) {
+        $homeRush[] = $row;   // Add to home array
+    } else {
+        $awayRush[] = $row;   // Add to away array
+    }
 }
 
 // Player receiving stats query 
@@ -101,10 +105,14 @@ $sql = "SELECT p.player_id, p.player_name, pos.pos_abbr, t.abbr, rs.rec, rs.yds,
 		    ORDER BY yds desc;";
 		
 		$result = $conn->query($sql);
-$playerRec = [];
-
+$homeRec = [];
+$awayRec = [];
 while ($row = $result->fetch_assoc()) {
-    $playerRec[] = $row;
+    if ($row["abbr"] === $home["abbr"]) {
+        $homeRec[] = $row;   // Add to home array
+    } else {
+        $awayRec[] = $row;   // Add to away array
+    }
 }
 
 // Player defensive stats query 
@@ -118,10 +126,14 @@ $sql = "SELECT p.player_id, p.player_name, pos.pos_abbr, t.abbr, ds.sack, ds.int
 		    ORDER BY sack desc, intr desc, ff desc, fr desc, td desc, tfl desc, pdef desc;";
 		
 		$result = $conn->query($sql);
-$playerDef = [];
-
+$homeDef = [];
+$awayDef = [];
 while ($row = $result->fetch_assoc()) {
-    $playerDef[] = $row;
+    if ($row["abbr"] === $home["abbr"]) {
+        $homeDef[] = $row;   // Add to home array
+    } else {
+        $awayDef[] = $row;   // Add to away array
+    }
 }
 
 
@@ -169,177 +181,260 @@ while ($row = $result->fetch_assoc()) {
 </div>
 
 <div class="main-box">
-<div class="box-score-container">
-	<div class="left-side-box">
-		<h3>Team Stats</h3>
-		<table class="team-stats">
-			<tr>
-				<th><?php echo $away["abbr"] ?></th>
-				<th></th>
-				<th><?php echo $home["abbr"] ?></th>
-			</tr>
-			<tr>
-				<td><?php echo $away["total"] ?></td>
-				<td>Total Yards</td>
-				<td><?php echo $home["total"] ?></td>
-			</tr>
-			<tr>
-				<td><?php echo $away["pass"] ?></td>
-				<td>Passing Yards</td>
-				<td><?php echo $home["pass"] ?></td>
-			</tr>
-		</table>
-	</div>
+	<div class="box-score-container">
+		<div class="left-side-box">
+			<h3>Team Stats</h3>
+			<table class="team-stats">
+				<tr>
+					<th><?php echo $away["abbr"] ?></th>
+					<th></th>
+					<th><?php echo $home["abbr"] ?></th>
+				</tr>
+				<tr>
+					<td><?php echo $away["total"] ?></td>
+					<td>Total Yards</td>
+					<td><?php echo $home["total"] ?></td>
+				</tr>
+				<tr>
+					<td><?php echo $away["pass"] ?></td>
+					<td>Passing Yards</td>
+					<td><?php echo $home["pass"] ?></td>
+				</tr>
+			</table>
+		</div>
+		
+		<!-- Player Stats -->
+		<div class="right-side-box">
 	
-	<!-- Player Stats -->
-	<div class="right-side-box">
-
-		<h3>Away Passing</h3>
-		<table>
-			<tr>
-				<th>Player</th>
-				<th>Pos</th>
-				<th>Team</th>
-				<th>Cmp</th>
-				<th>Att</th>
-				<th>Yds</th>
-				<th>TD</th>
-				<th>INT</th>
-			</tr>
-		
-		<?php
-		foreach ($awayPass as $player) {
-			$playerid = $player["player_id"];
-	        echo "<tr>";
-	        echo "<td class='link'><a class='leader' href='/api/playerPagePass.php?playerid=" . $playerid . "'>" . $player["player_name"]."</td>";
-	        echo "<td>". $player["pos_abbr"]."</td>";
-	        echo "<td>". $player["abbr"]."</td>";
-	        echo "<td>". $player["comp"]."</td>";
-	        echo "<td>". $player["att"]."</td>";
-	        echo "<td>". $player["yds"]."</td>";
-	        echo "<td>". $player["td"]."</td>";
-	        echo "<td>". $player["intr"]."</td>";
-	        echo "</tr>";
-		}?>
-		</table>
-
-		<h3>Player Rushing</h3>
-		<table>
-			<tr>
-				<th>Player</th>
-				<th>Pos</th>
-				<th>Team</th>
-				<th>Att</th>
-				<th>Yds</th>
-				<th>TD</th>
-			</tr>
-		
-		<?php		
-		foreach ($playerRush as $player) {
-			$playerid = $player["player_id"];
-	        echo "<tr>";
-	        echo "<td class='link'><a class='leader' href='/api/playerPageRush.php?playerid=" . $playerid . "'>" . $player["player_name"]."</td>";
-	        echo "<td>". $player["pos_abbr"]."</td>";
-	        echo "<td>". $player["abbr"]."</td>";
-	        echo "<td>". $player["att"]."</td>";
-	        echo "<td>". $player["yds"]."</td>";
-	        echo "<td>". $player["td"]."</td>";
-	        echo "</tr>";
-		}?>
-		</table>
-
-		<h3>Player Receiving</h3>
-		<table>
-			<tr>
-				<th>Player</th>
-				<th>Pos</th>
-				<th>Team</th>
-				<th>Rec</th>
-				<th>Yds</th>
-				<th>TD</th>
-			</tr>
+			<h3>Away Passing</h3>
+			<table>
+				<tr>
+					<th>Player</th>
+					<th>Pos</th>
+					<th>Team</th>
+					<th>Cmp</th>
+					<th>Att</th>
+					<th>Yds</th>
+					<th>TD</th>
+					<th>INT</th>
+				</tr>
 			
-		<?php		
-		foreach ($playerRec as $player) {
-			$playerid = $player["player_id"];
-	        echo "<tr>";
-	        echo "<td class='link'><a class='leader' href='/api/playerPageRec.php?playerid=" . $playerid . "'>" . $player["player_name"]."</td>";
-	        echo "<td>". $player["pos_abbr"]."</td>";
-	        echo "<td>". $player["abbr"]."</td>";
-	        echo "<td>". $player["rec"]."</td>";
-	        echo "<td>". $player["yds"]."</td>";
-	        echo "<td>". $player["td"]."</td>";
-	        echo "</tr>";
-		}?>
-		</table>
-
-		<h3>Player Defense</h3>
-		<table>
-			<tr>
-				<th>Player</th>
-				<th>Pos</th>
-				<th>Team</th>
-				<th>Sack</th>
-				<th>INT</th>
-				<th>FF</th>
-				<th>FR</th>
-				<th>TD</th>
-				<th>TFL</th>
-				<th>PDEF</th>
-			</tr>
+			<?php
+			foreach ($awayPass as $player) {
+				$playerid = $player["player_id"];
+		        echo "<tr>";
+		        echo "<td class='link'><a class='leader' href='/api/playerPagePass.php?playerid=" . $playerid . "'>" . $player["player_name"]."</td>";
+		        echo "<td>". $player["pos_abbr"]."</td>";
+		        echo "<td>". $player["abbr"]."</td>";
+		        echo "<td>". $player["comp"]."</td>";
+		        echo "<td>". $player["att"]."</td>";
+		        echo "<td>". $player["yds"]."</td>";
+		        echo "<td>". $player["td"]."</td>";
+		        echo "<td>". $player["intr"]."</td>";
+		        echo "</tr>";
+			}?>
+			</table>
+	
+			<h3>Away Rushing</h3>
+			<table>
+				<tr>
+					<th>Player</th>
+					<th>Pos</th>
+					<th>Team</th>
+					<th>Att</th>
+					<th>Yds</th>
+					<th>TD</th>
+				</tr>
 			
-		<?php		
-		foreach ($playerDef as $player) {
-			$playerid = $player["player_id"];
-	        echo "<tr>";
-	        echo "<td class='link'><a class='leader' href='/api/playerPageDef.php?playerid=" . $playerid . "'>" . $player["player_name"]."</td>";
-	        echo "<td>". $player["pos_abbr"]."</td>";
-	        echo "<td>". $player["abbr"]."</td>";
-	        echo "<td>". $player["sack"]."</td>";
-	        echo "<td>". $player["intr"]."</td>";
-	        echo "<td>". $player["ff"]."</td>";
-			echo "<td>". $player["fr"]."</td>";
-			echo "<td>". $player["td"]."</td>";
-			echo "<td>". $player["tfl"]."</td>";
-			echo "<td>". $player["pdef"]."</td>";
-	        echo "</tr>";
-		}?>
-		</table>
-		
-	</div>
+			<?php		
+			foreach ($awayRush as $player) {
+				$playerid = $player["player_id"];
+		        echo "<tr>";
+		        echo "<td class='link'><a class='leader' href='/api/playerPageRush.php?playerid=" . $playerid . "'>" . $player["player_name"]."</td>";
+		        echo "<td>". $player["pos_abbr"]."</td>";
+		        echo "<td>". $player["abbr"]."</td>";
+		        echo "<td>". $player["att"]."</td>";
+		        echo "<td>". $player["yds"]."</td>";
+		        echo "<td>". $player["td"]."</td>";
+		        echo "</tr>";
+			}?>
+			</table>
+	
+			<h3>Away Receiving</h3>
+			<table>
+				<tr>
+					<th>Player</th>
+					<th>Pos</th>
+					<th>Team</th>
+					<th>Rec</th>
+					<th>Yds</th>
+					<th>TD</th>
+				</tr>
+				
+			<?php		
+			foreach ($awayRec as $player) {
+				$playerid = $player["player_id"];
+		        echo "<tr>";
+		        echo "<td class='link'><a class='leader' href='/api/playerPageRec.php?playerid=" . $playerid . "'>" . $player["player_name"]."</td>";
+		        echo "<td>". $player["pos_abbr"]."</td>";
+		        echo "<td>". $player["abbr"]."</td>";
+		        echo "<td>". $player["rec"]."</td>";
+		        echo "<td>". $player["yds"]."</td>";
+		        echo "<td>". $player["td"]."</td>";
+		        echo "</tr>";
+			}?>
+			</table>
+	
+			<h3>Away Defense</h3>
+			<table>
+				<tr>
+					<th>Player</th>
+					<th>Pos</th>
+					<th>Team</th>
+					<th>Sack</th>
+					<th>INT</th>
+					<th>FF</th>
+					<th>FR</th>
+					<th>TD</th>
+					<th>TFL</th>
+					<th>PDEF</th>
+				</tr>
+				
+			<?php		
+			foreach ($awayDef as $player) {
+				$playerid = $player["player_id"];
+		        echo "<tr>";
+		        echo "<td class='link'><a class='leader' href='/api/playerPageDef.php?playerid=" . $playerid . "'>" . $player["player_name"]."</td>";
+		        echo "<td>". $player["pos_abbr"]."</td>";
+		        echo "<td>". $player["abbr"]."</td>";
+		        echo "<td>". $player["sack"]."</td>";
+		        echo "<td>". $player["intr"]."</td>";
+		        echo "<td>". $player["ff"]."</td>";
+				echo "<td>". $player["fr"]."</td>";
+				echo "<td>". $player["td"]."</td>";
+				echo "<td>". $player["tfl"]."</td>";
+				echo "<td>". $player["pdef"]."</td>";
+		        echo "</tr>";
+			}?>
+			</table>
+			
+		</div>
+	
+		<div class="right-side-box">
+			<h3>Home Passing</h3>
+			<table>
+				<tr>
+					<th>Player</th>
+					<th>Pos</th>
+					<th>Team</th>
+					<th>Cmp</th>
+					<th>Att</th>
+					<th>Yds</th>
+					<th>TD</th>
+					<th>INT</th>
+				</tr>
+			
+			<?php
+			foreach ($homePass as $player) {
+				$playerid = $player["player_id"];
+		        echo "<tr>";
+		        echo "<td class='link'><a class='leader' href='/api/playerPagePass.php?playerid=" . $playerid . "'>" . $player["player_name"]."</td>";
+		        echo "<td>". $player["pos_abbr"]."</td>";
+		        echo "<td>". $player["abbr"]."</td>";
+		        echo "<td>". $player["comp"]."</td>";
+		        echo "<td>". $player["att"]."</td>";
+		        echo "<td>". $player["yds"]."</td>";
+		        echo "<td>". $player["td"]."</td>";
+		        echo "<td>". $player["intr"]."</td>";
+		        echo "</tr>";
+			}?>
+			</table>
 
-	<div class="right-side-box">
-		<h3>Home Passing</h3>
-		<table>
-			<tr>
-				<th>Player</th>
-				<th>Pos</th>
-				<th>Team</th>
-				<th>Cmp</th>
-				<th>Att</th>
-				<th>Yds</th>
-				<th>TD</th>
-				<th>INT</th>
-			</tr>
-		
-		<?php
-		foreach ($homePass as $player) {
-			$playerid = $player["player_id"];
-	        echo "<tr>";
-	        echo "<td class='link'><a class='leader' href='/api/playerPagePass.php?playerid=" . $playerid . "'>" . $player["player_name"]."</td>";
-	        echo "<td>". $player["pos_abbr"]."</td>";
-	        echo "<td>". $player["abbr"]."</td>";
-	        echo "<td>". $player["comp"]."</td>";
-	        echo "<td>". $player["att"]."</td>";
-	        echo "<td>". $player["yds"]."</td>";
-	        echo "<td>". $player["td"]."</td>";
-	        echo "<td>". $player["intr"]."</td>";
-	        echo "</tr>";
-		}?>
-		</table>
+			<h3>Home Rushing</h3>
+			<table>
+				<tr>
+					<th>Player</th>
+					<th>Pos</th>
+					<th>Team</th>
+					<th>Att</th>
+					<th>Yds</th>
+					<th>TD</th>
+				</tr>
+			
+			<?php		
+			foreach ($homeRush as $player) {
+				$playerid = $player["player_id"];
+		        echo "<tr>";
+		        echo "<td class='link'><a class='leader' href='/api/playerPageRush.php?playerid=" . $playerid . "'>" . $player["player_name"]."</td>";
+		        echo "<td>". $player["pos_abbr"]."</td>";
+		        echo "<td>". $player["abbr"]."</td>";
+		        echo "<td>". $player["att"]."</td>";
+		        echo "<td>". $player["yds"]."</td>";
+		        echo "<td>". $player["td"]."</td>";
+		        echo "</tr>";
+			}?>
+			</table>
 
+			<h3>Home Receiving</h3>
+			<table>
+				<tr>
+					<th>Player</th>
+					<th>Pos</th>
+					<th>Team</th>
+					<th>Rec</th>
+					<th>Yds</th>
+					<th>TD</th>
+				</tr>
+				
+			<?php		
+			foreach ($homeRec as $player) {
+				$playerid = $player["player_id"];
+		        echo "<tr>";
+		        echo "<td class='link'><a class='leader' href='/api/playerPageRec.php?playerid=" . $playerid . "'>" . $player["player_name"]."</td>";
+		        echo "<td>". $player["pos_abbr"]."</td>";
+		        echo "<td>". $player["abbr"]."</td>";
+		        echo "<td>". $player["rec"]."</td>";
+		        echo "<td>". $player["yds"]."</td>";
+		        echo "<td>". $player["td"]."</td>";
+		        echo "</tr>";
+			}?>
+			</table>
+
+			<h3>Home Defense</h3>
+			<table>
+				<tr>
+					<th>Player</th>
+					<th>Pos</th>
+					<th>Team</th>
+					<th>Sack</th>
+					<th>INT</th>
+					<th>FF</th>
+					<th>FR</th>
+					<th>TD</th>
+					<th>TFL</th>
+					<th>PDEF</th>
+				</tr>
+				
+			<?php		
+			foreach ($homeDef as $player) {
+				$playerid = $player["player_id"];
+		        echo "<tr>";
+		        echo "<td class='link'><a class='leader' href='/api/playerPageDef.php?playerid=" . $playerid . "'>" . $player["player_name"]."</td>";
+		        echo "<td>". $player["pos_abbr"]."</td>";
+		        echo "<td>". $player["abbr"]."</td>";
+		        echo "<td>". $player["sack"]."</td>";
+		        echo "<td>". $player["intr"]."</td>";
+		        echo "<td>". $player["ff"]."</td>";
+				echo "<td>". $player["fr"]."</td>";
+				echo "<td>". $player["td"]."</td>";
+				echo "<td>". $player["tfl"]."</td>";
+				echo "<td>". $player["pdef"]."</td>";
+		        echo "</tr>";
+			}?>
+			</table>
+	
+		</div>
 	</div>
-</div>
 </div>
 
 
