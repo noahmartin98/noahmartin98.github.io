@@ -82,12 +82,15 @@ for ($week = 1; $week <= $lastWeek; $week++) {
         if ($result->num_rows > 0) {
             // output data of each row
             while($row = $result->fetch_assoc()) {
+				$awayWinner = ($row["awayScore"] > $row["homeScore"]) ? "winner" : "loser";
+    			$homeWinner = ($row["homeScore"] > $row["awayScore"]) ? "winner" : "loser";
+				
                 echo "<tr>";
                 echo "<td>". $row["game_date"]."</td>";
-                echo "<td>". $row["awayName"] . " (" . $row["awaySeed"] . ")" . "</td>";
-                echo "<td>". $row["awayScore"]."</td>";
-                echo "<td>". $row["homeScore"]."</td>";
-                echo "<td>". $row["homeName"] . " (" . $row["homeSeed"] . ")" . "</td>";
+                echo "<td class='$awayWinner'>". $row["awayName"] . " (" . $row["awaySeed"] . ")" . "</td>";
+                echo "<td class='$awayWinner'>". $row["awayScore"]."</td>";
+                echo "<td class='$homeWinner'>". $row["homeScore"]."</td>";
+                echo "<td class='$homeWinner'>". $row["homeName"] . " (" . $row["homeSeed"] . ")" . "</td>";
 				echo "<td class='link'><a class='leader' href='/api/gamePage.php?gameid=" . $row["game_id"] . "'>Box Score</a></td>";
                 echo "</tr>";
             }
