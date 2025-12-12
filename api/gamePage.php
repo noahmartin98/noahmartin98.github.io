@@ -29,8 +29,7 @@ if (isset($_GET['gameid'])) {
 // Team stats query
 $sql = "SELECT 
     g.game_id, g.season, g.game_date, g.difficulty, g.week,
-    t.team_name,
-    t.abbr,
+    t.team_name, t.abbr, t.short,
     ts.seed, ts.home_away, ts.team_user,
     ts.q1, ts.q2, ts.q3, ts.q4, ts.ot, ts.score, ts.rush+ts.pass AS total, ts.rush, ts.pass
 FROM game g
@@ -161,7 +160,7 @@ while ($row = $result->fetch_assoc()) {
 		<th>F</th>
 	</tr>
 	<tr>
-		<td><?php echo $away["abbr"] . " (" . $away["team_user"] . ") "?></td>
+		<td><?php echo $away["short"] . " (" . $away["team_user"] . ") "?></td>
 		<td><?php echo $away["q1"] ?></td>
 		<td><?php echo $away["q2"] ?></td>
 		<td><?php echo $away["q3"] ?></td>
@@ -170,7 +169,7 @@ while ($row = $result->fetch_assoc()) {
 		<td><?php echo $away["score"] ?></td>
 	</tr>
 	<tr>
-		<td><?php echo $home["abbr"] . " (" . $home["team_user"] . ") "?></td>
+		<td><?php echo $home["short"] . " (" . $home["team_user"] . ") "?></td>
 		<td><?php echo $home["q1"] ?></td>
 		<td><?php echo $home["q2"] ?></td>
 		<td><?php echo $home["q3"] ?></td>
