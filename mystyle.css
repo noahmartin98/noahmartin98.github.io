@@ -32,8 +32,8 @@ div.box-score-container {
   justify-content: space-between; /* push them to opposite sides */
   width: 800px;
 }
-.left-box, .right-box {
-    width: 75%;  /* or whatever size you want */
+.left-side-box, .right-side-box {
+    width: 30%;  /* or whatever size you want */
     background: #e8f4e8;
     padding: 20px;
     margin: 100px;
