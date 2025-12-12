@@ -138,7 +138,7 @@ h3 {
   overflow-x: auto;
 }
 
-table {
+table.table1 {
   width: 100%;
   border-collapse: collapse;
   background-color: #ffffff;
