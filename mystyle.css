@@ -23,7 +23,7 @@ table.scores {
 
 div.box-score-container {
   display: flex;
-  justify-content: space-between; /* push them to opposite sides */
+  /*justify-content: space-between;  push them to opposite sides */
   width: 100%;
 }
 .left-box, .right-box {
