@@ -23,8 +23,8 @@ table.scores {
 
 div.box-score-container {
   display: flex;
-  /*justify-content: space-between;  push them to opposite sides */
-  width: 100%;
+  justify-content: space-between; /* push them to opposite sides */
+  width: 500px;
 }
 .left-box, .right-box {
     width: 75%;  /* or whatever size you want */
