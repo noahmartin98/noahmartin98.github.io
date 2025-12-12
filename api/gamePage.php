@@ -121,6 +121,7 @@ if ($result->num_rows > 0) {
 </div>
 
 <div>
+	<t3>Team Stats</t3>
 	<table class="team-stats">
 		<tr>
 			<th><?php echo $away["abbr"] ?></th>
@@ -138,11 +139,9 @@ if ($result->num_rows > 0) {
 			<td><?php echo $home["pass"] ?></td>
 		</tr>
 	</table>
-</div>
-        
-<div>
-<!-- Player Stats -->
 
+<!-- Player Stats -->
+	<t3>Player Passing</t3>
 	<table>
 		<tr>
 			<th>Player</th>
