@@ -36,7 +36,7 @@ JOIN team homeTeam ON homeTeam.team_id = t2.team_id
 WHERE game.game_id = $gameid;";*/
 
 $sql = "SELECT 
-    g.game_id, g.game_date,
+    g.game_id, g.game_date, g.difficulty,
     t.team_name,
     t.abbr,
     ts.seed, ts.home_away, ts.team_user,
@@ -82,8 +82,9 @@ if ($result->num_rows > 0) {
 
 <div class="header-container">
 
-    <h1><?php echo $away["team_name"] . " (". $away["seed"] . ") @ " . $home["team_name"] . " (" . $home["seed"] . ")"; ?></h1>
+    <h1><?php echo $away["team_name"] . "   (". $away["seed"] . ") @ " . $home["team_name"] . "   (" . $home["seed"] . ")"; ?></h1>
 	<h2><?php echo $away["game_date"] ?>
+	<h2><?php echo "Difficulty: " . $away["difficulty"] ?>
 
     <h3>Box Score</h3>
 
