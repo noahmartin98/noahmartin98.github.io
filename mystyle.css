@@ -27,7 +27,7 @@ div.box-score-container {
   width: 100%;
 }
 .left-box, .right-box {
-    width: 45%;  /* or whatever size you want */
+    width: 75%;  /* or whatever size you want */
     background: #e8f4e8;
     padding: 20px;
 }
