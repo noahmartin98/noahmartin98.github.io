@@ -83,8 +83,8 @@ if ($result->num_rows > 0) {
 <div class="header-container">
 
     <h1><?php echo $away["team_name"] . "   (". $away["seed"] . ") @ " . $home["team_name"] . "   (" . $home["seed"] . ")"; ?></h1>
-	<h2><?php echo $away["game_date"] ?>
-	<h2><?php echo "Difficulty: " . $away["difficulty"] ?>
+	<h2><?php echo $away["game_date"] ?></h2>
+	<h3><?php echo "Difficulty: " . $away["difficulty"] ?></h3>
 
     <h3>Box Score</h3>
 
@@ -140,11 +140,58 @@ if ($result->num_rows > 0) {
 	</table>
 </div>
         
+<div>
+<!-- Player Stats -->
 
-<?php
+	<table>
+		<tr>
+			<th>Player</th>
+			<th>Pos</th>
+			<th>Team</th>
+			<th>Cmp</th>
+			<th>Att</th>
+			<th>Yds</th>
+			<th>TD</th>
+			<th>INT</th>
+		</tr>
+	
+	<?php
+	
+	$sql = "SELECT p.player_id, p.player_name, pos.pos_abbr, t.abbr, ps.comp, ps.att, ps.yds, ps.td, ps.intr
+	    FROM game g
+		JOIN pass_statline ps ON g.game_id = ps.game_id
+	    JOIN player p ON p.player_id = ps.player_id
+	    JOIN team t ON ps.team_id = t.team_id
+	    JOIN pos ON ps.pos_id = pos.pos_id
+	    WHERE g.game_id = $gameid
+	    ORDER BY yds desc;";
+	
+	$result = $conn->query($sql);
 
-
-?>
+	if ($result->num_rows > 0) {
+    // output data of each row
+    while($row = $result->fetch_assoc()) {
+        $playerid = $row["player_id"];
+        echo "<tr>";
+        echo "<td class='link'><a class='leader' href='/api/playerPagePass.php?playerid=" . $playerid . "'>" . $row["player_name"]."</td>";
+        echo "<td>". $row["pos_abbr"]."</td>";
+        echo "<td>". $row["abbr"]."</td>";
+        echo "<td>". $row["comp"]."</td>";
+        echo "<td>". $row["att"]."</td>";
+        echo "<td>". $row["yds"]."</td>";
+        echo "<td>". $row["td"]."</td>";
+        echo "<td>". $row["intr"]."</td>";
+        echo "</tr>";
+    }
+} else {
+    echo "0 results";
+}
+	
+	
+	
+	?>
+	</table>
+</div>
 
 
 </body>
