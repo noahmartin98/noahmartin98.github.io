@@ -149,7 +149,6 @@ while ($row = $result->fetch_assoc()) {
 		<h3><?php echo "Difficulty: " . $away["difficulty"] ?></h3>
 
 	    <h3>Box Score</h3>
-	</div>
 
 <table>
 	<tr>
@@ -180,7 +179,8 @@ while ($row = $result->fetch_assoc()) {
 		<td><?php echo $home["score"] ?></td>
 	</tr>
 </table>
-
+		
+	</div>
 </div>
 
 <div class="main-box">
