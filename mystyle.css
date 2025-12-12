@@ -21,8 +21,15 @@ table.team-stats {
   table-layout: fixed;
 }
 
-div.box-score {
-  display: grid;
+div.box-score-container {
+  display: flex;
+  justify-content: space-between; /* push them to opposite sides */
+  width: 100%;
+}
+.left-box, .right-box {
+    width: 45%;  /* or whatever size you want */
+    background: #e8f4e8;
+    padding: 20px;
 }
 
 .team-stats td, .team-stats th {
