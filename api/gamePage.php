@@ -39,7 +39,7 @@ $sql = "SELECT
     g.game_id,
     t.team_name,
     t.abbr,
-    ts.seed, ts.home_away,
+    ts.seed, ts.home_away, ts.team_user,
     ts.q1, ts.q2, ts.q3, ts.q4, ts.ot, ts.score, ts.rush+ts.pass AS total, ts.rush, ts.pass
 FROM game g
 JOIN team_statline ts ON g.game_id = ts.game_id
@@ -97,7 +97,7 @@ if ($result->num_rows > 0) {
 		<th>F</th>
 	</tr>
 	<tr>
-		<td><?php echo $away["abbr"] ?></td>
+		<td><?php echo $away["abbr"] . " (" . $away["team_user"] . ") "?></td>
 		<td><?php echo $away["q1"] ?></td>
 		<td><?php echo $away["q2"] ?></td>
 		<td><?php echo $away["q3"] ?></td>
@@ -106,7 +106,7 @@ if ($result->num_rows > 0) {
 		<td><?php echo $away["score"] ?></td>
 	</tr>
 	<tr>
-		<td><?php echo $home["abbr"] ?></td>
+		<td><?php echo $home["abbr"] . " (" . $home["team_user"] . ") "?></td>
 		<td><?php echo $home["q1"] ?></td>
 		<td><?php echo $home["q2"] ?></td>
 		<td><?php echo $home["q3"] ?></td>
