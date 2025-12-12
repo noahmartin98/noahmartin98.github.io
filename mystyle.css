@@ -16,10 +16,10 @@ table.scores {
    max-width: 800px;
 }
 
-table.team-stats {
+/*table.team-stats {
   width: 350px;
   table-layout: fixed;
-}
+}*/
 
 div.box-score-container {
   display: flex;
