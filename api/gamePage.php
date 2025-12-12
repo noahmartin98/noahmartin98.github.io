@@ -120,7 +120,7 @@ if ($result->num_rows > 0) {
 
 </div>
 
-<div>
+<div class="box-score">
 	<h3>Team Stats</h3>
 	<table class="team-stats">
 		<tr>
