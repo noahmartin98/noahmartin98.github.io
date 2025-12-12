@@ -55,7 +55,7 @@ while ($row = $result->fetch_assoc()) {
 $sql = "SELECT p.player_id, p.player_name, pos.pos_abbr, t.abbr, ps.comp, ps.att, ps.yds, ps.td, ps.intr
 		    FROM game g
 			JOIN pass_statline ps ON g.game_id = ps.game_id
-		    JOIN player p ON p.player_id = ps.player_id
+		    JOIN player p ON ps.player_id = p.player_id
 		    JOIN team t ON ps.team_id = t.team_id
 		    JOIN pos ON ps.pos_id = pos.pos_id
 		    WHERE g.game_id = $gameid
@@ -72,7 +72,7 @@ while ($row = $result->fetch_assoc()) {
 $sql = "SELECT p.player_id, p.player_name, pos.pos_abbr, t.abbr, rs.att, rs.yds, rs.td
 		    FROM game g
 			JOIN rush_statline rs ON g.game_id = rs.game_id
-		    JOIN player p ON p.player_id = rs.player_id
+		    JOIN player p ON rs.player_id = p.player_id
 		    JOIN team t ON rs.team_id = t.team_id
 		    JOIN pos ON rs.pos_id = pos.pos_id
 		    WHERE g.game_id = $gameid
@@ -83,6 +83,40 @@ $playerRush = [];
 
 while ($row = $result->fetch_assoc()) {
     $playerRush[] = $row;
+}
+
+// Player receiving stats query 
+$sql = "SELECT p.player_id, p.player_name, pos.pos_abbr, t.abbr, rs.rec, rs.yds, rs.td
+		    FROM game g
+			JOIN rec_statline rs ON g.game_id = rs.game_id
+		    JOIN player p ON rs.player_id = p.player_id
+		    JOIN team t ON rs.team_id = t.team_id
+		    JOIN pos ON rs.pos_id = pos.pos_id
+		    WHERE g.game_id = $gameid
+		    ORDER BY yds desc;";
+		
+		$result = $conn->query($sql);
+$playerRec = [];
+
+while ($row = $result->fetch_assoc()) {
+    $playerRec[] = $row;
+}
+
+// Player defensive stats query 
+$sql = "SELECT p.player_id, p.player_name, pos.pos_abbr, t.abbr, ds.sack, ds.intr, ds.ff, ds.fr, ds.td, ds.tfl, ds.pdef
+		    FROM game g
+			JOIN def_statline ds ON g.game_id = ds.game_id
+		    JOIN player p ON ds.player_id = p.player_id
+		    JOIN team t ON ds.team_id = t.team_id
+		    JOIN pos ON ds.pos_id = pos.pos_id
+		    WHERE g.game_id = $gameid
+		    ORDER BY sack desc, intr desc, ff desc, fr desc, td desc, tfl desc, pdef desc;";
+		
+		$result = $conn->query($sql);
+$playerDef = [];
+
+while ($row = $result->fetch_assoc()) {
+    $playerDef[] = $row;
 }
 
 
@@ -153,6 +187,7 @@ while ($row = $result->fetch_assoc()) {
 	
 	<!-- Player Stats -->
 	<div class="right-side-box">
+
 		<h3>Player Passing</h3>
 		<table>
 			<tr>
@@ -167,7 +202,6 @@ while ($row = $result->fetch_assoc()) {
 			</tr>
 		
 		<?php
-		
 		foreach ($playerPass as $player) {
 			$playerid = $player["player_id"];
 	        echo "<tr>";
@@ -180,10 +214,7 @@ while ($row = $result->fetch_assoc()) {
 	        echo "<td>". $player["td"]."</td>";
 	        echo "<td>". $player["intr"]."</td>";
 	        echo "</tr>";
-		}	
-		
-		
-		?>
+		}?>
 		</table>
 
 		<h3>Player Rushing</h3>
@@ -197,23 +228,78 @@ while ($row = $result->fetch_assoc()) {
 				<th>TD</th>
 			</tr>
 		
-		<?php
-		
+		<?php		
 		foreach ($playerRush as $player) {
 			$playerid = $player["player_id"];
 	        echo "<tr>";
-	        echo "<td class='link'><a class='leader' href='/api/playerRushPass.php?playerid=" . $playerid . "'>" . $player["player_name"]."</td>";
+	        echo "<td class='link'><a class='leader' href='/api/playerPageRush.php?playerid=" . $playerid . "'>" . $player["player_name"]."</td>";
 	        echo "<td>". $player["pos_abbr"]."</td>";
 	        echo "<td>". $player["abbr"]."</td>";
 	        echo "<td>". $player["att"]."</td>";
 	        echo "<td>". $player["yds"]."</td>";
 	        echo "<td>". $player["td"]."</td>";
 	        echo "</tr>";
-		}	
-
-		
-		?>
+		}?>
 		</table>
+
+		<h3>Player Receiving</h3>
+		<table>
+			<tr>
+				<th>Player</th>
+				<th>Pos</th>
+				<th>Team</th>
+				<th>Rec</th>
+				<th>Yds</th>
+				<th>TD</th>
+			</tr>
+			
+		<?php		
+		foreach ($playerRec as $player) {
+			$playerid = $player["player_id"];
+	        echo "<tr>";
+	        echo "<td class='link'><a class='leader' href='/api/playerPageRec.php?playerid=" . $playerid . "'>" . $player["player_name"]."</td>";
+	        echo "<td>". $player["pos_abbr"]."</td>";
+	        echo "<td>". $player["abbr"]."</td>";
+	        echo "<td>". $player["rec"]."</td>";
+	        echo "<td>". $player["yds"]."</td>";
+	        echo "<td>". $player["td"]."</td>";
+	        echo "</tr>";
+		}?>
+		</table>
+
+		<h3>Player Defense</h3>
+		<table>
+			<tr>
+				<th>Player</th>
+				<th>Pos</th>
+				<th>Team</th>
+				<th>Sack</th>
+				<th>INT</th>
+				<th>FF</th>
+				<th>FR</th>
+				<th>TD</th>
+				<th>TFL</th>
+				<th>PDEF</th>
+			</tr>
+			
+		<?php		
+		foreach ($playerDef as $player) {
+			$playerid = $player["player_id"];
+	        echo "<tr>";
+	        echo "<td class='link'><a class='leader' href='/api/playerPageDef.php?playerid=" . $playerid . "'>" . $player["player_name"]."</td>";
+	        echo "<td>". $player["pos_abbr"]."</td>";
+	        echo "<td>". $player["abbr"]."</td>";
+	        echo "<td>". $player["sack"]."</td>";
+	        echo "<td>". $player["intr"]."</td>";
+	        echo "<td>". $player["ff"]."</td>";
+			echo "<td>". $player["fr"]."</td>";
+			echo "<td>". $player["td"]."</td>";
+			echo "<td>". $player["tfl"]."</td>";
+			echo "<td>". $player["pdef"]."</td>";
+	        echo "</tr>";
+		}?>
+		</table>
+		
 	</div>
 </div>
 
