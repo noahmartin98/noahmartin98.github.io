@@ -23,7 +23,7 @@ table.scores {
 
 div.box-score-top2 {
   display: flex;
-  gap: 10px;
+  gap: 50px;
 }
 
 div.main-box {
