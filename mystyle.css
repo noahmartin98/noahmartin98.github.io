@@ -43,11 +43,10 @@ table.team-stats {
 
 .winner {
     font-weight: bold;
-    background-color: #e3ffe9;
 }
 
 .loser {
-    color: #777; /* slightly faded */
+    color: #555; /* slightly faded */
 }
 
 body {
