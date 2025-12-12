@@ -62,10 +62,15 @@ $sql = "SELECT p.player_id, p.player_name, pos.pos_abbr, t.abbr, ps.comp, ps.att
 		    ORDER BY yds desc;";
 		
 		$result = $conn->query($sql);
-$playerPass = [];
 
+$homePass = [];
+$awayPass = [];
 while ($row = $result->fetch_assoc()) {
-    $playerPass[] = $row;
+    if ($row["home_away"] === "Home") {
+        $homePass[] = $row;   // Add to home array
+    } else {
+        $awayPass[] = $row;   // Add to away array
+    }
 }
 
 // Player rushing stats query 
@@ -202,7 +207,7 @@ while ($row = $result->fetch_assoc()) {
 			</tr>
 		
 		<?php
-		foreach ($playerPass as $player) {
+		foreach ($homePass as $player) {
 			$playerid = $player["player_id"];
 	        echo "<tr>";
 	        echo "<td class='link'><a class='leader' href='/api/playerPagePass.php?playerid=" . $playerid . "'>" . $player["player_name"]."</td>";
