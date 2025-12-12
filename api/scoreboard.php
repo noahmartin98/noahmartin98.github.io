@@ -138,7 +138,7 @@ foreach ($playoffsWeeks as $weekCode) {
 			echo "<td>". $row["awayScore"]."</td>";
 			echo "<td>". $row["homeScore"]."</td>";
 			echo "<td>".  "(" . $row["homeSeed"] . ") " . $row["homeName"] . "</td>";
-			echo "<td class='link'><a class='leader' href='/api/gamePage.php?gameid=" . $row["game_id"] . "'>Box Score"</a></td>";
+			echo "<td class='link'><a class='leader' href='/api/gamePage.php?gameid=" . $row["game_id"] . "'>Box Score</a></td>";
 			echo "</tr>";
 		}
 	} else {
