@@ -70,11 +70,12 @@ $season = $_GET['season'] ?? '2024';
             <th>Score</th>
             <th>Opp Score</th>
             <th>Result</th>
+			<th></th>
         </tr>
 
 <?php
 
-$sql = "SELECT game.season, game.week, game.game_date, t1.home_away, t1.team_user,
+$sql = "SELECT game.game_id, game.season, game.week, game.game_date, t1.home_away, t1.team_user,
 t1.team_id AS team,
 t1.score AS team_score,
 
@@ -112,6 +113,7 @@ if ($result->num_rows > 0) {
         echo "<td>". $row["team_score"]."</td>";
         echo "<td>". $row["opp_score"]."</td>";
         echo "<td>". $row["result"]."</td>";
+		echo "<td class='link'><a class='leader' href='/api/gamePage.php?gameid=" . $row["game_id"] . "'>Box Score</a></td>";
         echo "</tr>";
     }
 } else {
