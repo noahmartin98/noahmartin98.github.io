@@ -21,6 +21,10 @@ table.scores {
   table-layout: fixed;
 }*/
 
+div.box-score-top2 {
+  display: flex;
+}
+
 div.main-box {
   display: flex;
   justify-content: center; /* Centers horizontally */
