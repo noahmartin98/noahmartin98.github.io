@@ -25,16 +25,8 @@ if (isset($_GET['gameid'])) {
 </nav>
 
 <?php
- /* $sql = "SELECT awayTeam.team_name AS awayName, awayTeam.abbr AS awayAbbr, homeTeam.team_name AS homeName, homeTeam.abbr AS homeAbbr,
-  t1.q1 AS awayQ1, t1.q2 AS awayQ2, t1.q3 AS awayQ3, t1.q4 AS awayQ4, t1.ot AS awayOT, t1.score AS awayF,   
-  t2.q1 AS homeQ1, t1.q2 AS homeQ2, t2.q3 AS homeQ3, t2.q4 AS homeQ4, t2.ot AS homeOT, t2.score AS homeF
-from game
-JOIN team_statline t1 ON game.game_id = t1.game_id AND t1.home_away = 'Away'
-JOIN team_statline t2 ON game.game_id = t2.game_id AND t2.home_away = 'Home'
-JOIN team awayTeam ON awayTeam.team_id = t1.team_id
-JOIN team homeTeam ON homeTeam.team_id = t2.team_id
-WHERE game.game_id = $gameid;";*/
 
+// Team stats query
 $sql = "SELECT 
     g.game_id, g.game_date, g.difficulty, g.week,
     t.team_name,
@@ -59,6 +51,7 @@ while ($row = $result->fetch_assoc()) {
     }
 }
 
+// Player passing stats query 
 $sql = "SELECT p.player_id, p.player_name, pos.pos_abbr, t.abbr, ps.comp, ps.att, ps.yds, ps.td, ps.intr
 		    FROM game g
 			JOIN pass_statline ps ON g.game_id = ps.game_id
@@ -75,25 +68,24 @@ while ($row = $result->fetch_assoc()) {
     $playerPass[] = $row;
 }
 
+// Player rushing stats query 
+$sql = "SELECT p.player_id, p.player_name, pos.pos_abbr, t.abbr, rs.att, rs.yds, rs.td
+		    FROM game g
+			JOIN rush_statline rs ON g.game_id = rs.game_id
+		    JOIN player p ON p.player_id = rs.player_id
+		    JOIN team t ON rs.team_id = t.team_id
+		    JOIN pos ON rs.pos_id = pos.pos_id
+		    WHERE g.game_id = $gameid
+		    ORDER BY yds desc;";
+		
+		$result = $conn->query($sql);
+$playerRush = [];
 
-/*$result = $conn->query($sql);
+while ($row = $result->fetch_assoc()) {
+    $playerRush[] = $row;
+}
 
-$awayName = '';
-$homeName = '';
 
-if ($result->num_rows > 0) {
-    // output data of each row
-    while($row = $result->fetch_assoc()) {
-        $awayName = $row["awayName"];
-        $homeName = $row["homeName"];
-		$awayAbbr = $row["awayAbbr"];
-		$homeAbbr = $row["homeAbbr"];
-		$awayScores = [$row["awayQ1"], $row["awayQ2"], $row["awayQ3"], $row["awayQ4"], $row["awayOT"], $row["awayF"]];
-		$homeScores = [$row["homeQ1"], $row["homeQ2"], $row["homeQ3"], $row["homeQ4"], $row["homeOT"], $row["homeF"]];
-    }
-} else {
-    echo "0 results";
-}*/
 ?>
 
 <div class="header-container">
@@ -175,27 +167,6 @@ if ($result->num_rows > 0) {
 			</tr>
 		
 		<?php
-
-	
-		/*if ($result->num_rows > 0) {
-	    // output data of each row
-	    while($row = $result->fetch_assoc()) {
-	        $playerid = $row["player_id"];
-	        echo "<tr>";
-	        echo "<td class='link'><a class='leader' href='/api/playerPagePass.php?playerid=" . $playerid . "'>" . $row["player_name"]."</td>";
-	        echo "<td>". $row["pos_abbr"]."</td>";
-	        echo "<td>". $row["abbr"]."</td>";
-	        echo "<td>". $row["comp"]."</td>";
-	        echo "<td>". $row["att"]."</td>";
-	        echo "<td>". $row["yds"]."</td>";
-	        echo "<td>". $row["td"]."</td>";
-	        echo "<td>". $row["intr"]."</td>";
-	        echo "</tr>";
-	    }
-		} else {
-		    echo "0 results";
-		}*/
-		
 		
 		foreach ($playerPass as $player) {
 			$playerid = $player["player_id"];
@@ -209,9 +180,37 @@ if ($result->num_rows > 0) {
 	        echo "<td>". $player["td"]."</td>";
 	        echo "<td>". $player["intr"]."</td>";
 	        echo "</tr>";
-		}
+		}	
 		
 		
+		?>
+		</table>
+
+		<h3>Player Rushing</h3>
+		<table>
+			<tr>
+				<th>Player</th>
+				<th>Pos</th>
+				<th>Team</th>
+				<th>Att</th>
+				<th>Yds</th>
+				<th>TD</th>
+			</tr>
+		
+		<?php
+		
+		foreach ($playerRush as $player) {
+			$playerid = $player["player_id"];
+	        echo "<tr>";
+	        echo "<td class='link'><a class='leader' href='/api/playerRushPass.php?playerid=" . $playerid . "'>" . $player["player_name"]."</td>";
+	        echo "<td>". $player["pos_abbr"]."</td>";
+	        echo "<td>". $player["abbr"]."</td>";
+	        echo "<td>". $player["att"]."</td>";
+	        echo "<td>". $player["yds"]."</td>";
+	        echo "<td>". $player["td"]."</td>";
+	        echo "</tr>";
+		}	
+
 		
 		?>
 		</table>
