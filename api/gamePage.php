@@ -59,6 +59,22 @@ while ($row = $result->fetch_assoc()) {
     }
 }
 
+$sql = "SELECT p.player_id, p.player_name, pos.pos_abbr, t.abbr, ps.comp, ps.att, ps.yds, ps.td, ps.intr
+		    FROM game g
+			JOIN pass_statline ps ON g.game_id = ps.game_id
+		    JOIN player p ON p.player_id = ps.player_id
+		    JOIN team t ON ps.team_id = t.team_id
+		    JOIN pos ON ps.pos_id = pos.pos_id
+		    WHERE g.game_id = $gameid
+		    ORDER BY yds desc;";
+		
+		$result = $conn->query($sql);
+$playerPass = [];
+
+while ($row = $result->fetch_assoc()) {
+    $playerPass[] = $row;
+}
+
 
 /*$result = $conn->query($sql);
 
@@ -159,17 +175,7 @@ if ($result->num_rows > 0) {
 			</tr>
 		
 		<?php
-		
-		$sql = "SELECT p.player_id, p.player_name, pos.pos_abbr, t.abbr, ps.comp, ps.att, ps.yds, ps.td, ps.intr
-		    FROM game g
-			JOIN pass_statline ps ON g.game_id = ps.game_id
-		    JOIN player p ON p.player_id = ps.player_id
-		    JOIN team t ON ps.team_id = t.team_id
-		    JOIN pos ON ps.pos_id = pos.pos_id
-		    WHERE g.game_id = $gameid
-		    ORDER BY yds desc;";
-		
-		$result = $conn->query($sql);
+
 	
 		if ($result->num_rows > 0) {
 	    // output data of each row
@@ -186,9 +192,23 @@ if ($result->num_rows > 0) {
 	        echo "<td>". $row["intr"]."</td>";
 	        echo "</tr>";
 	    }
-	} else {
-	    echo "0 results";
-	}
+		} else {
+		    echo "0 results";
+		}
+		
+		foreach ($playerPass as $player) {
+			$playerid = $player["player_id"];
+	        echo "<tr>";
+	        echo "<td class='link'><a class='leader' href='/api/playerPagePass.php?playerid=" . $playerid . "'>" . $player["player_name"]."</td>";
+	        echo "<td>". $player["pos_abbr"]."</td>";
+	        echo "<td>". $player["abbr"]."</td>";
+	        echo "<td>". $player["comp"]."</td>";
+	        echo "<td>". $player["att"]."</td>";
+	        echo "<td>". $player["yds"]."</td>";
+	        echo "<td>". $player["td"]."</td>";
+	        echo "<td>". $player["intr"]."</td>";
+	        echo "</tr>";
+		}
 		
 		
 		
