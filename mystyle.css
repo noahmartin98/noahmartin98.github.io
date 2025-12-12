@@ -41,6 +41,15 @@ table.team-stats {
 }
 
 
+.winner {
+    font-weight: bold;
+    background-color: #d4ffd4; /* light green */
+}
+
+.loser {
+    color: #777; /* slightly faded */
+}
+
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f4fdf4;
