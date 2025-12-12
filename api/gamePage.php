@@ -66,7 +66,7 @@ $sql = "SELECT p.player_id, p.player_name, pos.pos_abbr, t.abbr, ps.comp, ps.att
 $homePass = [];
 $awayPass = [];
 while ($row = $result->fetch_assoc()) {
-    if ($row["home_away"] === "Home") {
+    if ($row["abbr"] === $home["abbr"]) {
         $homePass[] = $row;   // Add to home array
     } else {
         $awayPass[] = $row;   // Add to away array
