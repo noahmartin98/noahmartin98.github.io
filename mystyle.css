@@ -21,10 +21,16 @@ table.scores {
   table-layout: fixed;
 }*/
 
+div.main-box {
+  display: flex;
+  justify-content: center; /* Centers horizontally */
+  align-items: center;
+}
+
 div.box-score-container {
   display: flex;
   justify-content: space-between; /* push them to opposite sides */
-  width: 500px;
+  width: 800px;
 }
 .left-box, .right-box {
     width: 75%;  /* or whatever size you want */
