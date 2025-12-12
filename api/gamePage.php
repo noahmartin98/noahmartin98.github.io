@@ -8,7 +8,9 @@
 <?php
 require 'databaseConnect.php';
 
-$gameID = $_GET['gameID'] ?? '538';
+if (isset($_GET['gameid'])) {
+    $gameid = $_GET['gameid'];
+}
 ?>
 
 <nav class="navbar">
@@ -31,7 +33,7 @@ JOIN team_statline t1 ON game.game_id = t1.game_id AND t1.home_away = 'Away'
 JOIN team_statline t2 ON game.game_id = t2.game_id AND t2.home_away = 'Home'
 JOIN team awayTeam ON awayTeam.team_id = t1.team_id
 JOIN team homeTeam ON homeTeam.team_id = t2.team_id
-WHERE game.game_id = 538;";
+WHERE game.game_id = $gameid;";
 
 $sql = "SELECT 
     g.game_id,
