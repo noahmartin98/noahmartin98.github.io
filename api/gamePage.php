@@ -25,7 +25,7 @@ if (isset($_GET['gameid'])) {
 </nav>
 
 <?php
-  $sql = "SELECT awayTeam.team_name AS awayName, awayTeam.abbr AS awayAbbr, homeTeam.team_name AS homeName, homeTeam.abbr AS homeAbbr,
+ /* $sql = "SELECT awayTeam.team_name AS awayName, awayTeam.abbr AS awayAbbr, homeTeam.team_name AS homeName, homeTeam.abbr AS homeAbbr,
   t1.q1 AS awayQ1, t1.q2 AS awayQ2, t1.q3 AS awayQ3, t1.q4 AS awayQ4, t1.ot AS awayOT, t1.score AS awayF,   
   t2.q1 AS homeQ1, t1.q2 AS homeQ2, t2.q3 AS homeQ3, t2.q4 AS homeQ4, t2.ot AS homeOT, t2.score AS homeF
 from game
@@ -33,7 +33,7 @@ JOIN team_statline t1 ON game.game_id = t1.game_id AND t1.home_away = 'Away'
 JOIN team_statline t2 ON game.game_id = t2.game_id AND t2.home_away = 'Home'
 JOIN team awayTeam ON awayTeam.team_id = t1.team_id
 JOIN team homeTeam ON homeTeam.team_id = t2.team_id
-WHERE game.game_id = $gameid;";
+WHERE game.game_id = $gameid;";*/
 
 $sql = "SELECT 
     g.game_id,
@@ -44,7 +44,7 @@ $sql = "SELECT
 FROM game g
 JOIN team_statline ts ON g.game_id = ts.game_id
 JOIN team t ON ts.team_id = t.team_id
-WHERE g.game_id = $gameID;";
+WHERE g.game_id = $gameid;";
 
 $result = $conn->query($sql);
 
