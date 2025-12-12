@@ -36,6 +36,7 @@ div.box-score-container {
     width: 75%;  /* or whatever size you want */
     background: #e8f4e8;
     padding: 20px;
+    margin: 100px;
 }
 
 .team-stats td, .team-stats th {
