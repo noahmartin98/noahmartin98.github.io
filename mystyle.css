@@ -30,7 +30,7 @@ div.main-box {
 div.box-score-container {
   display: flex;
   /*justify-content: space-between;*/ /* push them to opposite sides */
-  width: 1200px;
+  width: 2000px;
 }
 .left-side-box, .right-side-box {
     /*width: 30%;*/  /* or whatever size you want */
