@@ -194,7 +194,7 @@ while ($row = $result->fetch_assoc()) {
 	<!-- Player Stats -->
 	<div class="right-side-box">
 
-		<h3>Player Passing</h3>
+		<h3>Away Passing</h3>
 		<table>
 			<tr>
 				<th>Player</th>
@@ -208,7 +208,7 @@ while ($row = $result->fetch_assoc()) {
 			</tr>
 		
 		<?php
-		foreach ($homePass as $player) {
+		foreach ($awayPass as $player) {
 			$playerid = $player["player_id"];
 	        echo "<tr>";
 	        echo "<td class='link'><a class='leader' href='/api/playerPagePass.php?playerid=" . $playerid . "'>" . $player["player_name"]."</td>";
@@ -306,6 +306,38 @@ while ($row = $result->fetch_assoc()) {
 		}?>
 		</table>
 		
+	</div>
+
+	<div class="right-side-box">
+		<h3>Home Passing</h3>
+		<table>
+			<tr>
+				<th>Player</th>
+				<th>Pos</th>
+				<th>Team</th>
+				<th>Cmp</th>
+				<th>Att</th>
+				<th>Yds</th>
+				<th>TD</th>
+				<th>INT</th>
+			</tr>
+		
+		<?php
+		foreach ($homePass as $player) {
+			$playerid = $player["player_id"];
+	        echo "<tr>";
+	        echo "<td class='link'><a class='leader' href='/api/playerPagePass.php?playerid=" . $playerid . "'>" . $player["player_name"]."</td>";
+	        echo "<td>". $player["pos_abbr"]."</td>";
+	        echo "<td>". $player["abbr"]."</td>";
+	        echo "<td>". $player["comp"]."</td>";
+	        echo "<td>". $player["att"]."</td>";
+	        echo "<td>". $player["yds"]."</td>";
+	        echo "<td>". $player["td"]."</td>";
+	        echo "<td>". $player["intr"]."</td>";
+	        echo "</tr>";
+		}?>
+		</table>
+
 	</div>
 </div>
 </div>
