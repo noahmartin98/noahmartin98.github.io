@@ -142,11 +142,14 @@ while ($row = $result->fetch_assoc()) {
 <div class="box-score-top">
 
     <h1><?php echo $away["team_name"] . "   (". $away["seed"] . ") @ " . $home["team_name"] . "   (" . $home["seed"] . ")"; ?></h1>
-	<h2><?php echo $away["game_date"] ?></h2>
-	<h2><?php echo $away["week"] ?></h2>
-	<h3><?php echo "Difficulty: " . $away["difficulty"] ?></h3>
 
-    <h3>Box Score</h3>
+	<div class="box-score-top2">
+		<h2><?php echo $away["game_date"] ?></h2>
+		<h2><?php echo $away["week"] ?></h2>
+		<h3><?php echo "Difficulty: " . $away["difficulty"] ?></h3>
+
+	    <h3>Box Score</h3>
+	</div>
 
 <table>
 	<tr>
