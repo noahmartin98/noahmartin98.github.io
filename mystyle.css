@@ -30,13 +30,16 @@ div.main-box {
 div.box-score-container {
   display: flex;
   justify-content: space-between; /* push them to opposite sides */
-  width: 2000px;
+  width: 1500px;
 }
 .left-side-box, .right-side-box {
     /*width: 30%;*/  /* or whatever size you want */
     background: #e8f4e8;
     padding: 5px;
-    margin: 20px;
+}
+.right-side-box {
+  margin-right: 5px;
+  margin-left: 20px;
 }
 
 .team-stats td, .team-stats th {
