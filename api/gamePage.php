@@ -121,76 +121,80 @@ if ($result->num_rows > 0) {
 
 </div>
 
-<div class="box-score">
-	<h3>Team Stats</h3>
-	<table class="team-stats">
-		<tr>
-			<th><?php echo $away["abbr"] ?></th>
-			<th></th>
-			<th><?php echo $home["abbr"] ?></th>
-		</tr>
-		<tr>
-			<td><?php echo $away["total"] ?></td>
-			<td>Total Yards</td>
-			<td><?php echo $home["total"] ?></td>
-		</tr>
-		<tr>
-			<td><?php echo $away["pass"] ?></td>
-			<td>Passing Yards</td>
-			<td><?php echo $home["pass"] ?></td>
-		</tr>
-	</table>
-
-<!-- Player Stats -->
-	<h3>Player Passing</h3>
-	<table>
-		<tr>
-			<th>Player</th>
-			<th>Pos</th>
-			<th>Team</th>
-			<th>Cmp</th>
-			<th>Att</th>
-			<th>Yds</th>
-			<th>TD</th>
-			<th>INT</th>
-		</tr>
+<div class="box-score-container">
+	<div class="left-side-box">
+		<h3>Team Stats</h3>
+		<table class="team-stats">
+			<tr>
+				<th><?php echo $away["abbr"] ?></th>
+				<th></th>
+				<th><?php echo $home["abbr"] ?></th>
+			</tr>
+			<tr>
+				<td><?php echo $away["total"] ?></td>
+				<td>Total Yards</td>
+				<td><?php echo $home["total"] ?></td>
+			</tr>
+			<tr>
+				<td><?php echo $away["pass"] ?></td>
+				<td>Passing Yards</td>
+				<td><?php echo $home["pass"] ?></td>
+			</tr>
+		</table>
+	</div>
 	
-	<?php
+	<!-- Player Stats -->
+	<div class="right-side-box">
+		<h3>Player Passing</h3>
+		<table>
+			<tr>
+				<th>Player</th>
+				<th>Pos</th>
+				<th>Team</th>
+				<th>Cmp</th>
+				<th>Att</th>
+				<th>Yds</th>
+				<th>TD</th>
+				<th>INT</th>
+			</tr>
+		
+		<?php
+		
+		$sql = "SELECT p.player_id, p.player_name, pos.pos_abbr, t.abbr, ps.comp, ps.att, ps.yds, ps.td, ps.intr
+		    FROM game g
+			JOIN pass_statline ps ON g.game_id = ps.game_id
+		    JOIN player p ON p.player_id = ps.player_id
+		    JOIN team t ON ps.team_id = t.team_id
+		    JOIN pos ON ps.pos_id = pos.pos_id
+		    WHERE g.game_id = $gameid
+		    ORDER BY yds desc;";
+		
+		$result = $conn->query($sql);
 	
-	$sql = "SELECT p.player_id, p.player_name, pos.pos_abbr, t.abbr, ps.comp, ps.att, ps.yds, ps.td, ps.intr
-	    FROM game g
-		JOIN pass_statline ps ON g.game_id = ps.game_id
-	    JOIN player p ON p.player_id = ps.player_id
-	    JOIN team t ON ps.team_id = t.team_id
-	    JOIN pos ON ps.pos_id = pos.pos_id
-	    WHERE g.game_id = $gameid
-	    ORDER BY yds desc;";
-	
-	$result = $conn->query($sql);
-
-	if ($result->num_rows > 0) {
-    // output data of each row
-    while($row = $result->fetch_assoc()) {
-        $playerid = $row["player_id"];
-        echo "<tr>";
-        echo "<td class='link'><a class='leader' href='/api/playerPagePass.php?playerid=" . $playerid . "'>" . $row["player_name"]."</td>";
-        echo "<td>". $row["pos_abbr"]."</td>";
-        echo "<td>". $row["abbr"]."</td>";
-        echo "<td>". $row["comp"]."</td>";
-        echo "<td>". $row["att"]."</td>";
-        echo "<td>". $row["yds"]."</td>";
-        echo "<td>". $row["td"]."</td>";
-        echo "<td>". $row["intr"]."</td>";
-        echo "</tr>";
-    }
-} else {
-    echo "0 results";
-}
-	
-	
-	
-	?>
-	</table>
+		if ($result->num_rows > 0) {
+	    // output data of each row
+	    while($row = $result->fetch_assoc()) {
+	        $playerid = $row["player_id"];
+	        echo "<tr>";
+	        echo "<td class='link'><a class='leader' href='/api/playerPagePass.php?playerid=" . $playerid . "'>" . $row["player_name"]."</td>";
+	        echo "<td>". $row["pos_abbr"]."</td>";
+	        echo "<td>". $row["abbr"]."</td>";
+	        echo "<td>". $row["comp"]."</td>";
+	        echo "<td>". $row["att"]."</td>";
+	        echo "<td>". $row["yds"]."</td>";
+	        echo "<td>". $row["td"]."</td>";
+	        echo "<td>". $row["intr"]."</td>";
+	        echo "</tr>";
+	    }
+	} else {
+	    echo "0 results";
+	}
+		
+		
+		
+		?>
+		</table>
+	</div>
 </div>
 
 
