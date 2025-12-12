@@ -29,14 +29,14 @@ div.main-box {
 
 div.box-score-container {
   display: flex;
-  /*justify-content: space-between;*/ /* push them to opposite sides */
+  justify-content: space-between; /* push them to opposite sides */
   width: 2000px;
 }
 .left-side-box, .right-side-box {
     /*width: 30%;*/  /* or whatever size you want */
     background: #e8f4e8;
     padding: 5px;
-    maring: 20px;
+    margin: 20px;
 }
 
 .team-stats td, .team-stats th {
