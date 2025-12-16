@@ -66,6 +66,10 @@ div.box-score-container {
   width: 20%;
 }
 
+.highlight td {
+    font-weight: bold;
+}
+
 
 .winner {
     font-weight: bold;
