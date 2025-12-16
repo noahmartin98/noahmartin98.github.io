@@ -208,7 +208,7 @@ while ($row = $result->fetch_assoc()) {
 		<!-- Player Stats -->
 		<div class="right-side-box">
 	
-			<h3>Away Passing</h3>
+			<h3><?php echo $away["abbr"] ?> Passing</h3>
 			<table>
 				<tr>
 					<th>Player</th>
@@ -237,7 +237,7 @@ while ($row = $result->fetch_assoc()) {
 			}?>
 			</table>
 	
-			<h3>Away Rushing</h3>
+			<h3><?php echo $away["abbr"] ?> Rushing</h3>
 			<table>
 				<tr>
 					<th>Player</th>
@@ -262,7 +262,7 @@ while ($row = $result->fetch_assoc()) {
 			}?>
 			</table>
 	
-			<h3>Away Receiving</h3>
+			<h3><?php echo $away["abbr"] ?> Receiving</h3>
 			<table>
 				<tr>
 					<th>Player</th>
@@ -287,7 +287,7 @@ while ($row = $result->fetch_assoc()) {
 			}?>
 			</table>
 	
-			<h3>Away Defense</h3>
+			<h3><?php echo $away["abbr"] ?> Defense</h3>
 			<table>
 				<tr>
 					<th>Player</th>
@@ -323,7 +323,7 @@ while ($row = $result->fetch_assoc()) {
 		</div>
 	
 		<div class="right-side-box">
-			<h3>Home Passing</h3>
+			<h3><?php echo $home["abbr"] ?> Passing</h3>
 			<table>
 				<tr>
 					<th>Player</th>
@@ -352,7 +352,7 @@ while ($row = $result->fetch_assoc()) {
 			}?>
 			</table>
 
-			<h3>Home Rushing</h3>
+			<h3><?php echo $home["abbr"] ?> Rushing</h3>
 			<table>
 				<tr>
 					<th>Player</th>
@@ -377,7 +377,7 @@ while ($row = $result->fetch_assoc()) {
 			}?>
 			</table>
 
-			<h3>Home Receiving</h3>
+			<h3><?php echo $home["abbr"] ?> Receiving</h3>
 			<table>
 				<tr>
 					<th>Player</th>
@@ -402,7 +402,7 @@ while ($row = $result->fetch_assoc()) {
 			}?>
 			</table>
 
-			<h3>Home Defense</h3>
+			<h3><?php echo $home["abbr"] ?> Defense</h3>
 			<table>
 				<tr>
 					<th>Player</th>
