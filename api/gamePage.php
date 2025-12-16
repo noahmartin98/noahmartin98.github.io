@@ -221,16 +221,16 @@ while ($row = $result->fetch_assoc()) {
 					<th></th>
 					<th><?php echo $home["abbr"] ?></th>
 				</tr>
-				<tr><b>
+				<tr class="highlight">
 					<td><?php echo $away["total"] ?></td>
 					<td>Total Yards</td>
 					<td><?php echo $home["total"] ?></td>
-				</b></tr>
-				<tr><b>
+				</tr>
+				<tr class="highlight">
 					<td><?php echo $away["pass"] ?></td>
 					<td>Passing Yards</td>
 					<td><?php echo $home["pass"] ?></td>
-				</b></tr>
+				</tr>
 				<tr>
 					<td><?php echo ($away['passing']['pass_att'] + $away["sacked"]) ?></td>
 					<td>Pass Plays</td>
@@ -251,11 +251,11 @@ while ($row = $result->fetch_assoc()) {
 					<td>Sacked-Yards Lost</td>
 					<td><?php echo $home["sacked"] . " - " . ($home['passing']['pass_yds_gross'] - $home["pass"]) ?></td>
 				</tr>
-				<tr><b>
+				<tr class="highlight">
 					<td><?php echo $away["rush"] ?></td>
 					<td>Rushing Yards</td>
 					<td><?php echo $home["rush"] ?></td>
-				</b></tr>
+				</tr>
 				<tr>
 					<td><?php echo $away['rushing']['rush_att']; ?></td>
 					<td>Rush Att</td>
