@@ -220,9 +220,9 @@ while ($row = $result->fetch_assoc()) {
 					<td><?php echo $home["sacked"] ?></td>
 				</tr>
 				<tr>
-					<td><?php echo $away['rushing']['att']; ?></td>
+					<td><?php echo $away['rushing']['rush_att']; ?></td>
 					<td>Rush Att</td>
-					<td><?php echo $home['rushing']['att']; ?></td>
+					<td><?php echo $home['rushing']['rush_att']; ?></td>
 				</tr>
 				<tr>
 					<td><?php echo $away["rush"] ?></td>
@@ -230,9 +230,9 @@ while ($row = $result->fetch_assoc()) {
 					<td><?php echo $home["rush"] ?></td>
 				</tr>
 				<tr>
-					<td><?php echo $away['rushing']['yds'] ?></td>
+					<td><?php echo $away['rushing']['rush_yds'] ?></td>
 					<td>Rushing Yards</td>
-					<td><?php echo $home['rushing']['yds'] ?></td>
+					<td><?php echo $home['rushing']['rush_yds'] ?></td>
 				</tr>
 			</table>
 		</div>
