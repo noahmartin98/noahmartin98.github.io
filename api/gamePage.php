@@ -244,7 +244,7 @@ while ($row = $result->fetch_assoc()) {
 				<tr>
 					<td><?php echo $away['passing']['pass_comp'] . "/" . $away['passing']['pass_att'] ?></td>
 					<td>Comp/Att</td>
-					<td><?php echo $home['passing']['pass_comp'] . "/" . $home['passing']['pass_att'] ?</td>
+					<td><?php echo $home['passing']['pass_comp'] . "/" . $home['passing']['pass_att'] ?></td>
 				</tr>
 				<tr>
 					<td><?php echo $away["sacked"] . " - " . ($away['passing']['pass_yds'] - $away["pass"]) ?></td>
