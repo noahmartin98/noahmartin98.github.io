@@ -174,12 +174,12 @@ table th, table td {
   border-bottom: 1px solid #e0f2f1;
 }
 
-.table1 th {
+table th {
   padding: 2px 8px;
   background-color: #27db99;
 }
 
-.table1 td {
+table td {
   padding: 2px 8px;
   transition: background-color 0.3s ease;
 }
