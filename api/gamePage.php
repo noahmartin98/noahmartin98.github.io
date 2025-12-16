@@ -135,7 +135,6 @@ while ($row = $result->fetch_assoc()) {
     }
 }
 
-
 ?>
 
 <div class="box-score-top">
