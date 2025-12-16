@@ -234,6 +234,11 @@ while ($row = $result->fetch_assoc()) {
 					<td>Rushing Yards</td>
 					<td><?php echo $home['rushing']['rush_yds'] ?></td>
 				</tr>
+				<tr>
+					<td><?php echo ($away['rushing']['rush_yds'] / $away['rushing']['rush_att']) ?></td>
+					<td>Yards per Rush</td>
+					<td><?php echo ($home['rushing']['rush_yds'] / $home['rushing']['rush_att']) ?></td>
+				</tr>
 			</table>
 		</div>
 		
