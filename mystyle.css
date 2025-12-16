@@ -23,7 +23,7 @@ table.scores {
 
 div.box-score-top2 {
   display: flex;
-  gap: 20px;
+  gap: 50px;
 }
 
 div.main-box {
@@ -44,7 +44,7 @@ div.box-score-container {
 }
 .right-side-box {
   margin-right: 5px;
-  margin-left: 50px;
+  margin-left: 10px;
 }
 
 .team-stats td, .team-stats th {
