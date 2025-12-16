@@ -50,7 +50,7 @@ div.box-score-container {
 .team-stats td, .team-stats th {
   text-align: center;
 }
-
+/*
 .team-stats th:nth-child(1),
 .team-stats td:nth-child(1) {
   width: 20%;
@@ -64,7 +64,7 @@ div.box-score-container {
 .team-stats th:nth-child(3),
 .team-stats td:nth-child(3) {
   width: 20%;
-}
+}*/
 
 .highlight td {
     font-weight: bold;
