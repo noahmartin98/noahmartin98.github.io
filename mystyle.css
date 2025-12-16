@@ -1,16 +1,16 @@
 
 
 table.player {
-  width: 50%;
+  /*width: 50%;*/
 }
 table.player-passing {
-  width: 60%;
+  /*width: 60%;*/
 }
 table.player-years {
-  width: 65%;
+  /*width: 65%;*/
 }
 table.player-years-pass {
-  width: 75%;
+  /*width: 75%;*/
 }
 table.scores {
    max-width: 800px;
@@ -164,22 +164,22 @@ table.table1 {
   margin: 5px 0 20px 0;
 }
 
-table thead {
+.table1 thead {
   background-color: #a5d6a7;
   color: #1b5e20;
 }
 
-table th, table td {
+.table1 th, .table1 td {
   text-align: left;
   border-bottom: 1px solid #e0f2f1;
 }
 
-th {
+.table1 th {
   padding: 2px 8px;
   background-color: #27db99;
 }
 
-td {
+.table1 td {
   padding: 2px 8px;
   transition: background-color 0.3s ease;
 }
