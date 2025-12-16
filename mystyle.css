@@ -53,17 +53,17 @@ div.box-score-container {
 
 .team-stats th:nth-child(1),
 .team-stats td:nth-child(1) {
-  width: 25%;
+  width: 20%;
 }
 
 .team-stats th:nth-child(2),
 .team-stats td:nth-child(2) {
-  width: 50%;
+  width: 60%;
 }
 
 .team-stats th:nth-child(3),
 .team-stats td:nth-child(3) {
-  width: 25%;
+  width: 20%;
 }
 
 .highlight td {
