@@ -31,7 +31,7 @@ $sql = "SELECT
     g.game_id, g.season, g.game_date, g.difficulty, g.week,
     t.team_name, t.abbr, t.short,
     ts.seed, ts.home_away, ts.team_user,
-    ts.q1, ts.q2, ts.q3, ts.q4, ts.ot, ts.score, ts.rush+ts.pass AS total, ts.rush, ts.pass
+    ts.q1, ts.q2, ts.q3, ts.q4, ts.ot, ts.score, ts.rush+ts.pass AS total, ts.rush, ts.pass, ts.sacked
 FROM game g
 JOIN team_statline ts ON g.game_id = ts.game_id
 JOIN team t ON ts.team_id = t.team_id
