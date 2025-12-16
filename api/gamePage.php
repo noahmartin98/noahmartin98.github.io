@@ -52,6 +52,18 @@ while ($row = $result->fetch_assoc()) {
 
 ////
 $sql = "SELECT *
+	FROM team_game_passing
+	WHERE game_id = $gameid";
+
+$result = $conn->query($sql);
+
+while ($row = $result->fetch_assoc()) {
+    $teamPass[$row['team_id']] = $row;
+}
+$home['passing'] = $teamPass[$home['team_id']] ?? null;
+$away['passing'] = $teamPass[$away['team_id']] ?? null;
+////
+$sql = "SELECT *
 	FROM team_game_rushing
 	WHERE game_id = $gameid";
 
@@ -62,6 +74,11 @@ while ($row = $result->fetch_assoc()) {
 }
 $home['rushing'] = $teamRush[$home['team_id']] ?? null;
 $away['rushing'] = $teamRush[$away['team_id']] ?? null;
+
+$away["pass_plays"] = ($away['passing']['pass_att'] + $away["sacked"]);
+$home["pass_plays"] = ($home['passing']['pass_att'] + $home["sacked"]);
+	
+
 
 // Player passing stats query 
 $sql = "SELECT p.player_id, p.player_name, pos.pos_abbr, t.abbr, ps.comp, ps.att, ps.yds, ps.td, ps.intr
@@ -210,14 +227,29 @@ while ($row = $result->fetch_assoc()) {
 					<td><?php echo $home["total"] ?></td>
 				</tr>
 				<tr>
+					<td><?php echo ($away['passing']['pass_att'] + $away["sacked"]) ?></td>
+					<td>Pass Plays</td>
+					<td><?php echo ($home['passing']['pass_att'] + $home["sacked"]) ?></td>
+				</tr>
+				<tr>
 					<td><?php echo $away["pass"] ?></td>
 					<td>Passing Yards</td>
 					<td><?php echo $home["pass"] ?></td>
 				</tr>
 				<tr>
-					<td><?php echo $away["sacked"] . " - " ?></td>
+					<td><?php echo number_format(($away["pass"] / $away["pass_plays"]), 1) ?></td>
+					<td>Yards per Pass</td>
+					<td><?php echo number_format(($home["pass"] / $home["pass_plays"]), 1) ?></td>
+				</tr>
+				<tr>
+					<td><?php echo $away['passing']['pass_comp'] . "/" . $away['passing']['pass_att'] ?></td>
+					<td>Comp/Att</td>
+					<td><?php echo $home['passing']['pass_comp'] . "/" . $home['passing']['pass_att'] ?</td>
+				</tr>
+				<tr>
+					<td><?php echo $away["sacked"] . " - " . ($away['passing']['pass_yds'] - $away["pass"]) ?></td>
 					<td>Sacked-Yards Lost</td>
-					<td><?php echo $home["sacked"] ?></td>
+					<td><?php echo $home["sacked"] . " - " . ($home['passing']['pass_yds'] - $home["pass"]) ?></td>
 				</tr>
 				<tr>
 					<td><?php echo $away['rushing']['rush_att']; ?></td>
