@@ -164,12 +164,12 @@ table.table1 {
   margin: 5px 0 20px 0;
 }
 
-.table1 thead {
+table thead {
   background-color: #a5d6a7;
   color: #1b5e20;
 }
 
-.table1 th, .table1 td {
+table th, table td {
   text-align: left;
   border-bottom: 1px solid #e0f2f1;
 }
