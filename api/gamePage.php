@@ -29,7 +29,7 @@ if (isset($_GET['gameid'])) {
 // Team stats query
 $sql = "SELECT 
     g.game_id, g.season, g.game_date, g.difficulty, g.week,
-    t.team_name, t.abbr, t.short,
+    t.team_name, t.abbr, t.short, t.team_id,
     ts.seed, ts.home_away, ts.team_user,
     ts.q1, ts.q2, ts.q3, ts.q4, ts.ot, ts.score, ts.rush+ts.pass AS total, ts.rush, ts.pass, ts.sacked
 FROM game g
@@ -49,6 +49,19 @@ while ($row = $result->fetch_assoc()) {
         $away = $row;
     }
 }
+
+////
+$sql = "SELECT *
+	FROM team_game_rushing
+	WHERE game_id = $gameid";
+
+$result = $conn->query($sql);
+
+while ($row = $result->fetch_assoc()) {
+    $teamRush[$row['team_id']] = $row;
+}
+$home['rushing'] = $teamRush[$home['team_id']] ?? null;
+$away['rushing'] = $teamRush[$away['team_id']] ?? null;
 
 // Player passing stats query 
 $sql = "SELECT p.player_id, p.player_name, pos.pos_abbr, t.abbr, ps.comp, ps.att, ps.yds, ps.td, ps.intr
@@ -205,6 +218,21 @@ while ($row = $result->fetch_assoc()) {
 					<td><?php echo $away["sacked"] . " - " ?></td>
 					<td>Sacked-Yards Lost</td>
 					<td><?php echo $home["sacked"] ?></td>
+				</tr>
+				<tr>
+					<td><?php echo $away['rushing']['att']; ?></td>
+					<td>Rush Att</td>
+					<td><?php echo $home['rushing']['att']; ?></td>
+				</tr>
+				<tr>
+					<td><?php echo $away["rush"] ?></td>
+					<td>Rushing Yards</td>
+					<td><?php echo $home["rush"] ?></td>
+				</tr>
+				<tr>
+					<td><?php echo $away['rushing']['yds'] ?></td>
+					<td>Rushing Yards</td>
+					<td><?php echo $home['rushing']['yds'] ?></td>
 				</tr>
 			</table>
 		</div>
