@@ -202,6 +202,11 @@ while ($row = $result->fetch_assoc()) {
 					<td>Passing Yards</td>
 					<td><?php echo $home["pass"] ?></td>
 				</tr>
+				<tr>
+					<td><?php echo $away["sacked"] . " - " ?></td>
+					<td>Sacked-Yards Lost</td>
+					<td><?php echo $home["sacked"] ?></td>
+				</tr>
 			</table>
 		</div>
 		
