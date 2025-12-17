@@ -13,10 +13,9 @@
 
 require 'databaseConnect.php';
 
-require 'navbar.php';
-
-
 $season = $_GET['season'] ?? '2015';
+
+require 'navbar.php';
 
 
 
