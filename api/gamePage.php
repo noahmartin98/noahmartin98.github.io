@@ -41,7 +41,7 @@ while ($row = $result->fetch_assoc()) {
     }
 }
 
-$season = $home["season"]
+$season = $home["season"];
 
 ////
 $sql = "SELECT *
