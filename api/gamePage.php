@@ -286,7 +286,7 @@ require 'navbar.php';
 				<tr>
 					<td><?php echo $away["penalties"] . "-" . $away["pen_yds"] ?></td>
 					<td>Penalties-Yds</td>
-					<td><?php echo $home["penalties"] . "/" . $home["pen_yds"] ?></td>
+					<td><?php echo $home["penalties"] . "-" . $home["pen_yds"] ?></td>
 				</tr>
 				<tr>
 					<td><?php echo $away["top"] ?></td>
