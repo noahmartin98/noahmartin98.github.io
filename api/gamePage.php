@@ -269,24 +269,24 @@ require 'navbar.php';
 					<td><?php echo $home["firsts"] ?></td>
 				</tr>
 				<tr>
-					<td><?php echo $away["conv3"] . "/" . echo $away["att3"] ?></td>
+					<td><?php echo $away["conv3"] . "/" . $away["att3"] ?></td>
 					<td>3rd Down</td>
-					<td><?php echo $home["conv3"] . "/" . echo $home["att3"] ?></td>
+					<td><?php echo $home["conv3"] . "/" . $home["att3"] ?></td>
 				</tr>
 				<tr>
-					<td><?php echo $away["conv4"] . "/" . echo $away["att4"] ?></td>
+					<td><?php echo $away["conv4"] . "/" . $away["att4"] ?></td>
 					<td>4th Down</td>
-					<td><?php echo $home["conv4"] . "/" . echo $home["att4"] ?></td>
+					<td><?php echo $home["conv4"] . "/" . $home["att4"] ?></td>
 				</tr>
 				<tr>
-					<td><?php echo $away["conv2"] . "/" . echo $away["att2"] ?></td>
+					<td><?php echo $away["conv2"] . "/" . $away["att2"] ?></td>
 					<td>2pt</td>
-					<td><?php echo $home["conv2"] . "/" . echo $home["att2"] ?></td>
+					<td><?php echo $home["conv2"] . "/" . $home["att2"] ?></td>
 				</tr>
 				<tr>
-					<td><?php echo $away["penalties"] . "-" . echo $away["pen_yds"] ?></td>
+					<td><?php echo $away["penalties"] . "-" . $away["pen_yds"] ?></td>
 					<td>Penalties-Yds</td>
-					<td><?php echo $home["penalties"] . "/" . echo $home["pen_yds"] ?></td>
+					<td><?php echo $home["penalties"] . "/" . $home["pen_yds"] ?></td>
 				</tr>
 				<tr>
 					<td><?php echo $away["top"] ?></td>
