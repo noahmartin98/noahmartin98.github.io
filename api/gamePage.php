@@ -22,7 +22,9 @@ $sql = "SELECT
     g.game_id, g.season, g.game_date, g.difficulty, g.week,
     t.team_name, t.abbr, t.short, t.team_id,
     ts.seed, ts.home_away, ts.team_user,
-    ts.q1, ts.q2, ts.q3, ts.q4, ts.ot, ts.score, ts.rush+ts.pass AS total, ts.rush, ts.pass, ts.sacked
+    ts.q1, ts.q2, ts.q3, ts.q4, ts.ot, ts.score, ts.rush+ts.pass AS total, ts.rush, ts.pass, ts.sacked, 
+	ts.firsts, ts.to, ts.conv3, ts.att3, ts.conv4, ts.att4, ts.conv2, ts.att2, ts.rz_att, ts.rz_rd, ts.rz_fg,
+	ts.penalties, ts.pen_yds, ts.top
 FROM game g
 JOIN team_statline ts ON g.game_id = ts.game_id
 JOIN team t ON ts.team_id = t.team_id
@@ -233,7 +235,7 @@ require 'navbar.php';
 				</tr>
 				<tr>
 					<td><?php echo number_format(($away["pass"] / $away["pass_plays"]), 1) ?></td>
-					<td>Yards per Pass</td>
+					<td>Yards per Pass Play</td>
 					<td><?php echo number_format(($home["pass"] / $home["pass_plays"]), 1) ?></td>
 				</tr>
 				<tr>
@@ -258,8 +260,38 @@ require 'navbar.php';
 				</tr>
 				<tr>
 					<td><?php echo number_format(($away['rushing']['rush_yds'] / $away['rushing']['rush_att']), 1) ?></td>
-					<td>Yards per Rush</td>
+					<td>Yards per Rush Play</td>
 					<td><?php echo number_format(($home['rushing']['rush_yds'] / $home['rushing']['rush_att']), 1) ?></td>
+				</tr>
+				<tr>
+					<td><?php echo $away["firsts"]; ?></td>
+					<td>First Downs</td>
+					<td><?php echo $home["firsts"]; ?></td>
+				</tr>
+				<tr>
+					<td><?php echo $away["conv3"] . "/" . echo $away["att3"] ?></td>
+					<td>3rd Down</td>
+					<td><?php echo $home["conv3"] . "/" . echo $home["att3"] ?></td>
+				</tr>
+				<tr>
+					<td><?php echo $away["conv4"] . "/" . echo $away["att4"] ?></td>
+					<td>4th Down</td>
+					<td><?php echo $home["conv4"] . "/" . echo $home["att4"] ?></td>
+				</tr>
+				<tr>
+					<td><?php echo $away["conv2"] . "/" . echo $away["att2"] ?></td>
+					<td>2pt</td>
+					<td><?php echo $home["conv2"] . "/" . echo $home["att2"] ?></td>
+				</tr>
+				<tr>
+					<td><?php echo $away["penalties"] . "-" . echo $away["pen_yds"] ?></td>
+					<td>Penalties-Yds</td>
+					<td><?php echo $home["penalties"] . "/" . echo $home["pen_yds"] ?></td>
+				</tr>
+				<tr>
+					<td><?php echo $away["top"] ?></td>
+					<td>TOP</td>
+					<td><?php echo $home["top"] ?></td>
 				</tr>
 			</table>
 		</div>
