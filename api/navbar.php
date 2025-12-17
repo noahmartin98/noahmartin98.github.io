@@ -1,5 +1,5 @@
 <?php
-
+echo "
 <nav class="navbar">
     <ul class="nav-links">
         <li><a href="../home.html">Home</a></li>
@@ -11,5 +11,5 @@
         <li><a href="/api/bracket.php">Playoff Brackets</a></li>
     </ul>
 </nav>
-
+"
 ?>
