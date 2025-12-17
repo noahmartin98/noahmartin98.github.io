@@ -28,7 +28,6 @@ if ($result->num_rows > 0) {
 
 $season = $_GET['season'] ?? '2024';
 
-
 require 'navbar.php';
 
 ?>
