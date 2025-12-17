@@ -264,9 +264,9 @@ require 'navbar.php';
 					<td><?php echo number_format(($home['rushing']['rush_yds'] / $home['rushing']['rush_att']), 1) ?></td>
 				</tr>
 				<tr>
-					<td><?php echo $away["firsts"]; ?></td>
+					<td><?php echo $away["firsts"] ?></td>
 					<td>First Downs</td>
-					<td><?php echo $home["firsts"]; ?></td>
+					<td><?php echo $home["firsts"] ?></td>
 				</tr>
 				<tr>
 					<td><?php echo $away["conv3"] . "/" . echo $away["att3"] ?></td>
