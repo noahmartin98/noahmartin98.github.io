@@ -12,7 +12,6 @@ if (isset($_GET['gameid'])) {
     $gameid = $_GET['gameid'];
 }
 
-require 'navbar.php';
 ?>
 
 
@@ -41,6 +40,8 @@ while ($row = $result->fetch_assoc()) {
         $away = $row;
     }
 }
+
+$season = $home["season"]
 
 ////
 $sql = "SELECT *
@@ -157,6 +158,8 @@ while ($row = $result->fetch_assoc()) {
     }
 }
 
+
+require 'navbar.php';
 ?>
 
 <div class="box-score-top">
@@ -165,7 +168,7 @@ while ($row = $result->fetch_assoc()) {
 
 	<div class="box-score-top2">
 		<h2><?php echo $away["game_date"] ?></h2>
-		<h2><?php echo $away["season"] . " " . $away["week"] ?></h2>
+		<h2><?php echo $season . " " . $away["week"] ?></h2>
 		<h3><?php echo "Difficulty: " . $away["difficulty"] ?></h3>
 
 	    <h3>Box Score</h3>
