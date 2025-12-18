@@ -302,9 +302,9 @@ require 'navbar.php';
 					<td><?php echo $home["penalties"] . "-" . $home["pen_yds"] ?></td>
 				</tr>
 				<tr>
-					<td><?php echo substr($away["top"], 3) ?></td>
+					<td><?php echo substr($away["top"], 0, -3) ?></td>
 					<td>TOP</td>
-					<td><?php echo $home["top"] ?></td>
+					<td><?php echo substr($home["top"], 0, -3) ?></td>
 				</tr>
 			</table>
 		</div>
