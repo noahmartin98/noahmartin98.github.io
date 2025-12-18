@@ -276,6 +276,21 @@ require 'navbar.php';
 					<td><?php echo number_format(($home['rushing']['rush_yds'] / $home['rushing']['rush_att']), 1) ?></td>
 				</tr>
 				<tr><td>----</td><td>------------</td><td>----</td></tr>
+				<tr class="highlight">
+					<td><?php echo $away["to"] ?></td>
+					<td>Turnovers</td>
+					<td><?php echo $home["to"] ?></td>
+				</tr>
+				<tr>
+					<td><?php echo $away["passing"]["pass_int"] ?></td>
+					<td>Int Thrown</td>
+					<td><?php echo $home["passing"]["pass_int"] ?></td>
+				</tr>
+				<tr>
+					<td><?php echo ($away["to"] - $away["passing"]["pass_int"]) ?></td>
+					<td>Fumbles Lost</td>
+					<td><?php eacho ($home["to"] - $home["passing"]["pass_int"]) ?></td>
+				</tr>
 				<tr>
 					<td><?php echo $away["firsts"] ?></td>
 					<td>First Downs</td>
