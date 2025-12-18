@@ -15,6 +15,12 @@ table.player-years-pass {
 table.scores {
    max-width: 800px;
 }
+table.scores td:nth-child(2),
+table.scores th:nth-child(2),
+table.scores td:nth-child(5),
+table.scores th:nth-child(5) {
+  width: 500px;
+}
 
 /*table.team-stats {
   width: 350px;
