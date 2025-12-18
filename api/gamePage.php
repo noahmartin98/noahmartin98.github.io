@@ -289,7 +289,7 @@ require 'navbar.php';
 				<tr>
 					<td><?php echo ($away["to"] - $away["passing"]["pass_int"]) ?></td>
 					<td>Fumbles Lost</td>
-					<td><?php eacho ($home["to"] - $home["passing"]["pass_int"]) ?></td>
+					<td><?php echo ($home["to"] - $home["passing"]["pass_int"]) ?></td>
 				</tr>
 				<tr>
 					<td><?php echo $away["firsts"] ?></td>
