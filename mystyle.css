@@ -76,7 +76,7 @@ div.box-score-container {
     font-weight: bold;
 }
 
-tr.bottom-border {
+.bottom-border {
   border-bottom: 1px solid #ddd;
 }
 
