@@ -19,7 +19,7 @@ table.scores td:nth-child(2),
 table.scores th:nth-child(2),
 table.scores td:nth-child(5),
 table.scores th:nth-child(5) {
-  width: 175px;
+  width: 220px;
 }
 
 /*table.team-stats {
