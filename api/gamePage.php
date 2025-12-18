@@ -70,8 +70,10 @@ while ($row = $result->fetch_assoc()) {
 $home['rushing'] = $teamRush[$home['team_id']] ?? null;
 $away['rushing'] = $teamRush[$away['team_id']] ?? null;
 
-$away["pass_plays"] = ($away['passing']['pass_att'] + $away["sacked"]);
-$home["pass_plays"] = ($home['passing']['pass_att'] + $home["sacked"]);
+$away["pass_plays"] = $away['passing']['pass_att'] + $away["sacked"];
+$home["pass_plays"] = $home['passing']['pass_att'] + $home["sacked"];
+$away["total_plays"] = $away["pass_plays"] + $away["rushing"]["rush_att"];
+$home["total_plays"] = $home["pass_plays"] + $home["rushing"]["rush_att"];
 	
 
 
@@ -222,6 +224,16 @@ require 'navbar.php';
 					<td><?php echo $away["total"] ?></td>
 					<td>Total Yards</td>
 					<td><?php echo $home["total"] ?></td>
+				</tr>
+				<tr>
+					<td><?php echo $away["total_plays"] ?></td>
+					<td>Total Plays</td>
+					<td><?php echo $home["total_plays"] ?></td>
+				</tr>
+				<tr>
+					<td><?php echo number_format(($away["total"] / $away["total_plays"]), 1) ?></td>
+					<td>Yards per Play</td>
+					<td><?php echo number_format(($home["total"] / $home["total_plays"]), 1) ?></td>
 				</tr>
 				<tr class="highlight">
 					<td><?php echo $away["pass"] ?></td>
