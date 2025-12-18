@@ -77,7 +77,8 @@ div.box-score-container {
 }
 
 .bottom-border {
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #888;
+  margin-bottom: 30px;
 }
 
 
