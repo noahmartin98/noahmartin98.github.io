@@ -275,7 +275,6 @@ require 'navbar.php';
 					<td class="bottom-border">Yards per Rush Play</td>
 					<td class="bottom-border"><?php echo number_format(($home['rushing']['rush_yds'] / $home['rushing']['rush_att']), 1) ?></td>
 				</tr>
-				<!--<tr><td>----</td><td>------------</td><td>----</td></tr>-->
 				<tr class="highlight">
 					<td><?php echo $away["to"] ?></td>
 					<td>Turnovers</td>
@@ -287,9 +286,9 @@ require 'navbar.php';
 					<td><?php echo $home["passing"]["pass_int"] ?></td>
 				</tr>
 				<tr>
-					<td><?php echo ($away["to"] - $away["passing"]["pass_int"]) ?></td>
-					<td>Fumbles Lost</td>
-					<td><?php echo ($home["to"] - $home["passing"]["pass_int"]) ?></td>
+					<td class="bottom-border"><?php echo ($away["to"] - $away["passing"]["pass_int"]) ?></td>
+					<td class="bottom-border">Fumbles Lost</td>
+					<td class="bottom-border"><?php echo ($home["to"] - $home["passing"]["pass_int"]) ?></td>
 				</tr>
 				<tr>
 					<td><?php echo $away["firsts"] ?></td>
