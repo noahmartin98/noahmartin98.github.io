@@ -270,10 +270,10 @@ require 'navbar.php';
 					<td>Rush Att</td>
 					<td><?php echo $home['rushing']['rush_att']; ?></td>
 				</tr>
-				<tr class="bottom-border">
-					<td><?php echo number_format(($away['rushing']['rush_yds'] / $away['rushing']['rush_att']), 1) ?></td>
-					<td>Yards per Rush Play</td>
-					<td><?php echo number_format(($home['rushing']['rush_yds'] / $home['rushing']['rush_att']), 1) ?></td>
+				<tr>
+					<td class="bottom-border"><?php echo number_format(($away['rushing']['rush_yds'] / $away['rushing']['rush_att']), 1) ?></td>
+					<td class="bottom-border">Yards per Rush Play</td>
+					<td class="bottom-border"><?php echo number_format(($home['rushing']['rush_yds'] / $home['rushing']['rush_att']), 1) ?></td>
 				</tr>
 				<!--<tr><td>----</td><td>------------</td><td>----</td></tr>-->
 				<tr class="highlight">
