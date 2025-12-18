@@ -275,7 +275,7 @@ require 'navbar.php';
 					<td>Yards per Rush Play</td>
 					<td><?php echo number_format(($home['rushing']['rush_yds'] / $home['rushing']['rush_att']), 1) ?></td>
 				</tr>
-				<tr>----------------------------------</tr>
+				<tr><td>----------------------------------</td></tr>
 				<tr>
 					<td><?php echo $away["firsts"] ?></td>
 					<td>First Downs</td>
