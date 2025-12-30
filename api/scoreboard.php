@@ -159,9 +159,10 @@ foreach ($playoffsWeeks as $weekCode) {
 				<th>Score</th>
 				<th>Score</th>
 				<th>Team</th>
+				<th></th>
 			</tr>';
 	
-	$sql = "SELECT game_date,  Team1.team_name AS team1Name, t1.seed AS team1Seed, t1.score AS team1Score,
+	$sql = "SELECT game.game_id, game_date,  Team1.team_name AS team1Name, t1.seed AS team1Seed, t1.score AS team1Score,
  	t2.score AS team2Score, Team2.team_name AS team2Name, t2.seed AS team2Seed
         from game
         JOIN team_statline AS t1 ON game.game_id = t1.game_id AND t1.team_user = 'CPU'
@@ -184,6 +185,7 @@ foreach ($playoffsWeeks as $weekCode) {
 			echo "<td class='$awayWinner'>". $row["team1Score"]."</td>";
 			echo "<td class='$homeWinner'>". $row["team2Score"]."</td>";
 			echo "<td class='$homeWinner'>".  "(" . $row["team2Seed"] . ") " . $row["team2Name"] . "</td>";
+			echo "<td class='link'><a class='leader' href='/api/gamePage.php?gameid=" . $row["game_id"] . "'>Box Score</a></td>";
 			echo "</tr>";
 		}
 	} else {
