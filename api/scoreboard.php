@@ -176,15 +176,15 @@ foreach ($playoffsWeeks as $weekCode) {
 	if ($result->num_rows > 0) {
 		// output data of each row
 		while($row = $result->fetch_assoc()) {
-			$awayWinner = ($row["awayScore"] > $row["homeScore"]) ? "winner" : "loser";
-			$homeWinner = ($row["homeScore"] > $row["awayScore"]) ? "winner" : "loser";
+			$team1Winner = ($row["team1Score"] > $row["team2Score"]) ? "winner" : "loser";
+			$team2Winner = ($row["team2Score"] > $row["team1Score"]) ? "winner" : "loser";
 			
 			echo "<tr>";
 			echo "<td>". $row["game_date"]."</td>";
-			echo "<td class='$awayWinner'>".  "(" . $row["team1Seed"] . ") " . $row["team1Name"] . "</td>";
-			echo "<td class='$awayWinner'>". $row["team1Score"]."</td>";
-			echo "<td class='$homeWinner'>". $row["team2Score"]."</td>";
-			echo "<td class='$homeWinner'>".  "(" . $row["team2Seed"] . ") " . $row["team2Name"] . "</td>";
+			echo "<td class='$team1Winner'>".  "(" . $row["team1Seed"] . ") " . $row["team1Name"] . "</td>";
+			echo "<td class='$team1Winner'>". $row["team1Score"]."</td>";
+			echo "<td class='$team2Winner'>". $row["team2Score"]."</td>";
+			echo "<td class='$team2Winner'>".  "(" . $row["team2Seed"] . ") " . $row["team2Name"] . "</td>";
 			echo "<td class='link'><a class='leader' href='/api/gamePage.php?gameid=" . $row["game_id"] . "'>Box Score</a></td>";
 			echo "</tr>";
 		}
