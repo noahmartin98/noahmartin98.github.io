@@ -48,10 +48,10 @@ div.box-score-container {
     background: #e8f4e8;
     padding: 5px;
 }
-.right-side-box {
+/*.right-side-box {
   margin-right: 5px;
   margin-left: 50px;
-}
+}*/
 
 .team-stats td, .team-stats th {
   text-align: center;
