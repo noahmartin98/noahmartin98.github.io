@@ -141,7 +141,7 @@ foreach ($playoffsWeeks as $weekCode) {
 			echo "</tr>";
 		}
 	} else {
-		echo "<tr><td colspan='5'>No games this week</td></tr>";
+		echo "<tr><td colspan='5'>Not yet played</td></tr>";
 	}
 	echo "</table>";
 }
