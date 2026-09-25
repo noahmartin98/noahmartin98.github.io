@@ -5,23 +5,29 @@ $password = "AVNS_s9w_D_bs4m3e3bGzvGe";
 $dbname = "football_db";
 $port = 25060;
 
-// FIX: Force resolve the hostname to an IPv4 address to prevent Vercel from timing out
-$resolved_ip = gethostbyname($servername);
-
-// 1. Initialize the mysqli object
+// 1. Initialize the mysqli object safely
 $conn = mysqli_init();
 if (!$conn) {
     die("mysqli_init failed");
 }
 
-// 2. Force SSL encryption (Required by Aiven)
+// 2. Set options: Timeout if it takes more than 5 seconds so it doesn't freeze Vercel
+$conn->options(MYSQLI_OPT_CONNECT_TIMEOUT, 5);
+
+// 3. Enable SSL encryption (Absolutely required by Aiven)
 $conn->ssl_set(NULL, NULL, NULL, NULL, NULL);
 
-// 3. Establish the connection using the IPv4 address instead of the long text hostname
-$success = $conn->real_connect($resolved_ip, $username, $password, $dbname, $port);
+// 4. Establish the connection over the precise Aiven host & port
+$success = @$conn->real_connect($servername, $username, $password, $dbname, $port);
 
-// Check connection
+// 5. Catch connection failures cleanly
 if (!$success) {
-    die("Connection failed: " . mysqli_connect_error());
+    http_response_code(500);
+    echo json_encode([
+        "error" => "Database connection failed",
+        "details" => mysqli_connect_error(),
+        "errno" => mysqli_connect_errno()
+    ]);
+    exit();
 }
 ?>
