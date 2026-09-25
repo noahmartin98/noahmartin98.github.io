@@ -1,4 +1,6 @@
 {
+  "$schema": "https://vercel.sh",
+  "version": 2,
   "functions": {
     "api/index.php": {
       "runtime": "vercel-php@0.9.0"
@@ -7,4 +9,4 @@
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/index.php" }
   ]
-]
+}
