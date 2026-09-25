@@ -86,8 +86,11 @@ switch ($path) {
     // Add a case block for each of your other PHP files here...
 
     default:
-        // If the path doesn't match any of your files, return a 404
+        // Debug mode: If it still fails, this tells us exactly what path PHP is seeing!
         http_response_code(404);
-        echo json_encode(["error" => "Endpoint not found"]);
+        echo json_encode([
+            "error" => "Endpoint not found",
+            "debug_received_path" => $path
+        ]);
         break;
 }
