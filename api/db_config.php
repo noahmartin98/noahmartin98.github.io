@@ -13,8 +13,8 @@ $username = $fields["user"];
 $password = $fields["pass"];
 
 try {
-    $pdo = new PDO($dsn, $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $conn = new PDO($dsn, $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     echo "Connected successfully to Aiven MySQL!";
 } catch (PDOException $e) {
     echo "Connection failed: " . $e->getMessage();
