@@ -2,64 +2,82 @@
 // Get the requested URL path (e.g., /api/users or /api/login)
 $requestUri = $_SERVER['REQUEST_URI'];
 
-// Strip out any query strings like ?id=123 so they don't break our matching
+// Strip out query strings (e.g., ?id=123)
 $path = parse_url($requestUri, PHP_URL_PATH);
 
+// Clean up the path: strip trailing slashes so /api/users/ matches /api/users
+$path = rtrim($path, '/');
+
 // Route the request to the correct file based on the URL path
+// ROUTER: Match both Vercel's internal rewritten paths and direct paths
 switch ($path) {
     case '/api/bracket':
+    case '/bracket':
         include __DIR__ . '/bracket.php';
         break;
 
     case '/api/databaseConnect':
+    case '/databaseConnect':
         include __DIR__ . '/databaseConnect.php';
         break;
 
     case '/api/defLeaders':
+    case '/defLeaders':
         include __DIR__ . '/defLeaders.php';
         break;
 
     case '/api/gamePage':
+    case '/gamePage':
         include __DIR__ . '/gamePage.php';
         break;
 
     case '/api/navbar':
+    case '/navbar':
         include __DIR__ . '/navbar.php';
         break;
 
     case '/api/passingLeaders':
+    case '/passingLeaders':
         include __DIR__ . '/passingLeaders.php';
         break;
 
     case '/api/playerPageDef':
+    case '/playerPageDef':
         include __DIR__ . '/playerPageDef.php';
         break;
     
     case '/api/playerPagePass':
+    case '/playerPagePass':
         include __DIR__ . '/playerPagePass.php';
         break;
 
     case '/api/playerPageRec':
+    case '/playerPageRec':
         include __DIR__ . '/playerPageRec.php';
         break;
 
     case '/api/playerPageRush':
+    case '/playerPageRush':
         include __DIR__ . '/playerPageRush.php';
         break;
 
     case '/api/receivingLeaders':
+    case '/receivingLeaders':
         include __DIR__ . '/receivingLeaders.php';
         break;
 
     case '/api/rushingLeaders':
+    case '/rushingLeaders':
         include __DIR__ . '/rushingLeaders.php';
         break;
 
     case '/api/scoreboard':
+    case '/scoreboard':
         include __DIR__ . '/scoreboard.php';
         break;
 
     case '/api/teamPage':
+    case '/teamPage':
         include __DIR__ . '/teamPage.php';
         break;
 
