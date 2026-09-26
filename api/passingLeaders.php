@@ -84,7 +84,7 @@ $sql .= " GROUP BY Player_ID
 
 $result = $conn->query($sql);
 
-if ($result->num_rows > 0) {
+if ($result->rowCount() > 0) {
     // output data of each row
     $cur_rank = 1;
     while($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -111,7 +111,7 @@ if ($result->num_rows > 0) {
     echo "0 results";
 }
 
-$conn->close();
+$conn = null;
 ?>
 
 </table>
