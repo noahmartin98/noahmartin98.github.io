@@ -78,7 +78,7 @@ if ($season !== "Total") {
     $sql .= " WHERE Season = $season";
 }
 
-$sql .= " GROUP BY Player_ID
+$sql .= " GROUP BY Player_ID, game.Season
         ORDER BY SUM(Yds) desc;";
 
 
