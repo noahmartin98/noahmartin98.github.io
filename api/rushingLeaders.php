@@ -94,7 +94,7 @@ if ($season !== "Total") {
 
 $stmt->execute();
 
-if ($stmt->rowCount > 0) {
+if ($stmt->rowCount() > 0) {
     // output data of each row
     $cur_rank = 1;
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
