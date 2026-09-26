@@ -13,9 +13,14 @@ if (!$conn) {
     die("mysqli_init failed");
 }
 
-// 2. Set the SSL certificate path (Required by Aiven)
-// Replace with the absolute path to your downloaded ca.pem file
-$conn->ssl_set(NULL, NULL, "/absolute/path/to/ca.pem", NULL, NULL);
+// 2. FIXED: Dynamically point to the ca.pem file inside your api/ directory
+$cert_path = __DIR__ . '/ca.pem';
+
+if (!file_exists($cert_path)) {
+    die("SSL Certificate Error: The file ca.pem was not found at: " . $cert_path);
+}
+
+$conn->ssl_set(NULL, NULL, $cert_path, NULL, NULL);
 
 // 3. Connect to the database
 $success = $conn->real_connect($host, $username, $password, $dbname, $port, NULL, MYSQLI_CLIENT_SSL);
