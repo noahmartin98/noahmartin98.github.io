@@ -56,8 +56,23 @@ require 'navbar.php';
 
 <?php
 
-$sql = "SELECT game.Season, player.Player_Name, GROUP_CONCAT(DISTINCT pos.Pos_Abbr SEPARATOR ', ') AS Poss, GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS Teams,
-	rec_statline.Player_ID, COUNT(*) as Gms, SUM(Rec), SUM(Yds), SUM(TD),
+// 1. Conditionally add Season to both SELECT and GROUP BY blocks if it's not a lifetime total
+if ($season !== "Total") {
+    $select_season = "game.Season, ";
+    $where_clause = " WHERE game.Season = :season";
+    $group_by_season = ", game.Season";
+} else {
+    // For lifetime "Total", we show a hardcoded string label instead of an unpredictable single season
+    $select_season = "'All Seasons' AS Season, ";
+    $where_clause = "";
+    $group_by_season = "";
+}
+
+$sql = "SELECT $select_season player.Player_Name,
+	GROUP_CONCAT(DISTINCT pos.Pos_Abbr SEPARATOR ', ') AS Poss,
+	GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS Teams,
+	rec_statline.Player_ID, COUNT(*) as Gms,
+	SUM(Rec), SUM(Yds), SUM(TD),
 	(SUM(Yds)/SUM(Rec)) AS Ypc,
     (SUM(Rec)/count(*)) AS Rpg,
     (SUM(Yds)/count(*)) AS Ypg
@@ -65,22 +80,26 @@ $sql = "SELECT game.Season, player.Player_Name, GROUP_CONCAT(DISTINCT pos.Pos_Ab
     INNER JOIN player ON rec_statline.Player_ID = player.Player_ID
     INNER JOIN team ON rec_statline.Team_ID = team.Team_ID
     INNER JOIN pos ON rec_statline.Pos_ID = pos.Pos_ID
-    INNER JOIN game ON rec_statline.Game_ID = game.Game_ID";
+    INNER JOIN game ON rec_statline.Game_ID = game.Game_ID
+	$where_clause
+	GROUP BY Player_ID $group_by_season
+	ORDER BY Sum(Yds) DESC";
 
+// 2. Prepare the statement to run safely
+$stmt = $conn->prepare($sql);
+
+// 3. Securely bind the season parameter if filtering
 if ($season !== "Total") {
-    $sql .= " WHERE Season = $season";
+    $stmt->bindParam(':season', $season, PDO::PARAM_INT); // or PARAM_STR depending on your column type
 }
-
-$sql .= " GROUP BY Player_ID
-    ORDER BY SUM(Yds) desc;";
-
     
-$result = $conn->query($sql);
+$stmt->execute();
 
-if ($result->num_rows > 0) {
+
+if ($stmt->rowCount() > 0) {
     // output data of each row
     $cur_rank = 1;
-    while($row = $result->fetch_assoc()) {
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $playerid = $row["Player_ID"];
         echo "<tr>";
         echo "<td>".$cur_rank."</td>";
@@ -101,7 +120,7 @@ if ($result->num_rows > 0) {
     echo "0 results";
 }
 
-$conn->close();
+$conn = null;
 ?>
 
     </table>
