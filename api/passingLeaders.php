@@ -91,7 +91,7 @@ $sql = "SELECT $select_season player.Player_Name,
     INNER JOIN pos ON pass_statline.Pos_ID = pos.Pos_ID
     INNER JOIN game ON pass_statline.Game_ID = game.Game_ID
     $where_clause
-    GROUP BY pass_statline.Player_ID, player.Player_Name $group_by_season
+    GROUP BY Player_ID $group_by_season
     ORDER BY SUM(Yds) DESC;";
 
 // 2. Prepare the statement to run safely
