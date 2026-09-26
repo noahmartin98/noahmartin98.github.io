@@ -14,7 +14,7 @@
 <body>
 
 <?php
-require 'db_config.php';
+require 'databaseConnect.php';
 
 $season = $_GET['season'] ?? '2024';
 
