@@ -1,5 +1,5 @@
 <?php
-$uri = "mysql://avnadmin:AVNS_s9w_D_bs4m3e3bGzvGe@mysql-c4b6f13-sportssim98-2816.g.aivencloud.com:24353/defaultdb?ssl-mode=REQUIRED";
+$uri = "mysql://avnadmin:AVNS_s9w_D_bs4m3e3bGzvGe@://aivencloud.com";
 $fields = parse_url($uri);
 
 $host = $fields["host"];
