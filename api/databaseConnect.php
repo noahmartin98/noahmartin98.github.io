@@ -1,6 +1,6 @@
 <?php
 
-$host = mysql-c4b6f13-sportssim98-2816.g.aivencloud.com;
+$host = "mysql-c4b6f13-sportssim98-2816.g.aivencloud.com";
 $port = 24353;
 $username = "avnadmin";
 $password = "AVNS_s9w_D_bs4m3e3bGzvGe";
