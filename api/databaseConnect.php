@@ -1,33 +1,22 @@
 <?php
+$uri = "mysql://avnadmin:AVNS_s9w_D_bs4m3e3bGzvGe@mysql-c4b6f13-sportssim98-2816.g.aivencloud.com:24353/defaultdb?ssl-mode=REQUIRED";
+$fields = parse_url($uri);
 
-$host = "mysql-c4b6f13-sportssim98-2816.g.aivencloud.com";
-$port = 24353;
-$username = "avnadmin";
-$password = "AVNS_s9w_D_bs4m3e3bGzvGe";
-$dbname = "football_db";
+// FIXED: Use the correct, standardized array keys from parse_url()
+$dsn = "mysql:";
+$dsn .= "host=" . $fields["host"];
+$dsn .= ";port=" . $fields["port"];
+$dsn .= ";dbname=football_db"; // Your target database name
+$dsn .= ";sslmode=verify-ca;sslrootcert=/absolute/path/to/ca.pem";
 
-// 1. Initialize mysqli
-$conn = mysqli_init();
+$username = $fields["user"];
+$password = $fields["pass"];
 
-if (!$conn) {
-    die("mysqli_init failed");
+try {
+    $conn = new PDO($dsn, $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    echo "Connected successfully to Aiven MySQL!";
+} catch (PDOException $e) {
+    echo "Connection failed: " . $e->getMessage();
 }
-
-// 2. FIXED: Dynamically point to the ca.pem file inside your api/ directory
-$cert_path = __DIR__ . '/ca.pem';
-
-if (!file_exists($cert_path)) {
-    die("SSL Certificate Error: The file ca.pem was not found at: " . $cert_path);
-}
-
-$conn->ssl_set(NULL, NULL, $cert_path, NULL, NULL);
-
-// 3. Connect to the database
-$success = $conn->real_connect($host, $username, $password, $dbname, $port, NULL, MYSQLI_CLIENT_SSL);
-
-if (!$success) {
-    die("Connection failed: " . mysqli_connect_error());
-}
-
-echo "Connected successfully to Aiven MySQL using mysqli!";
 ?>
