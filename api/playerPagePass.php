@@ -14,12 +14,15 @@ if (isset($_GET['playerid'])) {
 
 $sql = "SELECT Player_Name
     FROM player 
-    WHERE Player_ID = $playerid;";
-$result = $conn->query($sql);
+    WHERE Player_ID = :playerid;";
 
-if ($result->num_rows > 0) {
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':playerid', $playerid, PDO::PARAM_INT);
+$stmt->execute();
+
+if ($stmt->rowCount() > 0) {
     // output data of each row
-    while($row = $result->fetch_assoc()) {
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $playername =  $row["Player_Name"];
     }
 } else {
@@ -56,7 +59,8 @@ require 'navbar.php';
 
 <?php
 
-$sql = "SELECT game.season, team.Abbr, count(*) as Gms, SUM(Comp) as Comp, SUM(Att) as Att, SUM(Yds) as Yds, SUM(TD) as TD, SUM(INTR) as INTR,
+$sql = "SELECT game.season, GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS Teams,
+	count(*) as Gms, SUM(Comp) as Comp, SUM(Att) as Att, SUM(Yds) as Yds, SUM(TD) as TD, SUM(INTR) as INTR,
     (SUM(Comp)/SUM(Att)) AS CompPct,
     (SUM(Yds)/count(*)) AS Ypg,
     (SUM(Yds)/SUM(Att)) AS Ypa,
@@ -64,13 +68,16 @@ $sql = "SELECT game.season, team.Abbr, count(*) as Gms, SUM(Comp) as Comp, SUM(A
     FROM pass_statline
     INNER JOIN game ON pass_statline.Game_ID = game.Game_ID
     INNER JOIN team ON pass_statline.Team_ID = team.Team_ID
-    WHERE Player_ID = $playerid
+    WHERE Player_ID = :playerid
     GROUP BY game.Season;";
-$result = $conn->query($sql);
 
-if ($result->num_rows > 0) {
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':playerid', $playerid, PDO::PARAM_INT);
+$stmt->execute();
+
+if ($stmt->rowCount() > 0) {
     // output data of each row
-    while($row = $result->fetch_assoc()) {
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         echo "<tr>";
         echo "<td>". $row["season"]."</td>";
         echo "<td>". $row["Abbr"]."</td>";
@@ -136,13 +143,16 @@ $sql = "SELECT game.season, tm.Abbr AS Tm, game.week, game.game_date, t1.team_us
 		AND t2.team_id <> pass_statline.team_id
 	JOIN team tm ON t1.team_id = tm.team_ID
 	JOIN team opp ON t2.team_id = opp.team_id
-    WHERE Player_ID = $playerid;";
-$result = $conn->query($sql);
+    WHERE Player_ID = :playerid;";
 
-if ($result->num_rows > 0) {
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':playerid', $playerid, PDO::PARAM_INT);
+$stmt->execute();
+
+if ($stmt->rowCount() > 0) {
     // output data of each row
     $cur_rank = 1;
-    while($row = $result->fetch_assoc()) {
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         echo "<tr>";
         echo "<td>". $row["season"]."</td>";
         echo "<td>". $row["Tm"]."</td>";
@@ -163,7 +173,7 @@ if ($result->num_rows > 0) {
     echo "0 results";
 }
 
-$conn->close();
+$conn = null;
 ?>
 
     
