@@ -28,14 +28,16 @@ $sql = "SELECT
 FROM game g
 JOIN team_statline ts ON g.game_id = ts.game_id
 JOIN team t ON ts.team_id = t.team_id
-WHERE g.game_id = $gameid;";
+WHERE g.game_id = :gameid;";
 
-$result = $conn->query($sql);
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':gameid', $gameid, PDO::PARAM_INT);
+$stmt->execute();
 
 $home = [];
 $away = [];
 
-while ($row = $result->fetch_assoc()) {
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     if ($row["home_away"] === "Home") {
         $home = $row;
     } else {
@@ -48,11 +50,13 @@ $season = $home["season"];
 ////
 $sql = "SELECT *
 	FROM team_game_passing
-	WHERE game_id = $gameid";
+	WHERE game_id = :gameid";
 
-$result = $conn->query($sql);
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':gameid', $gameid, PDO::PARAM_INT);
+$stmt->execute();
 
-while ($row = $result->fetch_assoc()) {
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $teamPass[$row['team_id']] = $row;
 }
 $home['passing'] = $teamPass[$home['team_id']] ?? null;
@@ -60,11 +64,13 @@ $away['passing'] = $teamPass[$away['team_id']] ?? null;
 ////
 $sql = "SELECT *
 	FROM team_game_rushing
-	WHERE game_id = $gameid";
+	WHERE game_id = :gameid";
 
-$result = $conn->query($sql);
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':gameid', $gameid, PDO::PARAM_INT);
+$stmt->execute();
 
-while ($row = $result->fetch_assoc()) {
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $teamRush[$row['team_id']] = $row;
 }
 $home['rushing'] = $teamRush[$home['team_id']] ?? null;
@@ -84,14 +90,16 @@ $sql = "SELECT p.player_id, p.player_name, pos.pos_abbr, t.abbr, ps.comp, ps.att
 		    JOIN player p ON ps.player_id = p.player_id
 		    JOIN team t ON ps.team_id = t.team_id
 		    JOIN pos ON ps.pos_id = pos.pos_id
-		    WHERE g.game_id = $gameid
+		    WHERE g.game_id = :gameid
 		    ORDER BY yds desc;";
 		
-		$result = $conn->query($sql);
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':gameid', $gameid, PDO::PARAM_INT);
+$stmt->execute();
 
 $homePass = [];
 $awayPass = [];
-while ($row = $result->fetch_assoc()) {
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     if ($row["abbr"] === $home["abbr"]) {
         $homePass[] = $row;   // Add to home array
     } else {
@@ -106,13 +114,16 @@ $sql = "SELECT p.player_id, p.player_name, pos.pos_abbr, t.abbr, rs.att, rs.yds,
 		    JOIN player p ON rs.player_id = p.player_id
 		    JOIN team t ON rs.team_id = t.team_id
 		    JOIN pos ON rs.pos_id = pos.pos_id
-		    WHERE g.game_id = $gameid
+		    WHERE g.game_id = :gameid
 		    ORDER BY yds desc;";
 		
-		$result = $conn->query($sql);
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':gameid', $gameid, PDO::PARAM_INT);
+$stmt->execute();
+
 $homeRush = [];
 $awayRush = [];
-while ($row = $result->fetch_assoc()) {
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     if ($row["abbr"] === $home["abbr"]) {
         $homeRush[] = $row;   // Add to home array
     } else {
@@ -127,13 +138,16 @@ $sql = "SELECT p.player_id, p.player_name, pos.pos_abbr, t.abbr, rs.rec, rs.yds,
 		    JOIN player p ON rs.player_id = p.player_id
 		    JOIN team t ON rs.team_id = t.team_id
 		    JOIN pos ON rs.pos_id = pos.pos_id
-		    WHERE g.game_id = $gameid
+		    WHERE g.game_id = :gameid
 		    ORDER BY yds desc;";
 		
-		$result = $conn->query($sql);
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':gameid', $gameid, PDO::PARAM_INT);
+$stmt->execute();
+
 $homeRec = [];
 $awayRec = [];
-while ($row = $result->fetch_assoc()) {
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     if ($row["abbr"] === $home["abbr"]) {
         $homeRec[] = $row;   // Add to home array
     } else {
@@ -148,13 +162,16 @@ $sql = "SELECT p.player_id, p.player_name, pos.pos_abbr, t.abbr, ds.sack, ds.int
 		    JOIN player p ON ds.player_id = p.player_id
 		    JOIN team t ON ds.team_id = t.team_id
 		    JOIN pos ON ds.pos_id = pos.pos_id
-		    WHERE g.game_id = $gameid
+		    WHERE g.game_id = :gameid
 		    ORDER BY sack desc, intr desc, ff desc, fr desc, td desc, tfl desc, pdef desc;";
 		
-		$result = $conn->query($sql);
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':gameid', $gameid, PDO::PARAM_INT);
+$stmt->execute();
+
 $homeDef = [];
 $awayDef = [];
-while ($row = $result->fetch_assoc()) {
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     if ($row["abbr"] === $home["abbr"]) {
         $homeDef[] = $row;   // Add to home array
     } else {
@@ -162,6 +179,7 @@ while ($row = $result->fetch_assoc()) {
     }
 }
 
+$conn = null;
 
 require 'navbar.php';
 ?>
