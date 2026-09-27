@@ -22,6 +22,7 @@ require 'navbar.php';
             <option value="2015" <?php if ($season == '2015') echo 'selected'; ?>>2015</option>
             <option value="2012" <?php if ($season == '2012') echo 'selected'; ?>>2012</option>
 			<option value="2024" <?php if ($season == '2024') echo 'selected'; ?>>2024</option>
+			<option value="2018" <?php if ($season == '2018') echo 'selected'; ?>>2018</option>
         </select>
     </form>
 
@@ -34,9 +35,12 @@ require 'navbar.php';
 $lastWeekQuery = "SELECT MAX(CAST(SUBSTRING(week, 2) AS UNSIGNED)) AS lastWeek
                   FROM game
                   WHERE season = $season AND week LIKE 'W%';";
-$lastWeekResult = $conn->query($lastWeekQuery);
-$lastWeekRow = $lastWeekResult->fetch_assoc();
 
+$stmt = $conn->prepare($lastWeekQuery);
+$stmt->bindParam(':season', $season, PDO::PARAM_INT); // or PARAM_STR depending on your column type
+$stmt->execute();
+
+$lastWeekRow = $stmt->fetch(PDO::FETCH_ASSOC);
 $lastWeek = $lastWeekRow['lastWeek'] ?? 0;
 
 
@@ -67,12 +71,15 @@ for ($week = 1; $week <= $lastWeek; $week++) {
         JOIN team AS AwayTeam ON t1.team_id = AwayTeam.team_id
         JOIN team AS HomeTeam ON t2.team_id = HomeTeam.team_id
         WHERE Season = $season and week = '$weekCode';";
+
+		$stmt = $conn->prepare($sql);
+		$stmt->bindParam(':season', $season, PDO::PARAM_INT); // or PARAM_STR depending on your column type
+		$stmt->bindParam(':weekCode', $weekCode, PDO::PARAM_STR);
+		$stmt->execute();
         
-        $result = $conn->query($sql);
-        
-        if ($result->num_rows > 0) {
+        if ($stmt->rowCount() > 0) {
             // output data of each row
-            while($row = $result->fetch_assoc()) {
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 				$awayWinner = ($row["awayScore"] > $row["homeScore"]) ? "winner" : "loser";
     			$homeWinner = ($row["homeScore"] > $row["awayScore"]) ? "winner" : "loser";
 				
@@ -123,11 +130,14 @@ foreach ($playoffsWeeks as $weekCode) {
         JOIN team AS HomeTeam ON t2.team_id = HomeTeam.team_id
 	WHERE season = $season and week = '$weekCode';";
 
-	$result = $conn->query($sql);
+	$stmt = $conn->prepare($sql);
+	$stmt->bindParam(':season', $season, PDO::PARAM_INT); // or PARAM_STR depending on your column type
+	$stmt->bindParam(':weekCode', $weekCode, PDO::PARAM_STR);
+	$stmt->execute();
 	
-	if ($result->num_rows > 0) {
+	if ($stmt->rowCount() > 0) {
 		// output data of each row
-		while($row = $result->fetch_assoc()) {
+		while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 			$awayWinner = ($row["awayScore"] > $row["homeScore"]) ? "winner" : "loser";
 			$homeWinner = ($row["homeScore"] > $row["awayScore"]) ? "winner" : "loser";
 			
@@ -170,12 +180,15 @@ foreach ($playoffsWeeks as $weekCode) {
         JOIN team AS Team1 ON t1.team_id = Team1.team_id
         JOIN team AS Team2 ON t2.team_id = Team2.team_id
 	WHERE season = $season and week = '$weekCode';";
+
+	$stmt = $conn->prepare($sql);
+	$stmt->bindParam(':season', $season, PDO::PARAM_INT); // or PARAM_STR depending on your column type
+	$stmt->bindParam(':weekCode', $weekCode, PDO::PARAM_STR);
+	$stmt->execute();
 	
-	$result = $conn->query($sql);
-	
-	if ($result->num_rows > 0) {
+	if ($stmt->rowCount() > 0) {
 		// output data of each row
-		while($row = $result->fetch_assoc()) {
+		while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 			$team1Winner = ($row["team1Score"] > $row["team2Score"]) ? "winner" : "loser";
 			$team2Winner = ($row["team2Score"] > $row["team1Score"]) ? "winner" : "loser";
 			
@@ -195,7 +208,7 @@ foreach ($playoffsWeeks as $weekCode) {
 
 
 
-    $conn->close();
+    $conn = null;
 ?>
 
 
