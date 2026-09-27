@@ -14,12 +14,15 @@ if (isset($_GET['playerid'])) {
 
 $sql = "SELECT Player_Name
     FROM player 
-    WHERE Player_ID = $playerid;";
-$result = $conn->query($sql);
+    WHERE Player_ID = :playerid;";
 
-if ($result->num_rows > 0) {
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':playerid', $playerid, PDO::PARAM_INT);
+$stmt->execute();
+
+if ($stmt->rowCount() > 0) {
     // output data of each row
-    while($row = $result->fetch_assoc()) {
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $playername =  $row["Player_Name"];
     }
 } else {
@@ -60,13 +63,16 @@ $sql = "SELECT game.season, GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS T
     INNER JOIN team ON rush_statline.Team_ID = team.Team_ID
     INNER JOIN pos ON rush_statline.Pos_ID = pos.Pos_ID
     INNER JOIN game ON rush_statline.Game_ID = game.Game_ID
-    WHERE Player_ID = $playerid
+    WHERE Player_ID = :playerid
     GROUP BY game.Season;";
-$result = $conn->query($sql);
 
-if ($result->num_rows > 0) {
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':playerid', $playerid, PDO::PARAM_INT);
+$stmt->execute();
+
+if ($stmt->rowCount() > 0) {
     // output data of each row
-    while($row = $result->fetch_assoc()) {
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         echo "<tr>";
         echo "<td>". $row["season"]."</td>";
         echo "<td>". $row["Teams"]."</td>";
@@ -126,12 +132,15 @@ $sql = "SELECT game.season, tm.Abbr AS Tm, game.week, game.game_date, t1.team_us
 		AND t2.team_id <> rush_statline.team_id
 	JOIN team tm ON t1.team_id = tm.team_id
 	JOIN team opp ON t2.team_id = opp.team_id
-    WHERE Player_ID = $playerid;";
-$result = $conn->query($sql);
+    WHERE Player_ID = :playerid;";
 
-if ($result->num_rows > 0) {
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':playerid', $playerid, PDO::PARAM_INT);
+$stmt->execute();
+
+if ($stmt->rowCount() > 0) {
     // output data of each row
-    while($row = $result->fetch_assoc()) {
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         echo "<tr>";
         echo "<td>". $row["season"]."</td>";
         echo "<td>". $row["Tm"]."</td>";
@@ -149,7 +158,7 @@ if ($result->num_rows > 0) {
     echo "0 results";
 }
 
-$conn->close();
+$conn = null;
 ?>
 
     </table>
