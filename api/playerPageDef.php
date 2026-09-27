@@ -57,7 +57,8 @@ require 'navbar.php';
 
 <?php
 
-$sql = "SELECT game.season, team.Abbr, count(*) as Gms, SUM(Sack) as Sack, SUM(INTR) as INTR, SUM(FF) as FF, SUM(FR) as FR, SUM(TD) as TD,
+$sql = "SELECT game.season, GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS Teams,
+	count(*) as Gms, SUM(Sack) as Sack, SUM(INTR) as INTR, SUM(FF) as FF, SUM(FR) as FR, SUM(TD) as TD,
 	SUM(TFL) as TFL, SUM(PDEF) as PDEF
     FROM def_statline
     INNER JOIN game ON def_statline.Game_ID = game.Game_ID
