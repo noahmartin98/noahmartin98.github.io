@@ -14,10 +14,10 @@ if (isset($_GET['playerid'])) {
 
 $sql = "SELECT Player_Name
     FROM player 
-    WHERE Player_ID = :playerID;";
+    WHERE Player_ID = :playerid;";
 
 $stmt = $conn->prepare($sql);
-$stmt->bindParam(':playerID', $playerid, PDO::PARAM_INT);
+$stmt->bindParam(':playerid', $playerid, PDO::PARAM_INT);
 $stmt->execute();
 
 if ($stmt->rowCount() > 0) {
