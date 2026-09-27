@@ -334,7 +334,7 @@ if ($stmt->rowCount() > 0) {
 
 
 <?php
-    $conn = null);
+    $conn = null;
 ?>
 
 
