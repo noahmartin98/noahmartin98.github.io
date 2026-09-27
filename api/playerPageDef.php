@@ -147,7 +147,7 @@ $stmt->execute();
 if ($stmt->rowCount() > 0) {
     // output data of each row
     $cur_rank = 1;
-    while($row = $stmt->fetch(PDO::FETCH_ASSOC) {
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         echo "<tr>";
         echo "<td>". $row["season"]."</td>";
         echo "<td>". $row["Tm"]."</td>";
