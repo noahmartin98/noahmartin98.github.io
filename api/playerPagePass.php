@@ -80,7 +80,7 @@ if ($stmt->rowCount() > 0) {
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         echo "<tr>";
         echo "<td>". $row["season"]."</td>";
-        echo "<td>". $row["Abbr"]."</td>";
+        echo "<td>". $row["Teams"]."</td>";
         echo "<td>". $row["Gms"]."</td>";
         echo "<td>". $row["Comp"]."</td>";
         echo "<td>". $row["Att"]."</td>";
