@@ -63,7 +63,7 @@ $sql = "SELECT game.season, team.Abbr, count(*) as Gms, SUM(Sack) as Sack, SUM(I
     INNER JOIN game ON def_statline.Game_ID = game.Game_ID
     INNER JOIN team ON def_statline.Team_ID = team.Team_ID
     WHERE Player_ID = :playerid
-    GROUP BY game.Season;";
+    GROUP BY game.Season, team.Abbr;";
 
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':playerid', $playerid, PDO::PARAM_INT);
