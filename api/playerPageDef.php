@@ -66,7 +66,7 @@ $sql = "SELECT game.season, team.Abbr, count(*) as Gms, SUM(Sack) as Sack, SUM(I
     GROUP BY game.Season;";
 
 $stmt = $conn->prepare($sql);
-$stmt->bindParam(':playerID', $playerid, PDO::PARAM_INT);
+$stmt->bindParam(':playerid', $playerid, PDO::PARAM_INT);
 $stmt->execute();
 
 
@@ -141,7 +141,7 @@ $sql = "SELECT game.season, tm.Abbr AS Tm, game.week, game.game_date, t1.team_us
     WHERE Player_ID = :playerid;";
 
 $stmt = $conn->prepare($sql);
-$stmt->bindParam(':playerID', $playerid, PDO::PARAM_INT);
+$stmt->bindParam(':playerid', $playerid, PDO::PARAM_INT);
 $stmt->execute();
 
 if ($stmt->rowCount() > 0) {
