@@ -34,7 +34,7 @@ require 'navbar.php';
 // Find last week with any games
 $lastWeekQuery = "SELECT MAX(CAST(SUBSTRING(week, 2) AS UNSIGNED)) AS lastWeek
                   FROM game
-                  WHERE season = $season AND week LIKE 'W%';";
+                  WHERE season = :season AND week LIKE 'W%';";
 
 $stmt = $conn->prepare($lastWeekQuery);
 $stmt->bindParam(':season', $season, PDO::PARAM_INT); // or PARAM_STR depending on your column type
