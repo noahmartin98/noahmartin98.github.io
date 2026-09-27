@@ -70,7 +70,7 @@ for ($week = 1; $week <= $lastWeek; $week++) {
         JOIN team_statline AS t2 ON game.game_id = t2.game_id AND t2.home_away = 'Home'
         JOIN team AS AwayTeam ON t1.team_id = AwayTeam.team_id
         JOIN team AS HomeTeam ON t2.team_id = HomeTeam.team_id
-        WHERE Season = $season and week = '$weekCode';";
+        WHERE Season = :season and week = :weekCode;";
 
 		$stmt = $conn->prepare($sql);
 		$stmt->bindParam(':season', $season, PDO::PARAM_INT); // or PARAM_STR depending on your column type
@@ -128,7 +128,7 @@ foreach ($playoffsWeeks as $weekCode) {
         JOIN team_statline AS t2 ON game.game_id = t2.game_id AND t2.home_away = 'Home'
         JOIN team AS AwayTeam ON t1.team_id = AwayTeam.team_id
         JOIN team AS HomeTeam ON t2.team_id = HomeTeam.team_id
-	WHERE season = $season and week = '$weekCode';";
+	WHERE season = :season and week = :weekCode;";
 
 	$stmt = $conn->prepare($sql);
 	$stmt->bindParam(':season', $season, PDO::PARAM_INT); // or PARAM_STR depending on your column type
@@ -179,7 +179,7 @@ foreach ($playoffsWeeks as $weekCode) {
         JOIN team_statline AS t2 ON game.game_id = t2.game_id AND t2.team_user = 'shady'
         JOIN team AS Team1 ON t1.team_id = Team1.team_id
         JOIN team AS Team2 ON t2.team_id = Team2.team_id
-	WHERE season = $season and week = '$weekCode';";
+	WHERE season = :season and week = :weekCode;";
 
 	$stmt = $conn->prepare($sql);
 	$stmt->bindParam(':season', $season, PDO::PARAM_INT); // or PARAM_STR depending on your column type
