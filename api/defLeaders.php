@@ -16,7 +16,7 @@
 <?php
 require 'databaseConnect.php';
 
-$season = $_GET['season'] ?? '2024';
+$season = $_GET['season'] ?? 'Total';
 
 require 'navbar.php';
 
