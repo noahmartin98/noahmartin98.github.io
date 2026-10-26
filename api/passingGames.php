@@ -71,7 +71,7 @@ if ($season !== "All") {
 }
 
 $sql = "SELECT 
-	  player.Player_ID
+	  player.Player_ID,
       game.season AS Season,
       game.week AS Week,
       game.game_date AS Date,
