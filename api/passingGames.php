@@ -114,7 +114,7 @@ if ($stmt->rowCount() > 0) {
         echo "<td>". $row["Week"]."</td>";
         echo "<td>". $row["Date"]."</td>";
         echo "<td>". $row["OT"]."</td>";
-        echo "<td>". $row["Player"]."</td>";
+         echo "<td class='link'><a class='leader' href='/api/playerPagePass.php?playerid=" . $playerid . "'>" . $row["Player"] . "</a></td>";
         echo "<td>". $row["Pos"]."</td>";
         echo "<td>". $row["Team"]."</td>";
         echo "<td>". $row["Com"]."</td>";
