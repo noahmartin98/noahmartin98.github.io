@@ -31,8 +31,8 @@ require 'navbar.php';
         <select class="season-select" name="season" onchange="this.form.submit()">
             <option value="2015" <?php if ($season == '2015') echo 'selected'; ?>>2015</option>
             <option value="2012" <?php if ($season == '2012') echo 'selected'; ?>>2012</option>
-			    <  option value="2024" <?php if ($season == '2024') echo 'selected'; ?>>2024</option>
-			      <option value="2018" <?php if ($season == '2018') echo 'selected'; ?>>2018</option>
+			<option value="2024" <?php if ($season == '2024') echo 'selected'; ?>>2024</option>
+			<option value="2018" <?php if ($season == '2018') echo 'selected'; ?>>2018</option>
             <option value="All" <?php if ($season == 'All') echo 'selected'; ?>>All</option>
         </select>
     </form>
