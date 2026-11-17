@@ -72,11 +72,11 @@ if ($season !== "Total") {
 }
 
 $sql = "SELECT game.season, game.week, game.game_date,
-  player.Player_Name,
-	pos.Pos_Abbr AS Poss,
-	team.Abbr AS Team,
+  player.player_Name,
+	pos.Pos_Abbr AS poss,
+	team.Abbr AS team,
 	def_statline.Player_ID,
-	Sack, INTR, FF, FR, TD, TFL, PDEF
+	sack, intr, ff, fr, td, tfl, pdef
     FROM def_statline
     INNER JOIN player ON def_statline.Player_ID = player.Player_ID
     INNER JOIN team ON def_statline.Team_ID = team.Team_ID
