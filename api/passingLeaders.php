@@ -57,7 +57,7 @@ require 'navbar.php';
             <th>TD/INT</th>
         </tr>
     </thead>
-
+	<tbody>
 
 <?php
 
@@ -132,6 +132,7 @@ if ($stmt->rowCount() > 0) {
 
 $conn = null;
 ?>
+	</tbody>
 
 </table>
 
