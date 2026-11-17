@@ -8,6 +8,8 @@
 <?php
 require 'databaseConnect.php';
 
+$season = $_GET['season'] ?? 'Total';
+
 if (isset($_GET['playerid'])) {
     $playerid = $_GET['playerid'];
 }
@@ -102,7 +104,11 @@ if ($stmt->rowCount() > 0) {
     </table>
 
 <h3>Game Log</h3>
-
+ <form method="get" action="playerPagePass.php">
+	    <select class="season-select" name="season" onchange="this.form.submit()">
+	        <?php include 'seasonOptions.php'; ?>
+	    </select>
+	</form>
 
 
     <table>
@@ -124,6 +130,14 @@ if ($stmt->rowCount() > 0) {
 
 <?php
 
+if ($season !== "Total") {
+    $where_clause = "AND game.Season = :season";
+} else {
+    // For lifetime "Total", we show a hardcoded string label instead of an unpredictable single season
+    $where_clause = "";
+}
+
+
 $sql = "SELECT game.season, tm.Abbr AS Tm, game.week, game.game_date, t1.team_user, 
 		CASE
 			WHEN (t1.home_away = 'Home')
@@ -143,7 +157,7 @@ $sql = "SELECT game.season, tm.Abbr AS Tm, game.week, game.game_date, t1.team_us
 		AND t2.team_id <> pass_statline.team_id
 	JOIN team tm ON t1.team_id = tm.team_ID
 	JOIN team opp ON t2.team_id = opp.team_id
-    WHERE Player_ID = :playerid;";
+    WHERE Player_ID = :playerid $where_clause;";
 
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':playerid', $playerid, PDO::PARAM_INT);
