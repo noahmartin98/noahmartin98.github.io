@@ -40,9 +40,6 @@ require 'navbar.php';
     <h3>Career</h3>
 </div>
 
-
-</table>
-
     <table class="player-years-pass">
         <tr>
             <th>Season</th>
@@ -75,7 +72,6 @@ $sql = "SELECT game.season, GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS T
 
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':playerid', $playerid, PDO::PARAM_INT);
-$stmt->bindParam(':playerid', $playerid, PDO::PARAM_INT);
 $stmt->execute();
 
 if ($stmt->rowCount() > 0) {
@@ -106,6 +102,7 @@ if ($stmt->rowCount() > 0) {
 
 <h3>Game Log</h3>
  <form method="get" action="playerPagePass.php">
+	 <input type="hidden" name="playerid" value="<?php echo htmlspecialchars($playerid ?? ''); ?>">
 	    <select class="season-select" name="season" onchange="this.form.submit()">
 	        <?php include 'seasonOptions.php'; ?>
 	    </select>
