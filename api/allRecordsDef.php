@@ -83,7 +83,6 @@ $sql = "SELECT game.season, game.week, game.game_date,
     INNER JOIN pos ON def_statline.Pos_ID = pos.Pos_ID
     INNER JOIN game ON def_statline.Game_ID = game.Game_ID
 	$where_clause
-	GROUP BY Player_ID
     ORDER BY SUM(Sack) DESC;";
 
 // 2. Prepare the statement to run safely
