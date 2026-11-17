@@ -72,7 +72,7 @@ if ($season !== "Total") {
 }
 
 $sql = "SELECT game.season, game.week, game.game_date,
-  player.player_Name,
+  player.player_name,
 	pos.Pos_Abbr AS poss,
 	team.Abbr AS team,
 	def_statline.Player_ID,
