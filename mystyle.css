@@ -199,17 +199,9 @@ table td {
   transition: background-color 0.3s ease;
 }
 
-table tbody tr:hover {
-  background-color: #d2e0d2;
-}
-
 a:link.leader, a:visited.leader {
   text-decoration: none;
   color: black;
-}
-
-td:hover.link {
-  background-color: #7b9abb;
 }
 
 a:hover.leader {
@@ -220,11 +212,30 @@ td.link > a {
    display: block; width: 100%; height: 100%;
 }
 
-
-
-/* Alternate row striping */
-.table tbody tr:nth-child(even) {
+/* Alternate row striping (works with DataTables .odd/.even and standard tables) */
+table.dataTable tbody tr.even td,
+table tbody tr:nth-child(even) td {
   background-color: #f1f8e9;
+  box-shadow: none;
+}
+
+table.dataTable tbody tr.odd td,
+table tbody tr:nth-child(odd) td {
+  background-color: #ffffff;
+  box-shadow: none;
+}
+
+/* Grey hover state that overrides both DataTables and striping */
+table.dataTable tbody tr:hover td,
+table tbody tr:hover td {
+  background-color: #d2e0d2 !important;
+  box-shadow: none !important;
+}
+
+/* Keep your blue hover effect on the player name link cell */
+table.dataTable tbody tr:hover td.link:hover,
+table tbody tr:hover td.link:hover {
+  background-color: #7b9abb !important;
 }
 
 /* Responsive */
@@ -296,3 +307,5 @@ select.season-select:hover {
   color: #117213;
   transform: translateY(-2px);
 }
+
+
