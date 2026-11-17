@@ -29,7 +29,7 @@ require 'navbar.php';
 
     <form method="get" action="passingLeaders.php">
 	    <select class="season-select" name="season" onchange="this.form.submit()">
-	        <?php include 'season_options.php'; ?>
+	        <?php include 'seasonOptions.php'; ?>
 	    </select>
 	</form>
 
