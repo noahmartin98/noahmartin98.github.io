@@ -7,9 +7,10 @@
 
 <?php
 require 'databaseConnect.php';
+require 'functions.php';
 
 $teamid = $_GET['teamid'] ?? null;
-$season = $_GET['season'] ?? '2014';
+$season = $_GET['season'] ?? 'Total';
 
 $sql = "SELECT Team_Name FROM team WHERE Team_ID = :teamid;";
 $stmt = $conn->prepare($sql);
@@ -17,16 +18,30 @@ $stmt->bindParam(':teamid', $teamid, PDO::PARAM_INT);
 $stmt->execute();
 
 if ($stmt->rowCount() > 0) {
-    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $teamname = $row["Team_Name"];
-    }
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $teamname = $row["Team_Name"];
 } else {
     $teamname = "Team Not Found";
 }
 
+// Fetch only the seasons this team has played in, ordered by play order (Game_ID)
+$teamSeasons = [];
+$seasonSql = "SELECT game.Season, MIN(game.Game_ID) AS first_game
+              FROM team_statline
+              INNER JOIN game ON team_statline.game_id = game.game_id
+              WHERE team_statline.team_id = :teamid
+              GROUP BY game.Season
+              ORDER BY first_game ASC;";
+$seasonStmt = $conn->prepare($seasonSql);
+$seasonStmt->bindParam(':teamid', $teamid, PDO::PARAM_INT);
+$seasonStmt->execute();
+
+while ($sRow = $seasonStmt->fetch(PDO::FETCH_ASSOC)) {
+    $teamSeasons[] = $sRow["Season"];
+}
+
 require 'navbar.php';
 
-// Set up reusable season filter for all 5 queries on this page
 if ($season !== "Total") {
     $season_clause = "AND game.Season = :season";
 } else {
@@ -34,16 +49,11 @@ if ($season !== "Total") {
 }
 ?>
 
+    
 <!--Header with team name and season select-->
 <div class="flex-row margin-top-small gap-large">
     <h1><?php echo htmlspecialchars($teamname); ?></h1>
-
-    <form method="get" action="teamPage.php">
-        <input type="hidden" name="teamid" value="<?php echo htmlspecialchars($teamid ?? ''); ?>">
-        <select class="season-select" name="season" onchange="this.form.submit()">
-            <?php include 'seasonOptions.php'; ?>
-        </select>
-    </form>
+    <?php seasonDropdownForm($teamSeasons, $season, 'teamid', $teamid); ?>
 </div>
 
 <h3>Games</h3>
