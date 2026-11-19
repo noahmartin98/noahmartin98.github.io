@@ -140,23 +140,24 @@ if ($stmt->rowCount() > 0) {
 
         $seasonUrl = "/api/teamPage.php?teamid=" . urlencode($teamid) . "&season=" . urlencode($row['Season']);
 
-        echo "<tr class='highlight'>";
-        echo "<td class='link'><a class='leader' href='$allSeasonsUrl'>Total</a></td>";
-        echo "<td>{$tot['W']}</td>";
-        echo "<td>{$tot['L']}</td>";
-        echo "<td>{$tot['T']}</td>";
-        echo "<td>" . sprintf('%.3f', $totPct) . "</td>";
-        echo "<td>{$tot['PF']}</td>";
-        echo "<td>{$tot['PA']}</td>";
-        echo "<td>$poRecordText</td>";
+        echo "<tr>";
+        echo "<td class='link'><a class='leader' href='$seasonUrl'>{$row['Season']}</a></td>";
+        echo "<td>{$row['W']}</td>";
+        echo "<td>{$row['L']}</td>";
+        echo "<td>{$row['T']}</td>";
+        echo "<td>" . sprintf('%.3f', $winPct) . "</td>";
+        echo "<td>{$row['PF']}</td>";
+        echo "<td>{$row['PA']}</td>";
+        echo "<td>$playoffFinish</td>";
         echo "</tr>";
-    }
+    } // <-- Make sure the while loop closes right here!
 
-    // Franchise Total Row
+    // Calculate Franchise Total values once after all seasons are summed
     $totGames = $tot['W'] + $tot['L'] + $tot['T'];
     $totPct   = ($totGames > 0) ? ($tot['W'] + 0.5 * $tot['T']) / $totGames : 0;
     $allSeasonsUrl = "/api/teamPage.php?teamid=" . urlencode($teamid) . "&season=Total";
 
+    // Output the Franchise Total Row once at the bottom
     echo "<tr class='highlight'>";
     echo "<td class='link'><a class='leader' href='$allSeasonsUrl'>Total</a></td>";
     echo "<td>{$tot['W']}</td>";
@@ -165,7 +166,7 @@ if ($stmt->rowCount() > 0) {
     echo "<td>" . sprintf('%.3f', $totPct) . "</td>";
     echo "<td>{$tot['PF']}</td>";
     echo "<td>{$tot['PA']}</td>";
-    echo "<td></td>";
+    echo "<td>$poRecordText</td>";
     echo "</tr>";
 } else {
     echo "<tr><td colspan='8'>0 results</td></tr>";
