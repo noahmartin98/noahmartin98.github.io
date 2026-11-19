@@ -246,11 +246,21 @@ table tbody tr:hover td.link:hover {
   }
 }
 
-.header-container {
+/*.header-container {
     display: flex;
     align-items: baseline;
     gap: 50px;           
     margin-bottom: 0px;
+}*/
+
+.flex-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.flex-row h1, .flex-row h3 {
+  margin: 0;
 }
 
 /*Season Select element*/
