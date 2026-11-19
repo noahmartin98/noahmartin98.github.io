@@ -49,40 +49,17 @@ foreach ($allPlayoffGames as $g) {
     $rounds[$g['week']][] = $g;
 }
 
-// Split games into Left Side (Conf 1) and Right Side (Conf 2)
+// Split games into Left Side (AFC) and Right Side (NFC)
 $left  = ['WC' => [], 'DIV' => [], 'CC' => []];
 $right = ['WC' => [], 'DIV' => [], 'CC' => []];
 
-if (count($rounds['CC']) >= 2) {
-    // Anchor sides using the two Conference Championship games
-    $left['CC'][]  = $rounds['CC'][0];
-    $right['CC'][] = $rounds['CC'][1];
-
-    $leftTeams = [$rounds['CC'][0]['team1_id'], $rounds['CC'][0]['team2_id']];
-
-    foreach ($rounds['DIV'] as $g) {
-        if (in_array($g['team1_id'], $leftTeams) || in_array($g['team2_id'], $leftTeams)) {
-            $left['DIV'][] = $g;
-            $leftTeams[] = $g['team1_id'];
-            $leftTeams[] = $g['team2_id'];
+foreach (['WC', 'DIV', 'CC'] as $round) {
+    foreach ($rounds[$round] as $g) {
+        if (getTeamConference($g['team1_abbr'], $season) === 'AFC') {
+            $left[$round][] = $g;
         } else {
-            $right['DIV'][] = $g;
+            $right[$round][] = $g;
         }
-    }
-
-    foreach ($rounds['WC'] as $g) {
-        if (in_array($g['team1_id'], $leftTeams) || in_array($g['team2_id'], $leftTeams)) {
-            $left['WC'][] = $g;
-        } else {
-            $right['WC'][] = $g;
-        }
-    }
-} else {
-    // Fallback if season is mid-playoffs before CC games are played
-    foreach (['WC', 'DIV', 'CC'] as $r) {
-        $half = ceil(count($rounds[$r]) / 2);
-        $left[$r]  = array_slice($rounds[$r], 0, $half);
-        $right[$r] = array_slice($rounds[$r], $half);
     }
 }
 
