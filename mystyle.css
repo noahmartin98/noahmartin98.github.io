@@ -34,12 +34,18 @@ table.table-spacious {
   max-width: 900px;        /* Keeps it readable on large monitors */
   border-collapse: collapse;
 }
-/* -------------------------------------------------------------------------- */
 
 table.table-spacious th,
 table.table-spacious td {
   padding: 6px 16px;       /* Extra vertical & horizontal breathing room */
   white-space: nowrap;     /* Prevents text like "Lost Conf. Championship" from wrapping */
+}
+
+/* -------------------------------------------------------------------------- */
+
+table.team-summary th:nth-child(n+2):nth-child(-n+7),
+table.team-summary td:nth-child(n+2):nth-child(-n+7) {
+  text-align: center;
 }
 
 div.box-score-top2 {
