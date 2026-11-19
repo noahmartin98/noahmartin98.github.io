@@ -378,3 +378,22 @@ select.season-select.small {
   background-color: #e8f5e9;
   color: #047248 !important;
 }
+
+
+
+/* Compact toggle link/button ------------------------------------*/
+a.sort-toggle {
+  background-color: #ffffff;
+  color: #1b5e20;
+  border: 1px solid #a5d6a7;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  text-decoration: none;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+a.sort-toggle:hover {
+  background-color: #e8f5e9;
+  border-color: #81c784;
+}
