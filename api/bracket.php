@@ -27,8 +27,8 @@ require 'navbar.php';
 // Fetch all playoff games for the selected season
 $sql = "SELECT 
             g.game_id, g.week,
-            t1.team_id AS team1_id, tm1.Abbr AS team1_abbr, tm1.Team_Name AS team1_name, t1.score AS team1_score,
-            t2.team_id AS team2_id, tm2.Abbr AS team2_abbr, tm2.Team_Name AS team2_name, t2.score AS team2_score
+            t1.team_id AS team1_id, t1.seed AS team1_seed, tm1.Abbr AS team1_abbr, tm1.Team_Name AS team1_name, t1.score AS team1_score,
+            t2.team_id AS team2_id, t2.seed AS team2_seed, tm2.Abbr AS team2_abbr, tm2.Team_Name AS team2_name, t2.score AS team2_score
         FROM game g
         JOIN team_statline t1 ON g.game_id = t1.game_id
         JOIN team_statline t2 ON g.game_id = t2.game_id AND t1.team_id < t2.team_id
@@ -73,17 +73,20 @@ function renderMatchup($game, $season) {
     $t1Win = ($game['team1_score'] > $game['team2_score']) ? 'winner' : 'loser';
     $t2Win = ($game['team2_score'] > $game['team1_score']) ? 'winner' : 'loser';
 
+    $t1Seed = !empty($game['team1_seed']) ? "<span class='team-seed'>({$game['team1_seed']})</span> " : "";
+    $t2Seed = !empty($game['team2_seed']) ? "<span class='team-seed'>({$game['team2_seed']})</span> " : "";
+
     $t1Url = "/api/teamPage.php?teamid={$game['team1_id']}&season=$season";
     $t2Url = "/api/teamPage.php?teamid={$game['team2_id']}&season=$season";
     $boxUrl = "/api/gamePage.php?gameid={$game['game_id']}";
 
     echo "<div class='matchup-card'>";
     echo "  <div class='team-slot $t1Win'>";
-    echo "      <a href='$t1Url'>{$game['team1_name']}</a>";
+    echo "      <div>$t1Seed<a href='$t1Url'>{$game['team1_name']}</a></div>";
     echo "      <span>{$game['team1_score']}</span>";
     echo "  </div>";
     echo "  <div class='team-slot $t2Win'>";
-    echo "      <a href='$t2Url'>{$game['team2_name']}</a>";
+    echo "      <div>$t2Seed<a href='$t2Url'>{$game['team2_name']}</a></div>";
     echo "      <span>{$game['team2_score']}</span>";
     echo "  </div>";
     echo "  <div class='matchup-footer'><a href='$boxUrl'>Box Score</a></div>";
