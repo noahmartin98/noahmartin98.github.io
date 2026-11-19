@@ -1,0 +1,119 @@
+/* Main 7-column NFL bracket layout */
+.bracket-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 18px;
+  overflow-x: auto;
+  padding: 20px 5px;
+  margin-top: 10px;
+}
+
+/* Each round column (WC, DIV, CC, SB) */
+.bracket-round {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  min-width: 195px;
+  flex: 1;
+}
+
+.round-title {
+  text-align: center;
+  font-weight: bold;
+  color: #1b5e20;
+  background-color: #a5d6a7;
+  padding: 5px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+
+/* Individual matchup box */
+.matchup-card {
+  background-color: #ffffff;
+  border: 1px solid #a5d6a7;
+  border-radius: 6px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  margin: 10px 0;
+  overflow: hidden;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.matchup-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.14);
+}
+
+/* Team row inside matchup card */
+.team-slot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 10px;
+  border-bottom: 1px solid #e8f5e9;
+  font-size: 0.85rem;
+}
+
+.team-slot:last-of-type {
+  border-bottom: none;
+}
+
+/* Winner & Loser styling */
+.team-slot.winner {
+  font-weight: bold;
+  background-color: #f1f8e9;
+  color: #1b5e20;
+}
+
+.team-slot.loser {
+  color: #666666;
+}
+
+.team-slot a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.team-slot a:hover {
+  text-decoration: underline;
+  color: #047248;
+}
+
+/* Box score footer link */
+.matchup-footer {
+  background-color: #f4fdf4;
+  border-top: 1px solid #e0f2f1;
+  text-align: center;
+  padding: 3px;
+  font-size: 0.72rem;
+}
+
+.matchup-footer a {
+  color: #2e7d32;
+  text-decoration: none;
+}
+
+.matchup-footer a:hover {
+  text-decoration: underline;
+}
+
+/* Super Bowl center highlight */
+.super-bowl-round .round-title {
+  background-color: #27db99;
+  color: #0f3d14;
+}
+
+.super-bowl-round .matchup-card {
+  border: 2px solid #27db99;
+  box-shadow: 0 4px 14px rgba(39, 219, 153, 0.25);
+}
+
+.empty-slot {
+  color: #999999;
+  font-style: italic;
+  text-align: center;
+  padding: 14px 8px;
+  font-size: 0.8rem;
+}
