@@ -36,7 +36,7 @@ require 'navbar.php';
 
 ?>
 
-<div class="header-container">
+<div class="flex-row">
     <h1><?php echo $playername?></h1>
     <h3>Career</h3>
 </div>
@@ -109,9 +109,10 @@ if ($stmt->rowCount() > 0) {
 
     </table>
 
-<h3>Game Log</h3>
-	
- <?php playerSeasonForm($playerSeasons, $season, $playerid); ?>
+<div class="flex-row">
+	<h3>Game Log</h3>
+	<?php playerSeasonForm($playerSeasons, $season, $playerid); ?>
+</div>
 
     <table>
         <tr>
