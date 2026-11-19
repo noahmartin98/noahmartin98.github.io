@@ -81,4 +81,36 @@ function getPlayerSeasonGames($conn, $playerid) {
     return $stmt->fetchAll(PDO::FETCH_KEY_PAIR); // Returns [Season => Gms]
 }
 
+function getAllPlayersGames($conn, $season = 'Total') {
+    $seasonFilter = ($season !== 'Total') ? "WHERE g.Season = :season" : "";
+
+    $sql = "SELECT p_teams.Player_ID, COUNT(DISTINCT ts.game_id) AS Gms
+            FROM (
+                SELECT DISTINCT s.Player_ID, g.Season, s.Team_ID
+                FROM (
+                    SELECT Player_ID, Game_ID, Team_ID FROM pass_statline
+                    UNION
+                    SELECT Player_ID, Game_ID, Team_ID FROM rush_statline
+                    UNION
+                    SELECT Player_ID, Game_ID, Team_ID FROM rec_statline
+                    UNION
+                    SELECT Player_ID, Game_ID, Team_ID FROM def_statline
+                ) s
+                INNER JOIN game g ON s.Game_ID = g.Game_ID
+                $seasonFilter
+            ) p_teams
+            INNER JOIN game g2 ON p_teams.Season = g2.Season
+            INNER JOIN team_statline ts ON g2.game_id = ts.game_id AND p_teams.Team_ID = ts.team_id
+            GROUP BY p_teams.Player_ID;";
+
+    $stmt = $conn->prepare($sql);
+    if ($season !== 'Total') {
+        $stmt->bindParam(':season', $season, PDO::PARAM_INT);
+    }
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_KEY_PAIR); // Returns [Player_ID => Gms]
+}
+
+
 ?>
