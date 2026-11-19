@@ -8,33 +8,13 @@
 <?php
 require 'databaseConnect.php';
 require 'functions.php';
-
-$season = $_GET['season'] ?? 'Total';
-
-if (isset($_GET['playerid'])) {
-    $playerid = $_GET['playerid'];
-}
-
-$sql = "SELECT Player_Name
-    FROM player 
-    WHERE Player_ID = :playerid;";
-
-$stmt = $conn->prepare($sql);
-$stmt->bindParam(':playerid', $playerid, PDO::PARAM_INT);
-$stmt->execute();
-
-if ($stmt->rowCount() > 0) {
-    // output data of each row
-    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $playername =  $row["Player_Name"];
-    }
-} else {
-    echo "0 results";
-}
-
 require 'navbar.php';
 
+$season = $_GET['season'] ?? 'Total';
+$playerid = $_GET['playerid'] ?? null;
+$playername = getPlayerName($conn, $playerid);
 ?>
+
 
 <div class="flex-row margin-top-small gap-large">
     <h1><?php echo $playername?></h1>
