@@ -7,6 +7,7 @@
 
 <?php
 require 'databaseConnect.php';
+require 'functions.php';
 
 $season = $_GET['season'] ?? 'Total';
 
@@ -105,13 +106,8 @@ if ($stmt->rowCount() > 0) {
     </table>
 
 <h3>Game Log</h3>
- <form method="get" action="playerPagePass.php">
-	 <input type="hidden" name="playerid" value="<?php echo htmlspecialchars($playerid ?? ''); ?>">
-	    <select class="season-select" name="season" onchange="this.form.submit()">
-	        <?php playerSeasonOptions($playerSeasons, $season); ?>
-	    </select>
-	</form>
-
+	
+ <?php playerSeasonForm($playerSeasons, $season, $playerid); ?>
 
     <table>
         <tr>
