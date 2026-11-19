@@ -35,18 +35,19 @@ $playername = getPlayerName($conn, $playerid);
         </tr>
 
 <?php
+$seasonGames = getPlayerSeasonGames($conn, $playerid);
 
+// Pure sums only — Gms comes from getPlayerSeasonGames()!
 $sql = "SELECT game.season, MIN(game.Game_ID) AS first_game,
             GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS Teams,
-            count(*) as Gms, SUM(Sack) as Sack, SUM(INTR) as INTR, SUM(FF) as FF, SUM(FR) as FR, SUM(TD) as TD,
-            SUM(TFL) as TFL, SUM(PDEF) as PDEF
+            SUM(Sack) AS Sack, SUM(INTR) AS INTR, SUM(FF) AS FF, SUM(FR) AS FR, SUM(TD) AS TD,
+            SUM(TFL) AS TFL, SUM(PDEF) AS PDEF
         FROM def_statline
         INNER JOIN game ON def_statline.Game_ID = game.Game_ID
         INNER JOIN team ON def_statline.Team_ID = team.Team_ID
         WHERE Player_ID = :playerid
         GROUP BY game.Season
-        ORDER BY game.Season ASC;
-        ";
+        ORDER BY game.Season ASC;";
 
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':playerid', $playerid, PDO::PARAM_INT);
@@ -57,25 +58,31 @@ $tot = ['Gms' => 0, 'Sack' => 0, 'INTR' => 0, 'FF' => 0, 'FR' => 0, 'TD' => 0, '
 
 if ($stmt->rowCount() > 0) {
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $playerSeasons[$row["first_game"]] = $row["season"];
-        foreach ($tot as $key => $val) $tot[$key] += $row[$key];
+        $yr  = $row["season"];
+        $gms = $seasonGames[$yr] ?? 0;
+
+        $playerSeasons[$row["first_game"]] = $yr;
+        $tot['Gms'] += $gms;
+        foreach (['Sack', 'INTR', 'FF', 'FR', 'TD', 'TFL', 'PDEF'] as $key) {
+            $tot[$key] += $row[$key];
+        }
 
         echo "<tr>";
-        echo "<td>". $row["season"]."</td>";
-        echo "<td>". $row["Teams"]."</td>";
-        echo "<td>". $row["Gms"]."</td>";
-        echo "<td>". $row["Sack"]."</td>";
-        echo "<td>". $row["INTR"]."</td>";
-        echo "<td>". $row["FF"]."</td>";
-        echo "<td>". $row["FR"]."</td>";
-        echo "<td>". $row["TD"]."</td>";
-        echo "<td>". $row["TFL"]."</td>";
-        echo "<td>". $row["PDEF"]."</td>";
+        echo "<td>". $yr ."</td>";
+        echo "<td>". $row["Teams"] ."</td>";
+        echo "<td>". $gms ."</td>";
+        echo "<td>". $row["Sack"] ."</td>";
+        echo "<td>". $row["INTR"] ."</td>";
+        echo "<td>". $row["FF"] ."</td>";
+        echo "<td>". $row["FR"] ."</td>";
+        echo "<td>". $row["TD"] ."</td>";
+        echo "<td>". $row["TFL"] ."</td>";
+        echo "<td>". $row["PDEF"] ."</td>";
         echo "</tr>";
     }
     ksort($playerSeasons);
 
-    // Output the Career Total row
+    // Career Total Row
     echo "<tr class='highlight'>";
     echo "<td>Total</td>";
     echo "<td></td>";
