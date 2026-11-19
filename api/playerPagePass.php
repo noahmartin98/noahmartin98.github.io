@@ -81,24 +81,13 @@ $stmt->execute();
 $playerSeasons = [];
 
 // Initialize running career totals
-$totGms = 0;
-$totComp = 0;
-$totAtt = 0;
-$totYds = 0;
-$totTD = 0;
-$totINT = 0;
+$tot = ['Gms' => 0, 'Comp' => 0, 'Att' => 0, 'Yds' => 0, 'TD' => 0, 'INTR' => 0];
 
 if ($stmt->rowCount() > 0) {
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $playerSeasons[$row["first_game"]] = $row["season"];
-
-        // Add each season's numbers to the career totals
-        $totGms  += $row["Gms"];
-        $totComp += $row["Comp"];
-        $totAtt  += $row["Att"];
-        $totYds  += $row["Yds"];
-        $totTD   += $row["TD"];
-        $totINT  += $row["INTR"];
+		// Add to career totals
+		foreach ($tot as $key => $val) $tot[$key] += $row[$key];
 
         echo "<tr>";
         echo "<td>". $row["season"]."</td>";
@@ -117,29 +106,27 @@ if ($stmt->rowCount() > 0) {
     }
     ksort($playerSeasons);
 
-    // Calculate career rate stats (guarding against division by zero)
-    $totCompPct = ($totAtt > 0) ? ($totComp / $totAtt) * 100 : 0;
-    $totYpg     = ($totGms > 0) ? ($totYds / $totGms) : 0;
-    $totYpa     = ($totAtt > 0) ? ($totYds / $totAtt) : 0;
-    $totTDINT   = ($totINT > 0) ? sprintf('%.2f', $totTD / $totINT) : '—';
+     // Calculate career rate stats (guarding against division by zero)
+    $totCompPct = ($tot['Att'] > 0) ? ($tot['Comp'] / $tot['Att']) * 100 : 0;
+    $totYpg     = ($tot['Gms'] > 0) ? ($tot['Yds'] / $tot['Gms']) : 0;
+    $totYpa     = ($tot['Att'] > 0) ? ($tot['Yds'] / $tot['Att']) : 0;
+    $totTDINT   = ($tot['INTR'] > 0) ? sprintf('%.2f', $tot['TD'] / $tot['INTR']) : '—';
 
-    // Output the Career Total row (only if the player has more than 1 season, or remove the if-check to always show it)
-    if ($stmt->rowCount() > 1) {
-        echo "<tr class='highlight'>";
-        echo "<td>Total</td>";
-        echo "<td></td>";
-        echo "<td>". $totGms ."</td>";
-        echo "<td>". $totComp ."</td>";
-        echo "<td>". $totAtt ."</td>";
-        echo "<td>". $totYds ."</td>";
-        echo "<td>". $totTD ."</td>";
-        echo "<td>". $totINT ."</td>";
-        echo "<td>". sprintf('%.1f%%', $totCompPct) ."</td>";
-        echo "<td>". sprintf('%.1f', $totYpg) ."</td>";
-        echo "<td>". sprintf('%.2f', $totYpa) ."</td>";
-        echo "<td>". $totTDINT ."</td>";
-        echo "</tr>";
-    }
+    // Output the Career Total row
+    echo "<tr class='highlight'>";
+    echo "<td>Total</td>";
+    echo "<td></td>";
+    echo "<td>". $tot['Gms'] ."</td>";
+    echo "<td>". $tot['Comp'] ."</td>";
+    echo "<td>". $tot['Att'] ."</td>";
+    echo "<td>". $tot['Yds'] ."</td>";
+    echo "<td>". $tot['TD'] ."</td>";
+    echo "<td>". $tot['INTR'] ."</td>";
+    echo "<td>". sprintf('%.1f%%', $totCompPct) ."</td>";
+    echo "<td>". sprintf('%.1f', $totYpg) ."</td>";
+    echo "<td>". sprintf('%.2f', $totYpa) ."</td>";
+    echo "<td>". $totTDINT ."</td>";
+    echo "</tr>";
 } else {
     echo "0 results";
 }
