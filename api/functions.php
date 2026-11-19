@@ -29,4 +29,26 @@ function getPlayerName($conn, $playerid) {
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     return $row ? $row["Player_Name"] : "Player Not Found";
 }
+
+function getTeamConference($abbr, $season) {
+    $abbr = strtoupper($abbr);
+    $season = (int)$season;
+
+    // Handle historical conference realignments
+    if ($abbr === 'SEA') {
+        return ($season <= 2001) ? 'AFC' : 'NFC';
+    }
+    if ($abbr === 'TB' && $season === 1976) {
+        return 'AFC';
+    }
+
+    // Standard AFC teams
+    $afcTeams = [
+        'BAL', 'BUF', 'CIN', 'CLE', 'DEN', 'HOU', 'IND', 'JAX',
+        'KC', 'LAC', 'SD', 'LV', 'OAK', 'MIA', 'NE', 'NYJ', 'PIT', 'TEN'
+    ];
+
+    return in_array($abbr, $afcTeams) ? 'AFC' : 'NFC';
+}
+
 ?>
