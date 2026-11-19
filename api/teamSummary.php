@@ -41,7 +41,7 @@ $completedSeasons = $conn->query("SELECT DISTINCT Season FROM game WHERE week = 
     </a>
 </div>
 
-<table class="table-spacious">
+<table class="table-spacious margin-top-large">
     <thead>
         <tr>
             <th>Season</th>
