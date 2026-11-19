@@ -117,3 +117,37 @@
   padding: 14px 8px;
   font-size: 0.8rem;
 }
+
+/* Conference side wrapper (holds WC, DIV, CC columns) */
+.conference-side {
+  display: flex;
+  flex-direction: column;
+  flex: 3;
+}
+
+.conference-rounds {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  flex: 1;
+}
+
+/* Conference Banner Headers */
+.conference-title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  padding: 6px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  color: #ffffff;
+}
+
+.afc-title {
+  background-color: #c62828; /* Classic NFL AFC Red */
+}
+
+.nfc-title {
+  background-color: #1565c0; /* Classic NFL NFC Blue */
+}
