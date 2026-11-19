@@ -38,7 +38,7 @@ $teamname = $stmt->fetchColumn() ?: "Team Not Found";
     </a>
 </div>
 
-<table class="player-years">
+<table class="table-spacious team-summary">
     <thead>
         <tr>
             <th>Season</th>
