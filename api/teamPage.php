@@ -78,11 +78,12 @@ $recordText = ($ties > 0) ? "$wins-$losses-$ties" : "$wins-$losses";
 ?>
 
     
-<!--Header with team name, record, and season select-->
+<!--Header with team name, record, season select, and franchise history link-->
 <div class="flex-row margin-top-small gap-large">
     <h1><?php echo htmlspecialchars($teamname); ?></h1>
     <h3>(<?php echo $recordText; ?>)</h3>
     <?php seasonDropdownForm($teamSeasons, $season, 'teamid', $teamid, false); ?>
+    <a class="home" href="/api/teamSummary.php?teamid=<?php echo urlencode($teamid); ?>">Franchise History</a>
 </div>
 
 <h3>Games</h3>
