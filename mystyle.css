@@ -310,7 +310,7 @@ select.season-select.small {
   margin: 0px 50px 5px 30px;
 }
 
-/* Navbar styling */
+/* Navbar styling----------------------------------------------------- */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -337,4 +337,44 @@ select.season-select.small {
   transform: translateY(-2px);
 }
 
+/* Teams Dropdown Container */
+.nav-links .dropdown {
+  position: relative;
+}
 
+/* Hidden 4-column grid menu */
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0; /* Aligns to right edge of Teams link so it won't clip off-screen */
+  background-color: #ffffff;
+  border: 1px solid #a5d6a7;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 10px;
+  z-index: 1000;
+  min-width: 480px;
+}
+
+/* Show 4-column grid on hover */
+.nav-links .dropdown:hover .dropdown-menu {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px 12px;
+}
+
+/* Individual team links inside dropdown */
+.dropdown-menu a {
+  color: #1b5e20 !important;
+  padding: 5px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  transform: none !important;
+}
+
+.dropdown-menu a:hover {
+  background-color: #e8f5e9;
+  color: #047248 !important;
+}
