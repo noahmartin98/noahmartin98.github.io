@@ -29,7 +29,7 @@ if ($stmt->rowCount() > 0) {
     echo "0 results";
 }
 
-$season = $_GET['season'] ?? '2024';
+$season = $_GET['season'] ?? '2014';
 
 require 'navbar.php';
 
