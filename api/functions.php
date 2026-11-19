@@ -14,4 +14,18 @@ function playerSeasonForm($seasons, $selectedSeason, $playerid) {
     </form>
     <?php
 }
+
+function getPlayerName($conn, $playerid) {
+    if (!$playerid) {
+        return "Player Not Found";
+    }
+
+    $sql = "SELECT Player_Name FROM player WHERE Player_ID = :playerid LIMIT 1;";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':playerid', $playerid, PDO::PARAM_INT);
+    $stmt->execute();
+
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $row ? $row["Player_Name"] : "Player Not Found";
+}
 ?>
