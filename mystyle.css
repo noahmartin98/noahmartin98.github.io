@@ -263,6 +263,11 @@ table tbody tr:hover td.link:hover {
   margin: 0;
 }
 
+/* Reusable top spacing */
+.mt-lg {
+  margin-top: 25px;
+}
+
 /*Season Select element*/
 select.season-select {  
   background-color: #ffffff;
