@@ -31,6 +31,26 @@ $teamname = $stmt->fetchColumn() ?: "Team Not Found";
 // Find all seasons where the Super Bowl has already been completed
 $completedSeasons = $conn->query("SELECT DISTINCT Season FROM game WHERE week = 'SB'")
                          ->fetchAll(PDO::FETCH_COLUMN);
+
+// Calculate overall franchise playoff record (WC, DIV, CC, SB)
+$poStmt = $conn->prepare("
+    SELECT 
+        SUM(CASE WHEN t1.score > t2.score THEN 1 ELSE 0 END) AS po_w,
+        SUM(CASE WHEN t2.score > t1.score THEN 1 ELSE 0 END) AS po_l
+    FROM team_statline t1
+    JOIN team_statline t2 
+        ON t1.game_id = t2.game_id AND t1.team_id <> t2.team_id
+    JOIN game ON t1.game_id = game.game_id
+    WHERE t1.team_id = :teamid 
+      AND game.week IN ('WC', 'DIV', 'CC', 'SB');
+");
+$poStmt->bindParam(':teamid', $teamid, PDO::PARAM_INT);
+$poStmt->execute();
+$poRow = $poStmt->fetch(PDO::FETCH_ASSOC);
+
+$poWins   = (int)($poRow['po_w'] ?? 0);
+$poLosses = (int)($poRow['po_l'] ?? 0);
+$poRecordText = "Playoffs: $poWins-$poLosses";
 ?>
 
 <div class="flex-row margin-top-small gap-large">
@@ -120,15 +140,15 @@ if ($stmt->rowCount() > 0) {
 
         $seasonUrl = "/api/teamPage.php?teamid=" . urlencode($teamid) . "&season=" . urlencode($row['Season']);
 
-        echo "<tr>";
-        echo "<td class='link'><a class='leader' href='$seasonUrl'>{$row['Season']}</a></td>";
-        echo "<td>{$row['W']}</td>";
-        echo "<td>{$row['L']}</td>";
-        echo "<td>{$row['T']}</td>";
-        echo "<td>" . sprintf('%.3f', $winPct) . "</td>";
-        echo "<td>{$row['PF']}</td>";
-        echo "<td>{$row['PA']}</td>";
-        echo "<td>$playoffFinish</td>";
+        echo "<tr class='highlight'>";
+        echo "<td class='link'><a class='leader' href='$allSeasonsUrl'>Total</a></td>";
+        echo "<td>{$tot['W']}</td>";
+        echo "<td>{$tot['L']}</td>";
+        echo "<td>{$tot['T']}</td>";
+        echo "<td>" . sprintf('%.3f', $totPct) . "</td>";
+        echo "<td>{$tot['PF']}</td>";
+        echo "<td>{$tot['PA']}</td>";
+        echo "<td>$poRecordText</td>";
         echo "</tr>";
     }
 
