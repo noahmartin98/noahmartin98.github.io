@@ -286,6 +286,12 @@ select.season-select:hover {
   box-shadow: 0 0 0 2px rgba(102, 187, 106, 0.2);
 }
 
+/* Modifier to make the dropdown compact */
+select.season-select.small {
+  padding: 2px 6px;
+  font-size: 0.8rem;
+}
+
 /*DataTables search bar*/
 #leaders_filter input {
   margin: 0px 50px 5px 30px;
