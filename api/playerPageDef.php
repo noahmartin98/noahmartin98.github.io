@@ -15,7 +15,6 @@ $playerid = $_GET['playerid'] ?? null;
 $playername = getPlayerName($conn, $playerid);
 ?>
 
-
 <div class="flex-row margin-top-small gap-large">
     <h1><?php echo $playername?></h1>
     <h3>Career</h3>
