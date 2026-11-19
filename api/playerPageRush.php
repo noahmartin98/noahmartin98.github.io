@@ -34,21 +34,18 @@ $playername = getPlayerName($conn, $playerid);
         </tr>
 
 <?php
+$seasonGames = getPlayerSeasonGames($conn, $playerid);
 
+// Pure sums only — no rate math in SQL!
 $sql = "SELECT game.season, MIN(game.Game_ID) AS first_game,
-            GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS Teams, 
-            COUNT(*) as Gms, SUM(Att) as Att, SUM(Yds) as Yds, SUM(TD) as TD,
-            (SUM(Yds)/NULLIF(SUM(Att), 0)) AS Ypc,
-            (SUM(Att)/count(*)) AS Apg,
-            (SUM(Yds)/count(*)) AS Ypg
+            GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS Teams,
+            SUM(Att) AS Att, SUM(Yds) AS Yds, SUM(TD) AS TD
         FROM rush_statline
-        INNER JOIN team ON rush_statline.Team_ID = team.Team_ID
-        INNER JOIN pos ON rush_statline.Pos_ID = pos.Pos_ID
         INNER JOIN game ON rush_statline.Game_ID = game.Game_ID
+        INNER JOIN team ON rush_statline.Team_ID = team.Team_ID
         WHERE Player_ID = :playerid
         GROUP BY game.Season
-        ORDER BY game.Season ASC;
-        ";
+        ORDER BY game.Season ASC;";
 
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':playerid', $playerid, PDO::PARAM_INT);
@@ -59,29 +56,39 @@ $tot = ['Gms' => 0, 'Att' => 0, 'Yds' => 0, 'TD' => 0];
 
 if ($stmt->rowCount() > 0) {
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $playerSeasons[$row["first_game"]] = $row["season"];
-        foreach ($tot as $key => $val) $tot[$key] += $row[$key];
+        $yr  = $row["season"];
+        $gms = $seasonGames[$yr] ?? 0;
+
+        // Calculate season rate stats in PHP
+        $ypc = ($row["Att"] > 0) ? ($row["Yds"] / $row["Att"]) : 0;
+        $apg = ($gms > 0) ? ($row["Att"] / $gms) : 0;
+        $ypg = ($gms > 0) ? ($row["Yds"] / $gms) : 0;
+
+        $playerSeasons[$row["first_game"]] = $yr;
+        $tot['Gms'] += $gms;
+        foreach (['Att', 'Yds', 'TD'] as $key) {
+            $tot[$key] += $row[$key];
+        }
 
         echo "<tr>";
-        echo "<td>". $row["season"]."</td>";
-        echo "<td>". $row["Teams"]."</td>";
-        echo "<td>". $row["Gms"]."</td>";
-        echo "<td>". $row["Att"]."</td>";
-        echo "<td>". $row["Yds"]."</td>";
-        echo "<td>". $row["TD"]."</td>";
-        echo "<td>". sprintf('%.2f', $row["Ypc"])."</td>";
-        echo "<td>". sprintf('%.2f', $row["Apg"])."</td>";
-        echo "<td>". sprintf('%.1f', $row["Ypg"])."</td>";
+        echo "<td>". $yr ."</td>";
+        echo "<td>". $row["Teams"] ."</td>";
+        echo "<td>". $gms ."</td>";
+        echo "<td>". $row["Att"] ."</td>";
+        echo "<td>". $row["Yds"] ."</td>";
+        echo "<td>". $row["TD"] ."</td>";
+        echo "<td>". sprintf('%.2f', $ypc) ."</td>";
+        echo "<td>". sprintf('%.2f', $apg) ."</td>";
+        echo "<td>". sprintf('%.1f', $ypg) ."</td>";
         echo "</tr>";
     }
     ksort($playerSeasons);
 
-    // Calculate career rate stats
+    // Career Total Row
     $totYpc = ($tot['Att'] > 0) ? ($tot['Yds'] / $tot['Att']) : 0;
     $totApg = ($tot['Gms'] > 0) ? ($tot['Att'] / $tot['Gms']) : 0;
     $totYpg = ($tot['Gms'] > 0) ? ($tot['Yds'] / $tot['Gms']) : 0;
 
-    // Output the Career Total row
     echo "<tr class='highlight'>";
     echo "<td>Total</td>";
     echo "<td></td>";
@@ -97,7 +104,6 @@ if ($stmt->rowCount() > 0) {
     echo "0 results";
 }
 ?>
-
     </table>
 
 <div class="flex-row margin-top-large">
