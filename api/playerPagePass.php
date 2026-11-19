@@ -59,17 +59,20 @@ require 'navbar.php';
 
 <?php
 
-$sql = "SELECT game.season, GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS Teams,
-	count(*) as Gms, SUM(Comp) as Comp, SUM(Att) as Att, SUM(Yds) as Yds, SUM(TD) as TD, SUM(INTR) as INTR,
-    (SUM(Comp)/SUM(Att)) AS CompPct,
-    (SUM(Yds)/count(*)) AS Ypg,
-    (SUM(Yds)/SUM(Att)) AS Ypa,
-    (SUM(TD)/SUM(INTR)) AS TDINT
-    FROM pass_statline
-    INNER JOIN game ON pass_statline.Game_ID = game.Game_ID
-    INNER JOIN team ON pass_statline.Team_ID = team.Team_ID
-    WHERE Player_ID = :playerid
-    GROUP BY game.Season;";
+$sql = "SELECT game.season, MIN(game.game_date) AS first_game,
+		    GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS Teams,
+		    count(*) as Gms, SUM(Comp) as Comp, SUM(Att) as Att, SUM(Yds) as Yds, SUM(TD) as TD, SUM(INTR) as INTR,
+		    (SUM(Comp)/SUM(Att)) AS CompPct,
+		    (SUM(Yds)/count(*)) AS Ypg,
+		    (SUM(Yds)/SUM(Att)) AS Ypa,
+		    (SUM(TD)/SUM(INTR)) AS TDINT
+		FROM pass_statline
+		INNER JOIN game ON pass_statline.Game_ID = game.Game_ID
+		INNER JOIN team ON pass_statline.Team_ID = team.Team_ID
+		WHERE Player_ID = :playerid
+		GROUP BY game.Season
+		ORDER BY game.Season ASC;
+		";
 
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':playerid', $playerid, PDO::PARAM_INT);
@@ -80,7 +83,7 @@ $playerSeasons = [];
 if ($stmt->rowCount() > 0) {
     // output data of each row
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-		$playerSeasons[] = $row["season"];
+		$playerSeasons[$row["first_game"]] = $row["season"];
 		
         echo "<tr>";
         echo "<td>". $row["season"]."</td>";
@@ -155,7 +158,8 @@ $sql = "SELECT game.season, tm.Abbr AS Tm, game.week, game.game_date, t1.team_us
 		AND t2.team_id <> pass_statline.team_id
 	JOIN team tm ON t1.team_id = tm.team_ID
 	JOIN team opp ON t2.team_id = opp.team_id
-    WHERE Player_ID = :playerid $where_clause;";
+    WHERE Player_ID = :playerid $where_clause
+	ORDER BY game.game_date ASC;";
 
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':playerid', $playerid, PDO::PARAM_INT);
