@@ -93,8 +93,9 @@ if ($stmt->rowCount() > 0) {
 
     </table>
 
-
-<h3>Game Log</h3>
+<div class="flex-row margin-top-large">
+	<h3>Game Log</h3>
+</div>
 
     <table class="player">
         <tr>
