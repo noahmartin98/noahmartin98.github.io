@@ -87,7 +87,7 @@ if ($stmt->rowCount() > 0) {
     echo "<td>Total</td>";
     echo "<td></td>";
     echo "<td>". $tot['Gms'] ."</td>";
-    echo "<td>". $tot['Sack'] ."</td>";
+    echo "<td>". sprintf('%.1f', $tot['Sack']) ."</td>"; // Formats as 0.0
     echo "<td>". $tot['INTR'] ."</td>";
     echo "<td>". $tot['FF'] ."</td>";
     echo "<td>". $tot['FR'] ."</td>";
