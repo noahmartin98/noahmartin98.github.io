@@ -59,7 +59,7 @@ require 'navbar.php';
 
 <?php
 
-$sql = "SELECT game.season, MIN(game.game_date) AS first_game,
+$sql = "SELECT game.season, MIN(game.Game_ID) AS first_game,
 		    GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS Teams,
 		    count(*) as Gms, SUM(Comp) as Comp, SUM(Att) as Att, SUM(Yds) as Yds, SUM(TD) as TD, SUM(INTR) as INTR,
 		    (SUM(Comp)/SUM(Att)) AS CompPct,
@@ -100,6 +100,7 @@ if ($stmt->rowCount() > 0) {
         echo "<td>". sprintf('%.2f', $row["TDINT"])."</td>";
         echo "</tr>";
     }
+	ksort($playerSeasons); // Sorts the dropdown array by Game_ID!
 } else {
     echo "0 results";
 }
@@ -159,7 +160,7 @@ $sql = "SELECT game.season, tm.Abbr AS Tm, game.week, game.game_date, t1.team_us
 	JOIN team tm ON t1.team_id = tm.team_ID
 	JOIN team opp ON t2.team_id = opp.team_id
     WHERE Player_ID = :playerid $where_clause
-	ORDER BY game.game_date ASC;";
+	ORDER BY game.Game_ID ASC;";
 
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':playerid', $playerid, PDO::PARAM_INT);
