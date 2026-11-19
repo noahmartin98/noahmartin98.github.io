@@ -51,4 +51,34 @@ function getTeamConference($abbr, $season) {
     return in_array($abbr, $afcTeams) ? 'AFC' : 'NFC';
 }
 
+function getPlayerSeasonGames($conn, $playerid) {
+    $sql = "SELECT g.Season, COUNT(DISTINCT ts.game_id) AS Gms
+            FROM team_statline ts
+            INNER JOIN game g ON ts.game_id = g.game_id
+            WHERE (g.Season, ts.team_id) IN (
+                SELECT g2.Season, s.Team_ID
+                FROM (
+                    SELECT Game_ID, Team_ID FROM pass_statline WHERE Player_ID = :p1
+                    UNION
+                    SELECT Game_ID, Team_ID FROM rush_statline WHERE Player_ID = :p2
+                    UNION
+                    SELECT Game_ID, Team_ID FROM rec_statline  WHERE Player_ID = :p3
+                    UNION
+                    SELECT Game_ID, Team_ID FROM def_statline  WHERE Player_ID = :p4
+                ) s
+                INNER JOIN game g2 ON s.Game_ID = g2.Game_ID
+            )
+            GROUP BY g.Season;";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([
+        ':p1' => $playerid,
+        ':p2' => $playerid,
+        ':p3' => $playerid,
+        ':p4' => $playerid
+    ]);
+
+    return $stmt->fetchAll(PDO::FETCH_KEY_PAIR); // Returns [Season => Gms]
+}
+
 ?>
