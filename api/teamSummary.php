@@ -13,7 +13,6 @@ require 'navbar.php';
 $teamid = $_GET['teamid'] ?? null;
 $sort   = $_GET['sort'] ?? 'play';
 
-// Safely pick ORDER BY clause and set up the opposite toggle link
 if ($sort === 'season') {
     $orderBy    = "game.Season ASC";
     $nextSort   = "play";
@@ -28,6 +27,10 @@ $stmt = $conn->prepare("SELECT Team_Name FROM team WHERE Team_ID = :teamid;");
 $stmt->bindParam(':teamid', $teamid, PDO::PARAM_INT);
 $stmt->execute();
 $teamname = $stmt->fetchColumn() ?: "Team Not Found";
+
+// Find all seasons where the Super Bowl has already been completed
+$completedSeasons = $conn->query("SELECT DISTINCT Season FROM game WHERE week = 'SB'")
+                         ->fetchAll(PDO::FETCH_COLUMN);
 ?>
 
 <div class="flex-row margin-top-small gap-large">
@@ -38,7 +41,7 @@ $teamname = $stmt->fetchColumn() ?: "Team Not Found";
     </a>
 </div>
 
-<table class="table-spacious team-summary">
+<table class="table-spacious">
     <thead>
         <tr>
             <th>Season</th>
@@ -53,7 +56,6 @@ $teamname = $stmt->fetchColumn() ?: "Team Not Found";
     </thead>
     <tbody>
 <?php
-// Query season totals + find the final game_id of each season to determine playoff finish
 $sql = "SELECT 
             game.Season,
             SUM(CASE WHEN t1.score > t2.score THEN 1 ELSE 0 END) AS W,
@@ -74,7 +76,6 @@ $stmt = $conn->prepare($sql);
 $stmt->bindParam(':teamid', $teamid, PDO::PARAM_INT);
 $stmt->execute();
 
-// Prepared query to inspect the team's final game of each season
 $lastGameStmt = $conn->prepare("
     SELECT game.week, (t1.score > t2.score) AS won
     FROM game
@@ -92,28 +93,28 @@ if ($stmt->rowCount() > 0) {
         $gamesPlayed = $row['W'] + $row['L'] + $row['T'];
         $winPct = ($gamesPlayed > 0) ? ($row['W'] + 0.5 * $row['T']) / $gamesPlayed : 0;
 
-        // Look up the final game's week & result
         $lastGameStmt->execute([':teamid' => $teamid, ':last_game_id' => $row['last_game_id']]);
         $lastGame = $lastGameStmt->fetch(PDO::FETCH_ASSOC);
         $lastWeek = $lastGame['week'] ?? '';
         $wonLast  = (bool)($lastGame['won'] ?? false);
 
-        // Map WC, DIV, CC, SB to readable playoff outcomes
+        // Bold all playoff appearances; check if season is still in progress otherwise
         switch ($lastWeek) {
             case 'SB':
-                $playoffFinish = $wonLast ? "<strong>Won Super Bowl</strong>" : "Lost Super Bowl";
+                $playoffFinish = $wonLast ? "<strong>Won Super Bowl</strong>" : "<strong>Lost Super Bowl</strong>";
                 break;
             case 'CC':
-                $playoffFinish = "Lost Conf. Championship";
+                $playoffFinish = "<strong>Lost Conf. Championship</strong>";
                 break;
             case 'DIV':
-                $playoffFinish = "Lost Divisional";
+                $playoffFinish = "<strong>Lost Divisional</strong>";
                 break;
             case 'WC':
-                $playoffFinish = "Lost Wild Card";
+                $playoffFinish = "<strong>Lost Wild Card</strong>";
                 break;
             default:
-                $playoffFinish = "Missed Playoffs";
+                $isSeasonDone = in_array($row['Season'], $completedSeasons);
+                $playoffFinish = $isSeasonDone ? "Missed Playoffs" : "In Progress";
                 break;
         }
 
