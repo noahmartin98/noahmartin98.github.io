@@ -257,6 +257,10 @@ table tbody tr:hover td.link:hover {
 .flex-row {
   display: flex;
   align-items: baseline;
+  gap: 20px;
+}
+
+.gap-large {
   gap: 50px;
 }
 
