@@ -328,23 +328,25 @@ $sql = "SELECT player.Player_Name, GROUP_CONCAT(DISTINCT pos.Pos_Abbr SEPARATOR 
     $stmt->execute();
     if ($stmt->rowCount() > 0) {
         while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $playerid = $row["Player_ID"];
-    $gms = $teamPlayerGames[$playerid] ?? 0;
-    echo "";
-    echo "" . $row["Player_Name"]."";
-    echo "". $row["Poss"]."";
-    echo "". $gms."";
-    echo "". $row["Sack"]."";
-    echo "". $row["INTR"]."";
-    echo "". $row["FF"]."";
-    echo "". $row["FR"]."";
-    echo "". $row["TD"]."";
-    echo "". $row["TFL"]."";
-    echo "". $row["PDEF"]."";
-    echo "";
-}
-} else {
-echo "0 results";
-}
-$conn = null;
+            $playerid = $row["Player_ID"];
+            $gms = $teamPlayerGames[$playerid] ?? 0;
+
+            echo "<tr>";
+            echo "<td class='link'><a class='leader' href='/api/playerPageDef.php?playerid=" . $playerid . "'>" . $row["Player_Name"] . "</a></td>";
+            echo "<td>" . $row["Poss"] . "</td>";
+            echo "<td>" . $gms . "</td>";
+            echo "<td>" . $row["Sack"] . "</td>";
+            echo "<td>" . $row["INTR"] . "</td>";
+            echo "<td>" . $row["FF"] . "</td>";
+            echo "<td>" . $row["FR"] . "</td>";
+            echo "<td>" . $row["TD"] . "</td>";
+            echo "<td>" . $row["TFL"] . "</td>";
+            echo "<td>" . $row["PDEF"] . "</td>";
+            echo "</tr>";
+        }
+    } else {
+        echo "<tr><td colspan='10'>0 results</td></tr>";
+    }
+    $conn = null;
 ?>
+</table>
