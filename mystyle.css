@@ -246,6 +246,7 @@ table tbody tr:hover td.link:hover {
   }
 }
 
+
 /*.header-container {
     display: flex;
     align-items: baseline;
@@ -255,8 +256,8 @@ table tbody tr:hover td.link:hover {
 
 .flex-row {
   display: flex;
-  align-items: center;
-  gap: 15px;
+  align-items: baseline;
+  gap: 50px;
 }
 
 .flex-row h1, .flex-row h3 {
