@@ -36,7 +36,7 @@ require 'navbar.php';
 
 ?>
 
-<div class="flex-row margin-top-small">
+<div class="flex-row margin-top-small gap-large">
     <h1><?php echo $playername?></h1>
     <h3>Career</h3>
 </div>
