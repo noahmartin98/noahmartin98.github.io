@@ -109,7 +109,7 @@ if ($stmt->rowCount() > 0) {
 
     </table>
 
-<div class="flex-row">
+<div class="flex-row margin-top-large">
 	<h3>Game Log</h3>
 	<?php playerSeasonForm($playerSeasons, $season, $playerid); ?>
 </div>
