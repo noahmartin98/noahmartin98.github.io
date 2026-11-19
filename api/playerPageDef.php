@@ -74,11 +74,12 @@ $stmt->bindParam(':playerid', $playerid, PDO::PARAM_INT);
 $stmt->execute();
 
 $playerSeasons = [];
+$tot = ['Gms' => 0, 'Sack' => 0, 'INTR' => 0, 'FF' => 0, 'FR' => 0, 'TD' => 0, 'TFL' => 0, 'PDEF' => 0];
 
 if ($stmt->rowCount() > 0) {
-    // output data of each row
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $playerSeasons[$row["first_game"]] = $row["season"];
+        foreach ($tot as $key => $val) $tot[$key] += $row[$key];
 
         echo "<tr>";
         echo "<td>". $row["season"]."</td>";
@@ -93,11 +94,24 @@ if ($stmt->rowCount() > 0) {
         echo "<td>". $row["PDEF"]."</td>";
         echo "</tr>";
     }
-    ksort($playerSeasons); // Sorts the dropdown array by Game_ID!
+    ksort($playerSeasons);
+
+    // Output the Career Total row
+    echo "<tr class='highlight'>";
+    echo "<td>Total</td>";
+    echo "<td></td>";
+    echo "<td>". $tot['Gms'] ."</td>";
+    echo "<td>". $tot['Sack'] ."</td>";
+    echo "<td>". $tot['INTR'] ."</td>";
+    echo "<td>". $tot['FF'] ."</td>";
+    echo "<td>". $tot['FR'] ."</td>";
+    echo "<td>". $tot['TD'] ."</td>";
+    echo "<td>". $tot['TFL'] ."</td>";
+    echo "<td>". $tot['PDEF'] ."</td>";
+    echo "</tr>";
 } else {
     echo "0 results";
 }
-
 ?>
 
     </table>
