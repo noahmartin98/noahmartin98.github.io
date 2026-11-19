@@ -27,6 +27,21 @@ table.scores th:nth-child(5) {
   table-layout: fixed;
 }*/
 
+/* Reusable wide, padded table layout------------------------------------- */
+table.table-spacious {
+  width: 65%;
+  min-width: 550px;        /* Prevents columns from cramping on smaller windows */
+  max-width: 900px;        /* Keeps it readable on large monitors */
+  border-collapse: collapse;
+}
+/* -------------------------------------------------------------------------- */
+
+table.table-spacious th,
+table.table-spacious td {
+  padding: 6px 16px;       /* Extra vertical & horizontal breathing room */
+  white-space: nowrap;     /* Prevents text like "Lost Conf. Championship" from wrapping */
+}
+
 div.box-score-top2 {
   display: flex;
   gap: 50px;
