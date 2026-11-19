@@ -101,6 +101,11 @@ switch ($path) {
         include __DIR__ . '/importStats.php';
         break;
 
+    case '/api/teamSummary.php':
+    case '/teamSummary':
+        include __DIR__ . '/teamSummary.php';
+        break;
+
   
 
     // Add a case block for each of your other PHP files here...
