@@ -13,8 +13,16 @@ require 'navbar.php';
 $teamid = $_GET['teamid'] ?? null;
 $sort   = $_GET['sort'] ?? 'play';
 
-// Safely pick ORDER BY clause
-$orderBy = ($sort === 'season') ? "game.Season ASC" : "MIN(game.game_id) ASC";
+// Safely pick ORDER BY clause and set up the opposite toggle link
+if ($sort === 'season') {
+    $orderBy    = "game.Season ASC";
+    $nextSort   = "play";
+    $toggleText = "Switch to Play Order";
+} else {
+    $orderBy    = "MIN(game.game_id) ASC";
+    $nextSort   = "season";
+    $toggleText = "Switch to Season Order";
+}
 
 $stmt = $conn->prepare("SELECT Team_Name FROM team WHERE Team_ID = :teamid;");
 $stmt->bindParam(':teamid', $teamid, PDO::PARAM_INT);
@@ -25,14 +33,9 @@ $teamname = $stmt->fetchColumn() ?: "Team Not Found";
 <div class="flex-row margin-top-small gap-large">
     <h1><?php echo htmlspecialchars($teamname); ?></h1>
     <h3>Franchise History</h3>
-
-    <form method="get">
-        <input type="hidden" name="teamid" value="<?php echo htmlspecialchars($teamid ?? ''); ?>">
-        <select class="season-select small" name="sort" onchange="this.form.submit()">
-            <option value="play" <?php if ($sort === 'play') echo 'selected'; ?>>Sort: Play Order</option>
-            <option value="season" <?php if ($sort === 'season') echo 'selected'; ?>>Sort: Season Year</option>
-        </select>
-    </form>
+    <a class="sort-toggle" href="?teamid=<?php echo urlencode($teamid); ?>&sort=<?php echo $nextSort; ?>">
+        <?php echo $toggleText; ?>
+    </a>
 </div>
 
 <table class="player-years">
