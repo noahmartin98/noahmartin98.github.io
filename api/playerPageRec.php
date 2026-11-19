@@ -58,7 +58,7 @@ require 'navbar.php';
 
 $sql = "SELECT game.season, MIN(game.Game_ID) AS first_game,
             GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS Teams,
-            COUNT(*) as Gms, SUM(Rec), SUM(Yds), SUM(TD),
+            COUNT(*) as Gms, SUM(Rec) as Rec, SUM(Yds) as Yds, SUM(TD) as TD,
             (SUM(Yds)/NULLIF(SUM(Rec), 0)) AS Ypc,
             (SUM(Rec)/count(*)) AS Rpg,
             (SUM(Yds)/count(*)) AS Ypg
@@ -76,29 +76,47 @@ $stmt->bindParam(':playerid', $playerid, PDO::PARAM_INT);
 $stmt->execute();
 
 $playerSeasons = [];
+$tot = ['Gms' => 0, 'Rec' => 0, 'Yds' => 0, 'TD' => 0];
 
 if ($stmt->rowCount() > 0) {
-    // output data of each row
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $playerSeasons[$row["first_game"]] = $row["season"];
+        foreach ($tot as $key => $val) $tot[$key] += $row[$key];
 
         echo "<tr>";
         echo "<td>". $row["season"]."</td>";
         echo "<td>". $row["Teams"]."</td>";
         echo "<td>". $row["Gms"]."</td>";
-        echo "<td>". $row["SUM(Rec)"]."</td>";
-        echo "<td>". $row["SUM(Yds)"]."</td>";
-        echo "<td>". $row["SUM(TD)"]."</td>";
+        echo "<td>". $row["Rec"]."</td>";
+        echo "<td>". $row["Yds"]."</td>";
+        echo "<td>". $row["TD"]."</td>";
         echo "<td>". sprintf('%.2f', $row["Ypc"])."</td>";
         echo "<td>". sprintf('%.1f', $row["Rpg"])."</td>";
         echo "<td>". sprintf('%.1f', $row["Ypg"])."</td>";
         echo "</tr>";
     }
-    ksort($playerSeasons); // Sorts the dropdown array by Game_ID!
+    ksort($playerSeasons);
+
+    // Calculate career rate stats
+    $totYpc = ($tot['Rec'] > 0) ? ($tot['Yds'] / $tot['Rec']) : 0;
+    $totRpg = ($tot['Gms'] > 0) ? ($tot['Rec'] / $tot['Gms']) : 0;
+    $totYpg = ($tot['Gms'] > 0) ? ($tot['Yds'] / $tot['Gms']) : 0;
+
+    // Output the Career Total row
+    echo "<tr class='highlight'>";
+    echo "<td>Total</td>";
+    echo "<td></td>";
+    echo "<td>". $tot['Gms'] ."</td>";
+    echo "<td>". $tot['Rec'] ."</td>";
+    echo "<td>". $tot['Yds'] ."</td>";
+    echo "<td>". $tot['TD'] ."</td>";
+    echo "<td>". sprintf('%.2f', $totYpc) ."</td>";
+    echo "<td>". sprintf('%.1f', $totRpg) ."</td>";
+    echo "<td>". sprintf('%.1f', $totYpg) ."</td>";
+    echo "</tr>";
 } else {
     echo "0 results";
 }
-
 ?>
 
     </table>
