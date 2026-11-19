@@ -47,13 +47,42 @@ if ($season !== "Total") {
 } else {
     $season_clause = "";
 }
+
+// Fetch team's W-L-T record for the selected season (or All Seasons)
+$recSql = "SELECT 
+            SUM(CASE WHEN t1.score > t2.score THEN 1 ELSE 0 END) AS wins,
+            SUM(CASE WHEN t2.score > t1.score THEN 1 ELSE 0 END) AS losses,
+            SUM(CASE WHEN t1.score = t2.score THEN 1 ELSE 0 END) AS ties
+           FROM team_statline t1
+           JOIN team_statline t2
+               ON t1.game_id = t2.game_id
+               AND t1.team_id <> t2.team_id
+           JOIN game ON t1.game_id = game.game_id
+           WHERE t1.team_id = :teamid $season_clause;";
+
+$recStmt = $conn->prepare($recSql);
+$recStmt->bindParam(':teamid', $teamid, PDO::PARAM_INT);
+if ($season !== "Total") {
+    $recStmt->bindParam(':season', $season, PDO::PARAM_INT);
+}
+$recStmt->execute();
+$recRow = $recStmt->fetch(PDO::FETCH_ASSOC);
+
+$wins   = (int)($recRow['wins'] ?? 0);
+$losses = (int)($recRow['losses'] ?? 0);
+$ties   = (int)($recRow['ties'] ?? 0);
+
+// Format as "11-5" if no ties, or "11-5-1" if there is at least one tie
+$recordText = ($ties > 0) ? "$wins-$losses-$ties" : "$wins-$losses";
+
 ?>
 
     
-<!--Header with team name and season select-->
+<!--Header with team name, record, and season select-->
 <div class="flex-row margin-top-small gap-large">
     <h1><?php echo htmlspecialchars($teamname); ?></h1>
-    <?php seasonDropdownForm($teamSeasons, $season, 'teamid', $teamid); ?>
+    <h3>(<?php echo $recordText; ?>)</h3>
+    <?php seasonDropdownForm($teamSeasons, $season, 'teamid', $teamid, false); ?>
 </div>
 
 <h3>Games</h3>
