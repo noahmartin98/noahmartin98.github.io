@@ -24,7 +24,7 @@ require 'navbar.php';
 
 ?>
 
-<div class="header-container">
+<div class="flex-row">
 
     <h1>Receiving Leaders</h1>
 
