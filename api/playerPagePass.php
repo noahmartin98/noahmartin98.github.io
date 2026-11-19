@@ -74,9 +74,13 @@ $stmt = $conn->prepare($sql);
 $stmt->bindParam(':playerid', $playerid, PDO::PARAM_INT);
 $stmt->execute();
 
+$playerSeasons = [];
+
 if ($stmt->rowCount() > 0) {
     // output data of each row
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+		$playerSeasons[] = $row["season"];
+		
         echo "<tr>";
         echo "<td>". $row["season"]."</td>";
         echo "<td>". $row["Teams"]."</td>";
@@ -104,7 +108,7 @@ if ($stmt->rowCount() > 0) {
  <form method="get" action="playerPagePass.php">
 	 <input type="hidden" name="playerid" value="<?php echo htmlspecialchars($playerid ?? ''); ?>">
 	    <select class="season-select" name="season" onchange="this.form.submit()">
-	        <?php include 'seasonOptions.php'; ?>
+	        <?php playerSeasonOptions($playerSeasons, $season); ?>
 	    </select>
 	</form>
 
@@ -191,7 +195,7 @@ if ($stmt->rowCount() > 0) {
 $conn = null;
 ?>
 
-    
+  </table>  
 
 
 
