@@ -7,6 +7,7 @@
 
 <?php
 require 'databaseConnect.php';
+require 'functions.php';
 
 $season = $_GET['season'] ?? 'Total';
 
@@ -23,6 +24,7 @@ $stmt->bindParam(':playerid', $playerid, PDO::PARAM_INT);
 $stmt->execute();
 
 if ($stmt->rowCount() > 0) {
+    // output data of each row
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $playername =  $row["Player_Name"];
     }
@@ -31,7 +33,6 @@ if ($stmt->rowCount() > 0) {
 }
 
 require 'navbar.php';
-require 'functions.php';
 
 ?>
 
@@ -39,7 +40,6 @@ require 'functions.php';
     <h1><?php echo $playername?></h1>
     <h3>Career</h3>
 </div>
-
 
     <table class="player-years">
         <tr>
@@ -57,18 +57,19 @@ require 'functions.php';
 <?php
 
 $sql = "SELECT game.season, MIN(game.Game_ID) AS first_game,
-    GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS Teams, 
-    COUNT(*) as Gms, SUM(Att), SUM(Yds), SUM(TD),
-    (SUM(Yds)/NULLIF(SUM(Att), 0)) AS Ypc,
-    (SUM(Att)/count(*)) AS Apg,
-    (SUM(Yds)/count(*)) AS Ypg
-    FROM rush_statline
-    INNER JOIN team ON rush_statline.Team_ID = team.Team_ID
-    INNER JOIN pos ON rush_statline.Pos_ID = pos.Pos_ID
-    INNER JOIN game ON rush_statline.Game_ID = game.Game_ID
-    WHERE Player_ID = :playerid
-    GROUP BY game.Season
-    ORDER BY game.Season ASC;";
+            GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS Teams, 
+            COUNT(*) as Gms, SUM(Att), SUM(Yds), SUM(TD),
+            (SUM(Yds)/NULLIF(SUM(Att), 0)) AS Ypc,
+            (SUM(Att)/count(*)) AS Apg,
+            (SUM(Yds)/count(*)) AS Ypg
+        FROM rush_statline
+        INNER JOIN team ON rush_statline.Team_ID = team.Team_ID
+        INNER JOIN pos ON rush_statline.Pos_ID = pos.Pos_ID
+        INNER JOIN game ON rush_statline.Game_ID = game.Game_ID
+        WHERE Player_ID = :playerid
+        GROUP BY game.Season
+        ORDER BY game.Season ASC;
+        ";
 
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':playerid', $playerid, PDO::PARAM_INT);
@@ -77,6 +78,7 @@ $stmt->execute();
 $playerSeasons = [];
 
 if ($stmt->rowCount() > 0) {
+    // output data of each row
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $playerSeasons[$row["first_game"]] = $row["season"];
 
@@ -92,7 +94,7 @@ if ($stmt->rowCount() > 0) {
         echo "<td>". sprintf('%.1f', $row["Ypg"])."</td>";
         echo "</tr>";
     }
-    ksort($playerSeasons);
+    ksort($playerSeasons); // Sorts the dropdown array by Game_ID!
 } else {
     echo "0 results";
 }
@@ -159,6 +161,7 @@ if ($season !== "Total") {
 $stmt->execute();
 
 if ($stmt->rowCount() > 0) {
+    // output data of each row
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         echo "<tr>";
         echo "<td>". $row["season"]."</td>";
@@ -180,7 +183,10 @@ if ($stmt->rowCount() > 0) {
 $conn = null;
 ?>
 
-    </table>
+  </table>  
+
+
+
 
 </body>
 </html>
