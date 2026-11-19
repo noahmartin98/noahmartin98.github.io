@@ -110,49 +110,54 @@ function renderMatchup($game, $season) {
 <?php else: ?>
 
 <div class="bracket-wrapper">
-    <!-- Left Wild Card -->
-    <div class="bracket-round">
-        <div class="round-title">Wild Card</div>
-        <?php foreach ($left['WC'] as $g) renderMatchup($g, $season); ?>
-    </div>
+    <!-- AFC Side (Left) -->
+    <div class="conference-side">
+        <div class="conference-title afc-title">AFC</div>
+        <div class="conference-rounds">
+            <div class="bracket-round">
+                <div class="round-title">Wild Card</div>
+                <?php foreach ($left['WC'] as $g) renderMatchup($g, $season); ?>
+            </div>
 
-    <!-- Left Divisional -->
-    <div class="bracket-round">
-        <div class="round-title">Divisional</div>
-        <?php foreach ($left['DIV'] as $g) renderMatchup($g, $season); ?>
-    </div>
+            <div class="bracket-round">
+                <div class="round-title">Divisional</div>
+                <?php foreach ($left['DIV'] as $g) renderMatchup($g, $season); ?>
+            </div>
 
-    <!-- Left Conference Championship -->
-    <div class="bracket-round">
-        <div class="round-title">Conf. Champ</div>
-        <?php foreach ($left['CC'] as $g) renderMatchup($g, $season); ?>
+            <div class="bracket-round">
+                <div class="round-title">Conf. Champ</div>
+                <?php foreach ($left['CC'] as $g) renderMatchup($g, $season); ?>
+            </div>
+        </div>
     </div>
 
     <!-- Center Super Bowl -->
     <div class="bracket-round super-bowl-round">
         <div class="round-title">Super Bowl</div>
-        <?php renderMatchup($rounds['SB'][0] ?? null, $season); ?>
+        <?php renderMatchup($rounds['SB'] ?? null, $season); ?>
     </div>
 
-    <!-- Right Conference Championship -->
-    <div class="bracket-round">
-        <div class="round-title">Conf. Champ</div>
-        <?php foreach ($right['CC'] as $g) renderMatchup($g, $season); ?>
-    </div>
+    <!-- NFC Side (Right) -->
+    <div class="conference-side">
+        <div class="conference-title nfc-title">NFC</div>
+        <div class="conference-rounds">
+            <div class="bracket-round">
+                <div class="round-title">Conf. Champ</div>
+                <?php foreach ($right['CC'] as $g) renderMatchup($g, $season); ?>
+            </div>
 
-    <!-- Right Divisional -->
-    <div class="bracket-round">
-        <div class="round-title">Divisional</div>
-        <?php foreach ($right['DIV'] as $g) renderMatchup($g, $season); ?>
-    </div>
+            <div class="bracket-round">
+                <div class="round-title">Divisional</div>
+                <?php foreach ($right['DIV'] as $g) renderMatchup($g, $season); ?>
+            </div>
 
-    <!-- Right Wild Card -->
-    <div class="bracket-round">
-        <div class="round-title">Wild Card</div>
-        <?php foreach ($right['WC'] as $g) renderMatchup($g, $season); ?>
+            <div class="bracket-round">
+                <div class="round-title">Wild Card</div>
+                <?php foreach ($right['WC'] as $g) renderMatchup($g, $season); ?>
+            </div>
+        </div>
     </div>
 </div>
-
 <?php endif; ?>
 
 <?php $conn = null; ?>
