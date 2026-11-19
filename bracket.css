@@ -151,3 +151,10 @@
 .nfc-title {
   background-color: #1565c0; /* Classic NFL NFC Blue */
 }
+
+.team-seed {
+  font-size: 0.75rem;
+  color: #555555;
+  font-weight: normal;
+  margin-right: 3px;
+}
