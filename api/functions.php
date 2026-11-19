@@ -1,9 +1,10 @@
 <?php
-function seasonDropdownForm($seasons, $selectedSeason, $paramName, $paramValue) {
+function seasonDropdownForm($seasons, $selectedSeason, $paramName, $paramValue, $isSmall = true) {
+    $sizeClass = $isSmall ? 'small' : '';
     ?>
     <form method="get">
         <input type="hidden" name="<?php echo $paramName; ?>" value="<?php echo $paramValue; ?>">
-        <select class="season-select small" name="season" onchange="this.form.submit()">
+        <select class="season-select <?php echo $sizeClass; ?>" name="season" onchange="this.form.submit()">
             <option value="Total" <?php if ($selectedSeason === 'Total') echo 'selected'; ?>>All Seasons</option>
             <?php foreach ($seasons as $yr): ?>
                 <option value="<?php echo $yr; ?>" <?php if ($selectedSeason == $yr) echo 'selected'; ?>>
