@@ -42,68 +42,10 @@ while ($sRow = $seasonStmt->fetch(PDO::FETCH_ASSOC)) {
 
 require 'navbar.php';
 
-if ($season !== "Total") {
-    $season_clause = "AND game.Season = :season";
-} else {
-    $season_clause = "";
-}
+$season_clause = ($season !== "Total") ? "AND game.Season = :season" : "";
 
-// Fetch team's W-L-T record for the selected season (or All Seasons)
-$recSql = "SELECT 
-            SUM(CASE WHEN t1.score > t2.score THEN 1 ELSE 0 END) AS wins,
-            SUM(CASE WHEN t2.score > t1.score THEN 1 ELSE 0 END) AS losses,
-            SUM(CASE WHEN t1.score = t2.score THEN 1 ELSE 0 END) AS ties
-           FROM team_statline t1
-           JOIN team_statline t2
-               ON t1.game_id = t2.game_id
-               AND t1.team_id <> t2.team_id
-           JOIN game ON t1.game_id = game.game_id
-           WHERE t1.team_id = :teamid $season_clause;";
-
-$recStmt = $conn->prepare($recSql);
-$recStmt->bindParam(':teamid', $teamid, PDO::PARAM_INT);
-if ($season !== "Total") {
-    $recStmt->bindParam(':season', $season, PDO::PARAM_INT);
-}
-$recStmt->execute();
-$recRow = $recStmt->fetch(PDO::FETCH_ASSOC);
-
-$wins   = (int)($recRow['wins'] ?? 0);
-$losses = (int)($recRow['losses'] ?? 0);
-$ties   = (int)($recRow['ties'] ?? 0);
-
-// Format as "11-5" if no ties, or "11-5-1" if there is at least one tie
-$recordText = ($ties > 0) ? "$wins-$losses-$ties" : "$wins-$losses";
-
-?>
-
-    
-<!--Header with team name, record, season select, and franchise history link-->
-<div class="flex-row margin-top-small gap-large">
-    <h1><?php echo htmlspecialchars($teamname); ?></h1>
-    <h3>(<?php echo $recordText; ?>)</h3>
-    <?php seasonDropdownForm($teamSeasons, $season, 'teamid', $teamid, false); ?>
-    <a class="home" href="/api/teamSummary.php?teamid=<?php echo urlencode($teamid); ?>">Franchise History</a>
-</div>
-
-<h3>Games</h3>
-
-    <table>
-        <tr>
-            <?php if ($season === "Total") echo "<th>Season</th>"; ?>
-            <th>Week</th>
-            <th>Date</th>
-            <th>User</th>
-            <th>H/A</th>
-            <th>Opponent</th>
-            <th>Score</th>
-            <th>Opp Score</th>
-            <th>Result</th>
-            <th></th>
-        </tr>
-
-<?php
-$sql = "SELECT game.game_id, game.season, game.week, game.game_date, t1.home_away, t1.team_user,
+// Fetch team's games first so we can count W-L-T in PHP without an extra query
+$gamesSql = "SELECT game.game_id, game.season, game.week, game.game_date, t1.home_away, t1.team_user,
         t1.score AS team_score,
         opp.Team_Name AS opponent,
         t2.score AS opp_score,
@@ -121,15 +63,53 @@ $sql = "SELECT game.game_id, game.season, game.week, game.game_date, t1.home_awa
     WHERE t1.team_id = :teamid $season_clause
     ORDER BY game.game_id ASC;";
 
-$stmt = $conn->prepare($sql);
-$stmt->bindParam(':teamid', $teamid, PDO::PARAM_INT);
+$gamesStmt = $conn->prepare($gamesSql);
+$gamesStmt->bindParam(':teamid', $teamid, PDO::PARAM_INT);
 if ($season !== "Total") {
-    $stmt->bindParam(':season', $season, PDO::PARAM_INT);
+    $gamesStmt->bindParam(':season', $season, PDO::PARAM_INT);
 }
-$stmt->execute();
+$gamesStmt->execute();
+$games = $gamesStmt->fetchAll(PDO::FETCH_ASSOC);
 
-if ($stmt->rowCount() > 0) {
-    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+// Count W-L-T in PHP
+$wins = 0; $losses = 0; $ties = 0;
+foreach ($games as $g) {
+    if ($g['result'] === 'W') $wins++;
+    elseif ($g['result'] === 'L') $losses++;
+    else $ties++;
+}
+$recordText = ($ties > 0) ? "$wins-$losses-$ties" : "$wins-$losses";
+
+// Fetch true team games played for all players on this roster
+$teamPlayerGames = getAllPlayersGames($conn, $season);
+?>
+
+<!--Header with team name, record, season select, and franchise history link-->
+<div class="flex-row margin-top-small gap-large">
+    <h1><?php echo htmlspecialchars($teamname); ?></h1>
+    <h3>(<?php echo $recordText; ?>)</h3>
+    <?php seasonDropdownForm($teamSeasons, $season, 'teamid', $teamid, false); ?>
+    <a class="home" href="/api/teamSummary.php?teamid=<?php echo urlencode($teamid); ?>">Franchise History</a>
+</div>
+
+<h3>Games</h3>
+    <table>
+        <tr>
+            <?php if ($season === "Total") echo "<th>Season</th>"; ?>
+            <th>Week</th>
+            <th>Date</th>
+            <th>User</th>
+            <th>H/A</th>
+            <th>Opponent</th>
+            <th>Score</th>
+            <th>Opp Score</th>
+            <th>Result</th>
+            <th></th>
+        </tr>
+
+<?php
+if (!empty($games)) {
+    foreach ($games as $row) {
         echo "<tr>";
         if ($season === "Total") echo "<td>". $row["season"]."</td>";
         echo "<td>". $row["week"]."</td>";
@@ -167,7 +147,7 @@ if ($stmt->rowCount() > 0) {
 $sql = "SELECT player.Player_Name, 
     GROUP_CONCAT(DISTINCT pos.Pos_Abbr SEPARATOR ', ') AS Poss,
     pass_statline.Player_ID,
-    COUNT(*) as Gms, SUM(Comp), SUM(Att), SUM(Yds), SUM(TD), SUM(INTR)
+    SUM(Comp) AS Comp, SUM(Att) AS Att, SUM(Yds) AS Yds, SUM(TD) AS TD, SUM(INTR) AS INTR
     FROM pass_statline
     INNER JOIN player ON pass_statline.Player_ID = player.Player_ID
     INNER JOIN team ON pass_statline.Team_ID = team.Team_ID
@@ -187,15 +167,17 @@ $stmt->execute();
 if ($stmt->rowCount() > 0) {
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $playerid = $row["Player_ID"];
+        $gms      = $teamPlayerGames[$playerid] ?? 0;
+
         echo "<tr>";
         echo "<td class='link'><a class='leader' href='/api/playerPagePass.php?playerid=" . $playerid . "'>" . $row["Player_Name"]."</a></td>";
         echo "<td>". $row["Poss"]."</td>";
-        echo "<td>". $row["Gms"]."</td>";
-        echo "<td>". $row["SUM(Comp)"]."</td>";
-        echo "<td>". $row["SUM(Att)"]."</td>";
-        echo "<td>". $row["SUM(Yds)"]."</td>";
-        echo "<td>". $row["SUM(TD)"]."</td>";
-        echo "<td>". $row["SUM(INTR)"]."</td>";
+        echo "<td>". $gms."</td>";
+        echo "<td>". $row["Comp"]."</td>";
+        echo "<td>". $row["Att"]."</td>";
+        echo "<td>". $row["Yds"]."</td>";
+        echo "<td>". $row["TD"]."</td>";
+        echo "<td>". $row["INTR"]."</td>";
         echo "</tr>";
     }
 } else {
@@ -219,7 +201,7 @@ if ($stmt->rowCount() > 0) {
 <?php
 $sql = "SELECT player.Player_Name, GROUP_CONCAT(DISTINCT pos.Pos_Abbr SEPARATOR ', ') AS Poss,
     rush_statline.Player_ID,
-    COUNT(*) as Gms, SUM(Att), SUM(Yds), SUM(TD)
+    SUM(Att) AS Att, SUM(Yds) AS Yds, SUM(TD) AS TD
     FROM rush_statline
     INNER JOIN player ON rush_statline.Player_ID = player.Player_ID
     INNER JOIN team ON rush_statline.Team_ID = team.Team_ID
@@ -239,13 +221,15 @@ $stmt->execute();
 if ($stmt->rowCount() > 0) {
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $playerid = $row["Player_ID"];
+        $gms      = $teamPlayerGames[$playerid] ?? 0;
+
         echo "<tr>";
         echo "<td class='link'><a class='leader' href='/api/playerPageRush.php?playerid=" . $playerid . "'>" . $row["Player_Name"]."</a></td>";
         echo "<td>". $row["Poss"]."</td>";
-        echo "<td>". $row["Gms"]."</td>";
-        echo "<td>". $row["SUM(Att)"]."</td>";
-        echo "<td>". $row["SUM(Yds)"]."</td>";
-        echo "<td>". $row["SUM(TD)"]."</td>";
+        echo "<td>". $gms."</td>";
+        echo "<td>". $row["Att"]."</td>";
+        echo "<td>". $row["Yds"]."</td>";
+        echo "<td>". $row["TD"]."</td>";
         echo "</tr>";
     }
 } else {
@@ -269,7 +253,7 @@ if ($stmt->rowCount() > 0) {
 <?php
 $sql = "SELECT player.Player_Name, GROUP_CONCAT(DISTINCT pos.Pos_Abbr SEPARATOR ', ') AS Poss,
     rec_statline.Player_ID,
-    COUNT(*) as Gms, SUM(Rec), SUM(Yds), SUM(TD)
+    SUM(Rec) AS Rec, SUM(Yds) AS Yds, SUM(TD) AS TD
     FROM rec_statline
     INNER JOIN player ON rec_statline.Player_ID = player.Player_ID
     INNER JOIN team ON rec_statline.Team_ID = team.Team_ID
@@ -289,13 +273,15 @@ $stmt->execute();
 if ($stmt->rowCount() > 0) {
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $playerid = $row["Player_ID"];
+        $gms      = $teamPlayerGames[$playerid] ?? 0;
+
         echo "<tr>";
         echo "<td class='link'><a class='leader' href='/api/playerPageRec.php?playerid=" . $playerid . "'>" . $row["Player_Name"]."</a></td>";
         echo "<td>". $row["Poss"]."</td>";
-        echo "<td>". $row["Gms"]."</td>";
-        echo "<td>". $row["SUM(Rec)"]."</td>";
-        echo "<td>". $row["SUM(Yds)"]."</td>";
-        echo "<td>". $row["SUM(TD)"]."</td>";
+        echo "<td>". $gms."</td>";
+        echo "<td>". $row["Rec"]."</td>";
+        echo "<td>". $row["Yds"]."</td>";
+        echo "<td>". $row["TD"]."</td>";
         echo "</tr>";
     }
 } else {
@@ -322,52 +308,43 @@ if ($stmt->rowCount() > 0) {
 
 <?php
 $sql = "SELECT player.Player_Name, GROUP_CONCAT(DISTINCT pos.Pos_Abbr SEPARATOR ', ') AS Poss,
-    GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS Teams,
-    def_statline.Player_ID,
-    COUNT(*) as Gms,
-    SUM(Sack) as Sack, SUM(INTR) as INTR, SUM(FF) as FF, SUM(FR) as FR, SUM(TD) as TD, SUM(TFL) as TFL, SUM(PDEF) as PDEF
-    FROM def_statline
-    INNER JOIN player ON def_statline.Player_ID = player.Player_ID
-    INNER JOIN team ON def_statline.Team_ID = team.Team_ID
-    INNER JOIN pos ON def_statline.Pos_ID = pos.Pos_ID
-    INNER JOIN game ON def_statline.Game_ID = game.Game_ID
-    WHERE team.Team_ID = :teamid $season_clause
-    GROUP BY Player_ID
-    ORDER BY SUM(Sack) desc;";
+            def_statline.Player_ID,
+            SUM(Sack) AS Sack, SUM(INTR) AS INTR, SUM(FF) AS FF, SUM(FR) AS FR,
+            SUM(TD) AS TD, SUM(TFL) AS TFL, SUM(PDEF) AS PDEF
+            FROM def_statline
+            INNER JOIN player ON def_statline.Player_ID = player.Player_ID
+            INNER JOIN team ON def_statline.Team_ID = team.Team_ID
+            INNER JOIN pos ON def_statline.Pos_ID = pos.Pos_ID
+            INNER JOIN game ON def_statline.Game_ID = game.Game_ID
+            WHERE team.Team_ID = :teamid $season_clause
+            GROUP BY def_statline.Player_ID, player.Player_Name
+            ORDER BY SUM(Sack) DESC;";
 
-$stmt = $conn->prepare($sql);
-$stmt->bindParam(':teamid', $teamid, PDO::PARAM_INT);
-if ($season !== "Total") {
-    $stmt->bindParam(':season', $season, PDO::PARAM_INT);
-}
-$stmt->execute();
-
-if ($stmt->rowCount() > 0) {
-    // output data of each row
-    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $playerid = $row["Player_ID"];
-        echo "<tr>";
-        echo "<td class='link'><a class='leader' href='/api/playerPageDef.php?playerid=" . $playerid . "'>" . $row["Player_Name"]."</a></td>";
-        echo "<td>". $row["Poss"]."</td>";
-        echo "<td>". $row["Gms"]."</td>";
-        echo "<td>". $row["Sack"]."</td>";
-        echo "<td>". $row["INTR"]."</td>";
-        echo "<td>". $row["FF"]."</td>";
-        echo "<td>". $row["FR"]."</td>";
-        echo "<td>". $row["TD"]."</td>";
-        echo "<td>". $row["TFL"]."</td>";
-        echo "<td>". $row["PDEF"]."</td>";
-        echo "</tr>";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':teamid', $teamid, PDO::PARAM_INT);
+    if ($season !== "Total") {
+        $stmt->bindParam(':season', $season, PDO::PARAM_INT);
     }
-} else {
-    echo "0 results";
+    $stmt->execute();
+    if ($stmt->rowCount() > 0) {
+        while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $playerid = $row["Player_ID"];
+    $gms = $teamPlayerGames[$playerid] ?? 0;
+    echo "";
+    echo "" . $row["Player_Name"]."";
+    echo "". $row["Poss"]."";
+    echo "". $gms."";
+    echo "". $row["Sack"]."";
+    echo "". $row["INTR"]."";
+    echo "". $row["FF"]."";
+    echo "". $row["FR"]."";
+    echo "". $row["TD"]."";
+    echo "". $row["TFL"]."";
+    echo "". $row["PDEF"]."";
+    echo "";
 }
+} else {
+echo "0 results";
+}
+$conn = null;
 ?>
-</table>
-
-<?php
-    $conn = null;
-?>
-
-</body>
-</html>
