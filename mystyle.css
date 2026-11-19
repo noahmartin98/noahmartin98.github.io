@@ -268,6 +268,9 @@ table tbody tr:hover td.link:hover {
 .margin-top-large {
   margin-top: 25px;
 }
+.margin-top-small {
+  margin-top: 15px;
+}
 
 /*Season Select element*/
 select.season-select {  
