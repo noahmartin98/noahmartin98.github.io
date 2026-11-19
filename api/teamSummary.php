@@ -11,6 +11,10 @@ require 'functions.php';
 require 'navbar.php';
 
 $teamid = $_GET['teamid'] ?? null;
+$sort   = $_GET['sort'] ?? 'play';
+
+// Safely pick ORDER BY clause
+$orderBy = ($sort === 'season') ? "game.Season ASC" : "MIN(game.game_id) ASC";
 
 $stmt = $conn->prepare("SELECT Team_Name FROM team WHERE Team_ID = :teamid;");
 $stmt->bindParam(':teamid', $teamid, PDO::PARAM_INT);
@@ -21,6 +25,14 @@ $teamname = $stmt->fetchColumn() ?: "Team Not Found";
 <div class="flex-row margin-top-small gap-large">
     <h1><?php echo htmlspecialchars($teamname); ?></h1>
     <h3>Franchise History</h3>
+
+    <form method="get">
+        <input type="hidden" name="teamid" value="<?php echo htmlspecialchars($teamid ?? ''); ?>">
+        <select class="season-select small" name="sort" onchange="this.form.submit()">
+            <option value="play" <?php if ($sort === 'play') echo 'selected'; ?>>Sort: Play Order</option>
+            <option value="season" <?php if ($sort === 'season') echo 'selected'; ?>>Sort: Season Year</option>
+        </select>
+    </form>
 </div>
 
 <table class="player-years">
@@ -53,7 +65,7 @@ $sql = "SELECT
         JOIN game ON t1.game_id = game.game_id
         WHERE t1.team_id = :teamid
         GROUP BY game.Season
-        ORDER BY game.Season ASC;";
+        ORDER BY $orderBy;";
 
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':teamid', $teamid, PDO::PARAM_INT);
@@ -116,7 +128,7 @@ if ($stmt->rowCount() > 0) {
         echo "</tr>";
     }
 
-    // Franchise Total Row (clicking Total opens teamPage.php with season=Total!)
+    // Franchise Total Row
     $totGames = $tot['W'] + $tot['L'] + $tot['T'];
     $totPct   = ($totGames > 0) ? ($tot['W'] + 0.5 * $tot['T']) / $totGames : 0;
     $allSeasonsUrl = "/api/teamPage.php?teamid=" . urlencode($teamid) . "&season=Total";
