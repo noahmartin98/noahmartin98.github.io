@@ -7,6 +7,9 @@
 
 <?php
 require 'databaseConnect.php';
+require 'functions.php';
+
+$season = $_GET['season'] ?? 'Total';
 
 if (isset($_GET['playerid'])) {
     $playerid = $_GET['playerid'];
@@ -33,7 +36,7 @@ require 'navbar.php';
 
 ?>
 
-<div class="header-container">
+<div class="flex-row margin-top-small gap-large">
     <h1><?php echo $playername?></h1>
     <h3>Career</h3>
 </div>
@@ -53,25 +56,32 @@ require 'navbar.php';
 
 <?php
 
-$sql = "SELECT game.season, GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS Teams,
-    COUNT(*) as Gms, SUM(Rec), SUM(Yds), SUM(TD),
-    (SUM(Yds)/SUM(Rec)) AS Ypc,
-    (SUM(Rec)/count(*)) AS Rpg,
-    (SUM(Yds)/count(*)) AS Ypg
-    FROM rec_statline
-    INNER JOIN team ON rec_statline.Team_ID = team.Team_ID
-    INNER JOIN pos ON rec_statline.Pos_ID = pos.Pos_ID
-    INNER JOIN game ON rec_statline.Game_ID = game.Game_ID
-    WHERE Player_ID = :playerid
-    GROUP BY game.Season;";
+$sql = "SELECT game.season, MIN(game.Game_ID) AS first_game,
+            GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS Teams,
+            COUNT(*) as Gms, SUM(Rec), SUM(Yds), SUM(TD),
+            (SUM(Yds)/NULLIF(SUM(Rec), 0)) AS Ypc,
+            (SUM(Rec)/count(*)) AS Rpg,
+            (SUM(Yds)/count(*)) AS Ypg
+        FROM rec_statline
+        INNER JOIN team ON rec_statline.Team_ID = team.Team_ID
+        INNER JOIN pos ON rec_statline.Pos_ID = pos.Pos_ID
+        INNER JOIN game ON rec_statline.Game_ID = game.Game_ID
+        WHERE Player_ID = :playerid
+        GROUP BY game.Season
+        ORDER BY game.Season ASC;
+        ";
 
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':playerid', $playerid, PDO::PARAM_INT);
 $stmt->execute();
 
+$playerSeasons = [];
+
 if ($stmt->rowCount() > 0) {
     // output data of each row
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $playerSeasons[$row["first_game"]] = $row["season"];
+
         echo "<tr>";
         echo "<td>". $row["season"]."</td>";
         echo "<td>". $row["Teams"]."</td>";
@@ -84,6 +94,7 @@ if ($stmt->rowCount() > 0) {
         echo "<td>". sprintf('%.1f', $row["Ypg"])."</td>";
         echo "</tr>";
     }
+    ksort($playerSeasons); // Sorts the dropdown array by Game_ID!
 } else {
     echo "0 results";
 }
@@ -92,7 +103,10 @@ if ($stmt->rowCount() > 0) {
 
     </table>
 
-<h3>Game Log</h3>
+<div class="flex-row margin-top-large">
+    <h3>Game Log</h3>
+    <?php playerSeasonForm($playerSeasons, $season, $playerid); ?>
+</div>
 
     <table class="player">
         <tr>
@@ -101,9 +115,9 @@ if ($stmt->rowCount() > 0) {
             <th>Week</th>
             <th>Date</th>
             <th>User</th>
-			<th></th>
-			<th>Opp</th>
-            <th>Att</th>
+            <th></th>
+            <th>Opp</th>
+            <th>Rec</th>
             <th>Yds</th>
             <th>TD</th>
         </tr>
@@ -111,29 +125,39 @@ if ($stmt->rowCount() > 0) {
 
 <?php
 
+if ($season !== "Total") {
+    $where_clause = "AND game.Season = :season";
+} else {
+    $where_clause = "";
+}
+
 $sql = "SELECT game.season, tm.Abbr AS Tm, game.week, game.game_date, t1.team_user, 
-		CASE
-			WHEN (t1.home_away = 'Home')
-				THEN 'vs.'
-			WHEN (t1.home_away = 'Away')
-				THEN '@'
-			ELSE ''
-		END AS loc,
+        CASE
+            WHEN (t1.home_away = 'Home')
+                THEN 'vs.'
+            WHEN (t1.home_away = 'Away')
+                THEN '@'
+            ELSE ''
+        END AS loc,
     opp.Abbr AS Opp, Rec, Yds, TD
     FROM rec_statline
     INNER JOIN game ON rec_statline.game_id = game.game_id
-	JOIN team_statline t1
-		ON t1.game_id = rec_statline.game_id
-		AND t1.team_id = rec_statline.team_id
-	JOIN team_statline t2
-		ON t2.game_id = rec_statline.game_id
-		AND t2.team_id <> rec_statline.team_id
-	JOIN team tm ON t1.team_id = tm.team_id
-	JOIN team opp ON t2.team_id = opp.team_id
-    WHERE Player_ID = :playerid;";
+    JOIN team_statline t1
+        ON t1.game_id = rec_statline.game_id
+        AND t1.team_id = rec_statline.team_id
+    JOIN team_statline t2
+        ON t2.game_id = rec_statline.game_id
+        AND t2.team_id <> rec_statline.team_id
+    JOIN team tm ON t1.team_id = tm.team_id
+    JOIN team opp ON t2.team_id = opp.team_id
+    WHERE Player_ID = :playerid $where_clause
+    ORDER BY game.Game_ID ASC;";
 
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':playerid', $playerid, PDO::PARAM_INT);
+if ($season !== "Total") {
+    $stmt->bindParam(':season', $season, PDO::PARAM_INT);
+}
 $stmt->execute();
 
 if ($stmt->rowCount() > 0) {
@@ -145,8 +169,8 @@ if ($stmt->rowCount() > 0) {
         echo "<td>". $row["week"]."</td>";
         echo "<td>". $row["game_date"]."</td>";
         echo "<td>". $row["team_user"]."</td>";
-		echo "<td>". $row["loc"]."</td>";
-		echo "<td>". $row["Opp"]."</td>";
+        echo "<td>". $row["loc"]."</td>";
+        echo "<td>". $row["Opp"]."</td>";
         echo "<td>". $row["Rec"]."</td>";
         echo "<td>". $row["Yds"]."</td>";
         echo "<td>". $row["TD"]."</td>";
@@ -159,7 +183,10 @@ if ($stmt->rowCount() > 0) {
 $conn = null;
 ?>
 
-    </table>
+  </table>  
+
+
+
 
 </body>
 </html>
