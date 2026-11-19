@@ -134,7 +134,7 @@ function renderMatchup($game, $season) {
     <!-- Center Super Bowl -->
     <div class="bracket-round super-bowl-round">
         <div class="round-title">Super Bowl</div>
-        <?php renderMatchup($rounds['SB'] ?? null, $season); ?>
+        <?php renderMatchup($rounds['SB'][0] ?? null, $season); ?>
     </div>
 
     <!-- NFC Side (Right) -->
