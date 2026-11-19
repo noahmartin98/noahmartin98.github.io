@@ -8,6 +8,8 @@
 <?php
 require 'databaseConnect.php';
 
+$season = $_GET['season'] ?? 'Total';
+
 if (isset($_GET['playerid'])) {
     $playerid = $_GET['playerid'];
 }
@@ -21,7 +23,6 @@ $stmt->bindParam(':playerid', $playerid, PDO::PARAM_INT);
 $stmt->execute();
 
 if ($stmt->rowCount() > 0) {
-    // output data of each row
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $playername =  $row["Player_Name"];
     }
@@ -30,10 +31,11 @@ if ($stmt->rowCount() > 0) {
 }
 
 require 'navbar.php';
+require 'functions.php';
 
 ?>
 
-<div class="flex-box margin-top-small gap-large">
+<div class="flex-row margin-top-small gap-large align-baseline">
     <h1><?php echo $playername?></h1>
     <h3>Career</h3>
 </div>
@@ -54,9 +56,10 @@ require 'navbar.php';
 
 <?php
 
-$sql = "SELECT game.season, GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS Teams, 
-	COUNT(*) as Gms, SUM(Att), SUM(Yds), SUM(TD),
-    (SUM(Yds)/SUM(Att)) AS Ypc,
+$sql = "SELECT game.season, MIN(game.Game_ID) AS first_game,
+    GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS Teams, 
+    COUNT(*) as Gms, SUM(Att), SUM(Yds), SUM(TD),
+    (SUM(Yds)/NULLIF(SUM(Att), 0)) AS Ypc,
     (SUM(Att)/count(*)) AS Apg,
     (SUM(Yds)/count(*)) AS Ypg
     FROM rush_statline
@@ -64,15 +67,19 @@ $sql = "SELECT game.season, GROUP_CONCAT(DISTINCT team.Abbr SEPARATOR ', ') AS T
     INNER JOIN pos ON rush_statline.Pos_ID = pos.Pos_ID
     INNER JOIN game ON rush_statline.Game_ID = game.Game_ID
     WHERE Player_ID = :playerid
-    GROUP BY game.Season;";
+    GROUP BY game.Season
+    ORDER BY game.Season ASC;";
 
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':playerid', $playerid, PDO::PARAM_INT);
 $stmt->execute();
 
+$playerSeasons = [];
+
 if ($stmt->rowCount() > 0) {
-    // output data of each row
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $playerSeasons[$row["first_game"]] = $row["season"];
+
         echo "<tr>";
         echo "<td>". $row["season"]."</td>";
         echo "<td>". $row["Teams"]."</td>";
@@ -85,6 +92,7 @@ if ($stmt->rowCount() > 0) {
         echo "<td>". sprintf('%.1f', $row["Ypg"])."</td>";
         echo "</tr>";
     }
+    ksort($playerSeasons);
 } else {
     echo "0 results";
 }
@@ -94,7 +102,8 @@ if ($stmt->rowCount() > 0) {
     </table>
 
 <div class="flex-row margin-top-large">
-	<h3>Game Log</h3>
+    <h3>Game Log</h3>
+    <?php playerSeasonForm($playerSeasons, $season, $playerid); ?>
 </div>
 
     <table class="player">
@@ -103,9 +112,9 @@ if ($stmt->rowCount() > 0) {
             <th>Team</th>
             <th>Week</th>
             <th>Date</th>
-			<th>User</th>
-			<th></th>
-			<th>Opp</th>
+            <th>User</th>
+            <th></th>
+            <th>Opp</th>
             <th>Att</th>
             <th>Yds</th>
             <th>TD</th>
@@ -114,42 +123,51 @@ if ($stmt->rowCount() > 0) {
 
 <?php
 
+if ($season !== "Total") {
+    $where_clause = "AND game.Season = :season";
+} else {
+    $where_clause = "";
+}
+
 $sql = "SELECT game.season, tm.Abbr AS Tm, game.week, game.game_date, t1.team_user, 
-		CASE
-			WHEN (t1.home_away = 'Home')
-				THEN 'vs.'
-			WHEN (t1.home_away = 'Away')
-				THEN '@'
-			ELSE ''
-		END AS loc,
+        CASE
+            WHEN (t1.home_away = 'Home')
+                THEN 'vs.'
+            WHEN (t1.home_away = 'Away')
+                THEN '@'
+            ELSE ''
+        END AS loc,
     opp.Abbr AS Opp, Att, Yds, TD
     FROM rush_statline
     INNER JOIN game ON rush_statline.game_ID = game.game_ID
     JOIN team_statline t1
-		ON t1.game_id = rush_statline.game_id
-		AND t1.team_id = rush_statline.team_id
-	JOIN team_statline t2
-		ON t2.game_id = rush_statline.game_id
-		AND t2.team_id <> rush_statline.team_id
-	JOIN team tm ON t1.team_id = tm.team_id
-	JOIN team opp ON t2.team_id = opp.team_id
-    WHERE Player_ID = :playerid;";
+        ON t1.game_id = rush_statline.game_id
+        AND t1.team_id = rush_statline.team_id
+    JOIN team_statline t2
+        ON t2.game_id = rush_statline.game_id
+        AND t2.team_id <> rush_statline.team_id
+    JOIN team tm ON t1.team_id = tm.team_id
+    JOIN team opp ON t2.team_id = opp.team_id
+    WHERE Player_ID = :playerid $where_clause
+    ORDER BY game.Game_ID ASC;";
 
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':playerid', $playerid, PDO::PARAM_INT);
+if ($season !== "Total") {
+    $stmt->bindParam(':season', $season, PDO::PARAM_INT);
+}
 $stmt->execute();
 
 if ($stmt->rowCount() > 0) {
-    // output data of each row
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         echo "<tr>";
         echo "<td>". $row["season"]."</td>";
         echo "<td>". $row["Tm"]."</td>";
         echo "<td>". $row["week"]."</td>";
         echo "<td>". $row["game_date"]."</td>";
-		echo "<td>". $row["team_user"]."</td>";
-		echo "<td>". $row["loc"]."</td>";
-		echo "<td>". $row["Opp"]."</td>";
+        echo "<td>". $row["team_user"]."</td>";
+        echo "<td>". $row["loc"]."</td>";
+        echo "<td>". $row["Opp"]."</td>";
         echo "<td>". $row["Att"]."</td>";
         echo "<td>". $row["Yds"]."</td>";
         echo "<td>". $row["TD"]."</td>";
