@@ -20,69 +20,69 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         foreach ($gameLines as $line) {
             $c = array_map('trim', explode("\t", $line));
-            if (count($c) < 18 || strtolower($c) === 'game id') continue; // Skip header if copied
+            if (count($c) < 18 || strtolower($c[0]) === 'game id') continue; // Skip header if copied
 
-            $gameId = (int)ltrim($c, '0');
-            $mad    = (int)$c;
-            $yr     = (int)$c;
+            $gameId = (int)ltrim($c[0], '0');
+            $mad    = (int)$c[1];
+            $yr     = (int)$c[2];
             $season = !empty($_POST['season_override']) ? (int)$_POST['season_override'] : (2000 + $mad - 1);
-            $dateFormatted = date('Y-m-d', strtotime($c));
-            $otFlag = !empty($c) ? 1 : 0;
+            $dateFormatted = date('Y-m-d', strtotime($c[6]));
+            $otFlag = !empty($c[8]) ? 1 : 0;
 
             if (!$gameMeta) {
                 $gameMeta = [
                     'game_id'    => $gameId,
                     'season'     => $season,
-                    'week'       => $c,
+                    'week'       => $c[3],
                     'game_date'  => $dateFormatted,
-                    'difficulty' => $c,
+                    'difficulty' => $c[5],
                     'OT'         => $otFlag,
                     'mad'        => $mad,
                     'yr'         => $yr
                 ];
             }
 
-            $teamName = $c;
+            $teamName = $c[11];
             $findTeam->execute([':name' => $teamName]);
             $teamId = $findTeam->fetchColumn();
 
             $teamsMap[$teamName] = [
                 'team_id'   => $teamId,
-                'team_user' => $c,
-                'home_away' => $c,
-                'seed'      => $c,
-                'q1'        => (int)$c,
-                'q2'        => (int)$c,
-                'q3'        => (int)$c,
-                'q4'        => (int)$c,
-                'ot'        => (int)$c,
-                'score'     => (int)$c
+                'team_user' => $c[4],
+                'home_away' => $c[7],
+                'seed'      => $c[10],
+                'q1'        => (int)$c[12],
+                'q2'        => (int)$c[13],
+                'q3'        => (int)$c[14],
+                'q4'        => (int)$c[15],
+                'ot'        => (int)$c[16],
+                'score'     => (int)$c[17]
             ];
         }
 
         // Parse Box 2: Team Box Score Stats (2 rows)
         foreach ($teamLines as $line) {
             $c = array_map('trim', explode("\t", $line));
-            if (count($c) < 19 || empty($c) || strtolower($c) === 'score') continue; // Skip header rows
+            if (count($c) < 19 || empty($c[0]) || strtolower($c[1]) === 'score') continue; // Skip header rows
 
-            $teamName = $c;
+            $teamName = $c[0];
             if (isset($teamsMap[$teamName])) {
-                $teamsMap[$teamName]['rush']      = (int)$c;
-                $teamsMap[$teamName]['pass']      = (int)$c;
-                $teamsMap[$teamName]['firsts']    = (int)$c;
-                $teamsMap[$teamName]['to']        = (int)$c;
-                $teamsMap[$teamName]['conv3']     = (int)$c;
-                $teamsMap[$teamName]['att3']      = (int)$c;
-                $teamsMap[$teamName]['conv4']     = (int)$c;
-                $teamsMap[$teamName]['att4']      = (int)$c;
-                $teamsMap[$teamName]['conv2']     = (int)$c;
-                $teamsMap[$teamName]['att2']      = (int)$c;
-                $teamsMap[$teamName]['rz_att']    = (int)$c;
-                $teamsMap[$teamName]['rz_rd']     = (int)$c; // Red Zone TD column (named rz_rd in your query)
-                $teamsMap[$teamName]['rz_fg']     = (int)$c;
-                $teamsMap[$teamName]['penalties'] = (int)$c;
-                $teamsMap[$teamName]['pen_yds']   = (int)$c;
-                $teamsMap[$teamName]['top']       = $c;
+                $teamsMap[$teamName]['rush']      = (int)$c[3];
+                $teamsMap[$teamName]['pass']      = (int)$c[4];
+                $teamsMap[$teamName]['firsts']    = (int)$c[5];
+                $teamsMap[$teamName]['to']        = (int)$c[6];
+                $teamsMap[$teamName]['conv3']     = (int)$c[7];
+                $teamsMap[$teamName]['att3']      = (int)$c[8];
+                $teamsMap[$teamName]['conv4']     = (int)$c[9];
+                $teamsMap[$teamName]['att4']      = (int)$c[10];
+                $teamsMap[$teamName]['conv2']     = (int)$c[11];
+                $teamsMap[$teamName]['att2']      = (int)$c[12];
+                $teamsMap[$teamName]['rz_att']    = (int)$c[13];
+                $teamsMap[$teamName]['rz_rd']     = (int)$c[14];
+                $teamsMap[$teamName]['rz_fg']     = (int)$c[15];
+                $teamsMap[$teamName]['penalties'] = (int)$c[16];
+                $teamsMap[$teamName]['pen_yds']   = (int)$c[17];
+                $teamsMap[$teamName]['top']       = $c[18];
             }
         }
 
