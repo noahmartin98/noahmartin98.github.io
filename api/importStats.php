@@ -179,9 +179,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 // 1. Load all existing players into a normalized PHP lookup map [clean_lowercase_name => Player_ID]
                 $cleanStr = function($str) {
-                    // Replace non-breaking spaces, tabs, newlines, and collapse multiple spaces
+                    // Replace non-breaking spaces, tabs, newlines, and collapse multiple spaces (preserves capitalization)
                     $str = str_replace(["\xC2\xA0", "\r", "\n", "\t"], ' ', (string)$str);
-                    return strtolower(trim(preg_replace('/\s+/', ' ', $str)));
+                    return trim(preg_replace('/\s+/', ' ', $str));
                 };
 
                 $playerLookup = [];
