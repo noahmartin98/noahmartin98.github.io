@@ -103,13 +103,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 // 3. Insert both rows into team_statline
                 $tsSql = "INSERT INTO team_statline (
-                            game_id, team_id, seed, home_away, team_user,
+                            team_stat_id, game_id, team_id, seed, home_away, team_user,
                             q1, q2, q3, q4, ot, score,
                             rush, pass, sacked, firsts, `to`,
                             conv3, att3, conv4, att4, conv2, att2,
                             rz_att, rz_rd, rz_fg, penalties, pen_yds, top
                           ) VALUES (
-                            :game_id, :team_id, :seed, :home_away, :team_user,
+                            :team_stat_id, :game_id, :team_id, :seed, :home_away, :team_user,
                             :q1, :q2, :q3, :q4, :ot, :score,
                             :rush, :pass, 0, :firsts, :to,
                             :conv3, :att3, :conv4, :att4, :conv2, :att2,
@@ -122,33 +122,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         throw new Exception("Team '$tName' not found in database.");
                     }
                     $tsStmt->execute([
-                        ':game_id'   => $gameMeta['game_id'],
-                        ':team_id'   => $t['team_id'],
-                        ':seed'      => $t['seed'],
-                        ':home_away' => $t['home_away'],
-                        ':team_user' => $t['team_user'],
-                        ':q1'        => $t['q1'],
-                        ':q2'        => $t['q2'],
-                        ':q3'        => $t['q3'],
-                        ':q4'        => $t['q4'],
-                        ':ot'        => $t['ot'],
-                        ':score'     => $t['score'],
-                        ':rush'      => $t['rush'] ?? 0,
-                        ':pass'      => $t['pass'] ?? 0,
-                        ':firsts'    => $t['firsts'] ?? 0,
-                        ':to'        => $t['to'] ?? 0,
-                        ':conv3'     => $t['conv3'] ?? 0,
-                        ':att3'      => $t['att3'] ?? 0,
-                        ':conv4'     => $t['conv4'] ?? 0,
-                        ':att4'      => $t['att4'] ?? 0,
-                        ':conv2'     => $t['conv2'] ?? 0,
-                        ':att2'      => $t['att2'] ?? 0,
-                        ':rz_att'    => $t['rz_att'] ?? 0,
-                        ':rz_rd'     => $t['rz_rd'] ?? 0,
-                        ':rz_fg'     => $t['rz_fg'] ?? 0,
-                        ':penalties' => $t['penalties'] ?? 0,
-                        ':pen_yds'   => $t['pen_yds'] ?? 0,
-                        ':top'       => $t['top'] ?? '00:00'
+                        ':team_stat_id' => $nextTsId++,
+                        ':game_id'      => $gameMeta['game_id'],
+                        ':team_id'      => $t['team_id'],
+                        ':seed'         => $t['seed'],
+                        ':home_away'    => $t['home_away'],
+                        ':team_user'    => $t['team_user'],
+                        ':q1'           => $t['q1'],
+                        ':q2'           => $t['q2'],
+                        ':q3'           => $t['q3'],
+                        ':q4'           => $t['q4'],
+                        ':ot'           => $t['ot'],
+                        ':score'        => $t['score'],
+                        ':rush'         => $t['rush'] ?? 0,
+                        ':pass'         => $t['pass'] ?? 0,
+                        ':firsts'       => $t['firsts'] ?? 0,
+                        ':to'           => $t['to'] ?? 0,
+                        ':conv3'        => $t['conv3'] ?? 0,
+                        ':att3'         => $t['att3'] ?? 0,
+                        ':conv4'        => $t['conv4'] ?? 0,
+                        ':att4'         => $t['att4'] ?? 0,
+                        ':conv2'        => $t['conv2'] ?? 0,
+                        ':att2'         => $t['att2'] ?? 0,
+                        ':rz_att'       => $t['rz_att'] ?? 0,
+                        ':rz_rd'        => $t['rz_rd'] ?? 0,
+                        ':rz_fg'        => $t['rz_fg'] ?? 0,
+                        ':penalties'    => $t['penalties'] ?? 0,
+                        ':pen_yds'      => $t['pen_yds'] ?? 0,
+                        ':top'          => $t['top'] ?? '00:00'
                     ]);
                 }
 
