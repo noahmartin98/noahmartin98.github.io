@@ -98,7 +98,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             VALUES (:game_id, :season, :week, :game_date, :difficulty, :OT, :mad, :yr)";
                 $conn->prepare($gameSql)->execute($gameMeta);
 
-                // 2. Insert both rows into team_statline
+                // 2. Get the next available team_stat_id
+                $nextTsId = (int)$conn->query("SELECT COALESCE(MAX(team_stat_id), 0) + 1 FROM team_statline")->fetchColumn();
+
+                // 3. Insert both rows into team_statline
                 $tsSql = "INSERT INTO team_statline (
                             game_id, team_id, seed, home_away, team_user,
                             q1, q2, q3, q4, ot, score,
