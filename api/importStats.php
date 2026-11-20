@@ -177,16 +177,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $teamLookup = $conn->query("SELECT Abbr, Team_ID FROM team")->fetchAll(PDO::FETCH_KEY_PAIR);
                 $posLookup  = $conn->query("SELECT Pos_Abbr, Pos_ID FROM pos")->fetchAll(PDO::FETCH_KEY_PAIR);
 
-                $findPlayer   = $conn->prepare("SELECT Player_ID FROM player WHERE LOWER(TRIM(Player_Name)) = LOWER(:name) LIMIT 1");
+                // 1. Load all existing players into a normalized PHP lookup map [clean_lowercase_name => Player_ID]
+                $cleanStr = function($str) {
+                    // Replace non-breaking spaces, tabs, newlines, and collapse multiple spaces
+                    $str = str_replace(["\xC2\xA0", "\r", "\n", "\t"], ' ', (string)$str);
+                    return strtolower(trim(preg_replace('/\s+/', ' ', $str)));
+                };
+
+                $playerLookup = [];
+                $allPlayersStmt = $conn->query("SELECT Player_ID, Player_Name FROM player");
+                while ($pRow = $allPlayersStmt->fetch(PDO::FETCH_ASSOC)) {
+                    $normName = $cleanStr($pRow['Player_Name']);
+                    if ($normName !== '') {
+                        $playerLookup[$normName] = $pRow['Player_ID'];
+                    }
+                }
+
                 $insertPlayer = $conn->prepare("INSERT INTO player (Player_ID, Player_Name) VALUES (:id, :name)");
                 $nextPlayerId = (int)$conn->query("SELECT COALESCE(MAX(Player_ID), 0) + 1 FROM player")->fetchColumn();
                 $newPlayers   = [];
 
-                $resolveIds = function($playerName, $posAbbr, $teamAbbr) use ($findPlayer, $insertPlayer, &$nextPlayerId, &$newPlayers, $teamLookup, $posLookup) {
-                    // Normalize non-breaking spaces (\xC2\xA0) and extra whitespace from Google Sheets
-                    $playerName = trim(preg_replace('/\s+/u', ' ', str_replace("\xC2\xA0", ' ', $playerName)));
-                    $posAbbr    = trim(str_replace("\xC2\xA0", ' ', $posAbbr));
-                    $teamAbbr   = trim(str_replace("\xC2\xA0", ' ', $teamAbbr));
+                $resolveIds = function($playerName, $posAbbr, $teamAbbr) use (&$playerLookup, $cleanStr, $insertPlayer, &$nextPlayerId, &$newPlayers, $teamLookup, $posLookup) {
+                    $teamAbbr = trim(str_replace("\xC2\xA0", ' ', $teamAbbr));
+                    $posAbbr  = trim(str_replace("\xC2\xA0", ' ', $posAbbr));
 
                     $teamId = $teamLookup[$teamAbbr] ?? null;
                     if (!$teamId) throw new Exception("Team abbreviation '$teamAbbr' not found in team table.");
@@ -194,12 +207,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $posId = $posLookup[$posAbbr] ?? null;
                     if (!$posId) throw new Exception("Position '$posAbbr' not found in pos table.");
 
-                    $findPlayer->execute([':name' => $playerName]);
-                    $playerId = $findPlayer->fetchColumn();
-                    if (!$playerId) {
+                    $displayName = trim(preg_replace('/\s+/', ' ', str_replace("\xC2\xA0", ' ', $playerName)));
+                    $lookupKey   = $cleanStr($displayName);
+
+                    if (isset($playerLookup[$lookupKey])) {
+                        $playerId = $playerLookup[$lookupKey];
+                    } else {
                         $playerId = $nextPlayerId++;
-                        $insertPlayer->execute([':id' => $playerId, ':name' => $playerName]);
-                        $newPlayers[] = "$playerName ($posAbbr, $teamAbbr)";
+                        $insertPlayer->execute([':id' => $playerId, ':name' => $displayName]);
+                        $playerLookup[$lookupKey] = $playerId; // Cache so same game doesn't re-add
+                        $newPlayers[] = "$displayName ($posAbbr, $teamAbbr)";
                     }
 
                     return [$playerId, $posId, $teamId];
