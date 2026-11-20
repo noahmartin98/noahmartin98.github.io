@@ -32,7 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $yr     = (int)$rawYr;
             $season = !empty($_POST['season_override']) ? (int)$_POST['season_override'] : (2000 + $mad - 1);
             $dateFormatted = date('Y-m-d', strtotime($rawDate));
-            $otFlag = !empty($rawOtFlag) ? 1 : 0;
 
             if (!$gameMeta) {
                 $gameMeta = [
@@ -41,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'week'       => $week,
                     'game_date'  => $dateFormatted,
                     'difficulty' => $difficulty,
-                    'OT'         => $otFlag,
+                    'OT'         => $rawOtFlag,
                     'mad'        => $mad,
                     'yr'         => $yr
                 ];
