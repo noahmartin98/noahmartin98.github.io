@@ -307,3 +307,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 ?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="../mystyle.css">
+    <title>Import Game & Player Stats</title>
+</head>
+<body>
+
+<h1>Step 1: Import Game & Team Stats</h1>
+
+<?php echo $message; ?>
+
+<form method="post">
+    <input type="hidden" name="action" value="import_game">
+
+    <div class="flex-row">
+        <div>
+            <label><strong>Passcode:</strong></label><br>
+            <input type="password" name="passcode" value="<?php echo htmlspecialchars($_POST['passcode'] ?? ''); ?>" required>
+        </div>
+        <div>
+            <label><strong>Season Override (Optional):</strong></label><br>
+            <input type="number" name="season_override" placeholder="Auto: 2000 + Mad - 1">
+        </div>
+    </div>
+
+    <p class="margin-top-small">
+        <label><strong>1. Paste Game Info (2 rows from Game ID through F):</strong></label><br>
+        <textarea name="game_data" rows="4" cols="110" style="width: 100%; max-width: 1500px; white-space: pre; overflow-x: auto;" placeholder="0673	15	02	W8	CPU	All-Pro	11/19/26	Away		L	4-3	Green Bay Packers	0	0	0	10	0	10" required></textarea>
+    </p>
+
+    <p class="margin-top-small">
+        <label><strong>2. Paste Team Stats (2 rows from Team Name through Opponent):</strong></label><br>
+        <textarea name="team_data" rows="4" cols="110" style="width: 100%; max-width: 1500px; white-space: pre; overflow-x: auto;" placeholder="Green Bay Packers	10	206	36	170	9	1	1	5	0	0	0	0	2	1	1	0	0	13:54	New Orleans Saints	GB" required></textarea>
+    </p>
+
+    <button type="submit">Import Game & Team Stats</button>
+</form>
+
+</body>
+</html>
