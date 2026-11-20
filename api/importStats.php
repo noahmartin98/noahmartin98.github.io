@@ -316,36 +316,81 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 
-<h1>Step 1: Import Game & Team Stats</h1>
+    <h1>Step 1: Import Game & Team Stats</h1>
+    
+    <?php echo $message; ?>
 
-<?php echo $message; ?>
-
-<form method="post">
-    <input type="hidden" name="action" value="import_game">
-
-    <div class="flex-row">
-        <div>
-            <label><strong>Passcode:</strong></label><br>
-            <input type="password" name="passcode" value="<?php echo htmlspecialchars($_POST['passcode'] ?? ''); ?>" required>
+    <form method="post">
+        <input type="hidden" name="action" value="import_game">
+    
+        <div class="flex-row">
+            <div>
+                <label><strong>Passcode:</strong></label><br>
+                <input type="password" name="passcode" value="<?php echo htmlspecialchars($_POST['passcode'] ?? ''); ?>" required>
+            </div>
+            <div>
+                <label><strong>Season Override (Optional):</strong></label><br>
+                <input type="number" name="season_override" placeholder="Auto: 2000 + Mad - 1">
+            </div>
         </div>
-        <div>
-            <label><strong>Season Override (Optional):</strong></label><br>
-            <input type="number" name="season_override" placeholder="Auto: 2000 + Mad - 1">
+    
+        <p class="margin-top-small">
+            <label><strong>1. Paste Game Info (2 rows from Game ID through F):</strong></label><br>
+            <textarea name="game_data" rows="4" cols="110" style="width: 100%; max-width: 1500px; white-space: pre; overflow-x: auto;" placeholder="0673	15	02	W8	CPU	All-Pro	11/19/26	Away		L	4-3	Green Bay Packers	0	0	0	10	0	10" required></textarea>
+        </p>
+    
+        <p class="margin-top-small">
+            <label><strong>2. Paste Team Stats (2 rows from Team Name through Opponent):</strong></label><br>
+            <textarea name="team_data" rows="4" cols="110" style="width: 100%; max-width: 1500px; white-space: pre; overflow-x: auto;" placeholder="Green Bay Packers	10	206	36	170	9	1	1	5	0	0	0	0	2	1	1	0	0	13:54	New Orleans Saints	GB" required></textarea>
+        </p>
+    
+        <button type="submit">Import Game & Team Stats</button>
+    </form>
+
+    <hr>
+
+    <h3>Step 2: Import Player Stats</h3>
+    <form method="post">
+        <input type="hidden" name="action" value="import_players">
+    
+        <div class="flex-row">
+            <div>
+                <label><strong>Passcode:</strong></label><br>
+                <input type="password" name="passcode" value="<?php echo htmlspecialchars($_POST['passcode'] ?? ''); ?>" required>
+            </div>
+            <div>
+                <label><strong>Game ID:</strong></label><br>
+                <input type="text" name="game_id" value="<?php echo htmlspecialchars($importedGameId); ?>" placeholder="e.g. 673" required>
+            </div>
         </div>
-    </div>
+    
+        <p class="margin-top-small">
+            <label><strong>Passing (Player, Pos, Team, Comp, Att, Yds, TD, INT):</strong></label><br>
+            <textarea name="pass_data" rows="5" style="width: 100%; max-width: 1150px; box-sizing: border-box; white-space: pre; overflow-x: auto;"></textarea>
+        </p>
+    
+        <p class="margin-top-small">
+            <label><strong>Rushing (Player, Pos, Team, Att, Yds, TD):</strong></label><br>
+            <textarea name="rush_data" rows="7" style="width: 100%; max-width: 1150px; box-sizing: border-box; white-space: pre; overflow-x: auto;"></textarea>
+        </p>
+    
+        <p class="margin-top-small">
+            <label><strong>Receiving (Player, Pos, Team, Rec, Yds, TD):</strong></label><br>
+            <textarea name="rec_data" rows="10" style="width: 100%; max-width: 1150px; box-sizing: border-box; white-space: pre; overflow-x: auto;"></textarea>
+        </p>
+    
+        <p class="margin-top-small">
+            <label><strong>Defensive (Player, Pos, Team, Sack, INT, FF, FR, TD, TFL, PDEF):</strong></label><br>
+            <textarea name="def_data" rows="12" style="width: 100%; max-width: 1150px; box-sizing: border-box; white-space: pre; overflow-x: auto;"></textarea>
+        </p>
+    
+        <button type="submit">Import All Player Stats</button>
+    </form>
 
-    <p class="margin-top-small">
-        <label><strong>1. Paste Game Info (2 rows from Game ID through F):</strong></label><br>
-        <textarea name="game_data" rows="4" cols="110" style="width: 100%; max-width: 1500px; white-space: pre; overflow-x: auto;" placeholder="0673	15	02	W8	CPU	All-Pro	11/19/26	Away		L	4-3	Green Bay Packers	0	0	0	10	0	10" required></textarea>
-    </p>
+</body>
+</html>
 
-    <p class="margin-top-small">
-        <label><strong>2. Paste Team Stats (2 rows from Team Name through Opponent):</strong></label><br>
-        <textarea name="team_data" rows="4" cols="110" style="width: 100%; max-width: 1500px; white-space: pre; overflow-x: auto;" placeholder="Green Bay Packers	10	206	36	170	9	1	1	5	0	0	0	0	2	1	1	0	0	13:54	New Orleans Saints	GB" required></textarea>
-    </p>
 
-    <button type="submit">Import Game & Team Stats</button>
-</form>
 
 </body>
 </html>
