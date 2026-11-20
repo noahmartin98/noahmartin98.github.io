@@ -22,68 +22,72 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         foreach ($gameLines as $line) {
             $c = array_map('trim', explode("\t", $line));
-            if (count($c) < 18 || strtolower($c) === 'game id') continue;
+            if (count($c) < 18) continue;
 
-            $gameId = (int)ltrim($c, '0');
-            $mad    = (int)$c;
-            $yr     = (int)$c;
+            list($rawGameId, $rawMad, $rawYr, $week, $teamUser, $difficulty, $rawDate, $homeAway, $rawOtFlag, $wl, $seed, $teamName, $q1, $q2, $q3, $q4, $otScore, $finalScore) = $c;
+            if (strtolower($rawGameId) === 'game id') continue;
+
+            $gameId = (int)ltrim($rawGameId, '0');
+            $mad    = (int)$rawMad;
+            $yr     = (int)$rawYr;
             $season = !empty($_POST['season_override']) ? (int)$_POST['season_override'] : (2000 + $mad - 1);
-            $dateFormatted = date('Y-m-d', strtotime($c));
-            $otFlag = !empty($c) ? 1 : 0;
+            $dateFormatted = date('Y-m-d', strtotime($rawDate));
+            $otFlag = !empty($rawOtFlag) ? 1 : 0;
 
             if (!$gameMeta) {
                 $gameMeta = [
                     'game_id'    => $gameId,
                     'season'     => $season,
-                    'week'       => $c,
+                    'week'       => $week,
                     'game_date'  => $dateFormatted,
-                    'difficulty' => $c,
+                    'difficulty' => $difficulty,
                     'OT'         => $otFlag,
                     'mad'        => $mad,
                     'yr'         => $yr
                 ];
             }
 
-            $teamName = $c;
             $findTeam->execute([':name' => $teamName]);
             $teamId = $findTeam->fetchColumn();
 
             $teamsMap[$teamName] = [
                 'team_id'   => $teamId,
-                'team_user' => $c,
-                'home_away' => $c,
-                'seed'      => $c,
-                'q1'        => (int)$c,
-                'q2'        => (int)$c,
-                'q3'        => (int)$c,
-                'q4'        => (int)$c,
-                'ot'        => (int)$c,
-                'score'     => (int)$c
+                'team_user' => $teamUser,
+                'home_away' => $homeAway,
+                'seed'      => $seed,
+                'q1'        => (int)$q1,
+                'q2'        => (int)$q2,
+                'q3'        => (int)$q3,
+                'q4'        => (int)$q4,
+                'ot'        => (int)$otScore,
+                'score'     => (int)$finalScore
             ];
         }
 
         foreach ($teamLines as $line) {
             $c = array_map('trim', explode("\t", $line));
-            if (count($c) < 19 || empty($c) || strtolower($c) === 'score') continue;
+            if (count($c) < 19) continue;
 
-            $teamName = $c;
+            list($teamName, $tScore, $tTotal, $rush, $pass, $firsts, $to, $conv3, $att3, $conv4, $att4, $conv2, $att2, $rzAtt, $rzTd, $rzFg, $penalties, $penYds, $top) = $c;
+            if (empty($teamName) || strtolower($tScore) === 'score') continue;
+
             if (isset($teamsMap[$teamName])) {
-                $teamsMap[$teamName]['rush']      = (int)$c;
-                $teamsMap[$teamName]['pass']      = (int)$c;
-                $teamsMap[$teamName]['firsts']    = (int)$c;
-                $teamsMap[$teamName]['to']        = (int)$c;
-                $teamsMap[$teamName]['conv3']     = (int)$c;
-                $teamsMap[$teamName]['att3']      = (int)$c;
-                $teamsMap[$teamName]['conv4']     = (int)$c;
-                $teamsMap[$teamName]['att4']      = (int)$c;
-                $teamsMap[$teamName]['conv2']     = (int)$c;
-                $teamsMap[$teamName]['att2']      = (int)$c;
-                $teamsMap[$teamName]['rz_att']    = (int)$c;
-                $teamsMap[$teamName]['rz_rd']     = (int)$c;
-                $teamsMap[$teamName]['rz_fg']     = (int)$c;
-                $teamsMap[$teamName]['penalties'] = (int)$c;
-                $teamsMap[$teamName]['pen_yds']   = (int)$c;
-                $teamsMap[$teamName]['top']       = $c;
+                $teamsMap[$teamName]['rush']      = (int)$rush;
+                $teamsMap[$teamName]['pass']      = (int)$pass;
+                $teamsMap[$teamName]['firsts']    = (int)$firsts;
+                $teamsMap[$teamName]['to']        = (int)$to;
+                $teamsMap[$teamName]['conv3']     = (int)$conv3;
+                $teamsMap[$teamName]['att3']      = (int)$att3;
+                $teamsMap[$teamName]['conv4']     = (int)$conv4;
+                $teamsMap[$teamName]['att4']      = (int)$att4;
+                $teamsMap[$teamName]['conv2']     = (int)$conv2;
+                $teamsMap[$teamName]['att2']      = (int)$att2;
+                $teamsMap[$teamName]['rz_att']    = (int)$rzAtt;
+                $teamsMap[$teamName]['rz_rd']     = (int)$rzTd;
+                $teamsMap[$teamName]['rz_fg']     = (int)$rzFg;
+                $teamsMap[$teamName]['penalties'] = (int)$penalties;
+                $teamsMap[$teamName]['pen_yds']   = (int)$penYds;
+                $teamsMap[$teamName]['top']       = $top;
             }
         }
 
@@ -177,9 +181,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $findPlayer   = $conn->prepare("SELECT Player_ID FROM player WHERE Player_Name = :name LIMIT 1");
                 $insertPlayer = $conn->prepare("INSERT INTO player (Player_ID, Player_Name) VALUES (:id, :name)");
                 $nextPlayerId = (int)$conn->query("SELECT COALESCE(MAX(Player_ID), 0) + 1 FROM player")->fetchColumn();
-                $newPlayers   = []; // Track newly created players
+                $newPlayers   = [];
 
-                // Helper to resolve Player_ID (auto-creating player if new), Team_ID, and Pos_ID
                 $resolveIds = function($playerName, $posAbbr, $teamAbbr) use ($findPlayer, $insertPlayer, &$nextPlayerId, &$newPlayers, $teamLookup, $posLookup) {
                     $teamId = $teamLookup[$teamAbbr] ?? null;
                     if (!$teamId) throw new Exception("Team abbreviation '$teamAbbr' not found in team table.");
@@ -194,28 +197,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $insertPlayer->execute([':id' => $playerId, ':name' => $playerName]);
                         $newPlayers[] = "$playerName ($posAbbr, $teamAbbr)";
                     }
-
                     return [$playerId, $posId, $teamId];
                 };
-
                 $counts = ['pass' => 0, 'rush' => 0, 'rec' => 0, 'def' => 0];
-
+                
                 // 1. PASSING
                 $passLines = array_filter(explode("\n", trim($_POST['pass_data'] ?? '')), 'trim');
                 if (!empty($passLines)) {
                     $nextPassId = (int)$conn->query("SELECT COALESCE(MAX(pass_stat_id), 0) + 1 FROM pass_statline")->fetchColumn();
                     $passStmt = $conn->prepare("INSERT INTO pass_statline (pass_stat_id, Player_ID, Game_ID, Team_ID, Pos_ID, Comp, Att, Yds, TD, INTR)
                     VALUES (:id, :pid, :gid, :tid, :posid, :comp, :att, :yds, :td, :intr)");
-                foreach ($passLines as $line) {
-                    $c = array_map('trim', explode("\t", rtrim($line, "\r\n")));
-                    if (count($c) < 8 || strtolower($c) === 'passing') continue;
-                    [$pid, $posid, $tid] = $resolveIds($c, $c, $c);
-                    $passStmt->execute([
-                        ':id' => $nextPassId++, ':pid' => $pid, ':gid' => $gameId, ':tid' => $tid, ':posid' => $posid,
-                        ':comp' => (int)$c, ':att' => (int)$c, ':yds' => (int)$c, ':td' => (int)$c, ':intr' => (int)$c
-                    ]);
-                    $counts['pass']++;
-                }
+                    foreach ($passLines as $line) {
+                        $c = array_map('trim', explode("\t", rtrim($line, "\r\n")));
+                        if (count($c) < 8) continue;
+                        list($pName, $posAbbr, $teamAbbr, $comp, $att, $yds, $td, $intr) = $c;
+                        if (strtolower($pName) === 'passing') continue;
+                        list($pid, $posid, $tid) = $resolveIds($pName, $posAbbr, $teamAbbr);
+                        $passStmt->execute([
+                            ':id' => $nextPassId++, ':pid' => $pid, ':gid' => $gameId, ':tid' => $tid, ':posid' => $posid,
+                            ':comp' => (int)$comp, ':att' => (int)$att, ':yds' => (int)$yds, ':td' => (int)$td, ':intr' => (int)$intr
+                        ]);
+                        $counts['pass']++;
+                    }
                 }
                 // 2. RUSHING
                 $rushLines = array_filter(explode("\n", trim($_POST['rush_data'] ?? '')), 'trim');
@@ -225,14 +228,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     VALUES (:id, :pid, :gid, :tid, :posid, :att, :yds, :td)");
                     foreach ($rushLines as $line) {
                         $c = array_map('trim', explode("\t", rtrim($line, "\r\n")));
-                        if (count($c) < 6 || strtolower($c) === 'rushing') continue;
-                        [$pid, $posid, $tid] = $resolveIds($c, $c, $c);
+                        if (count($c) < 6) continue;
+                        list($pName, $posAbbr, $teamAbbr, $att, $yds, $td) = $c;
+                        if (strtolower($pName) === 'rushing') continue;
+                        list($pid, $posid, $tid) = $resolveIds($pName, $posAbbr, $teamAbbr);
                         $rushStmt->execute([
                             ':id' => $nextRushId++, ':pid' => $pid, ':gid' => $gameId, ':tid' => $tid, ':posid' => $posid,
-                            ':att' => (int)$c, ':yds' => (int)$c, ':td' => (int)$c
+                            ':att' => (int)$att, ':yds' => (int)$yds, ':td' => (int)$td
                         ]);
                         $counts['rush']++;
-                    } 
+                    }
                 }
                 // 3. RECEIVING
                 $recLines = array_filter(explode("\n", trim($_POST['rec_data'] ?? '')), 'trim');
@@ -242,41 +247,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     VALUES (:id, :pid, :gid, :tid, :posid, :rec, :yds, :td)");
                     foreach ($recLines as $line) {
                         $c = array_map('trim', explode("\t", rtrim($line, "\r\n")));
-                        if (count($c) < 6 || strtolower($c) === 'receiving') continue;
-                        [$pid, $posid, $tid] = $resolveIds($c, $c, $c);
+                        if (count($c) < 6) continue;
+                        list($pName, $posAbbr, $teamAbbr, $rec, $yds, $td) = $c;
+                        if (strtolower($pName) === 'receiving') continue;
+                        list($pid, $posid, $tid) = $resolveIds($pName, $posAbbr, $teamAbbr);
                         $recStmt->execute([
                             ':id' => $nextRecId++, ':pid' => $pid, ':gid' => $gameId, ':tid' => $tid, ':posid' => $posid,
-                            ':rec' => (int)$c, ':yds' => (int)$c, ':td' => (int)$c
+                            ':rec' => (int)$rec, ':yds' => (int)$yds, ':td' => (int)$td
                         ]);
                         $counts['rec']++;
                     }
                 }
-                // 4. DEFENSIVE (Pad trailing empty tabs so sparse rows work cleanly!)
+                // 4. DEFENSIVE
                 $defLines = array_filter(explode("\n", trim($_POST['def_data'] ?? '')), 'trim');
-                $teamSacksRecorded = []; // Track sacks by each defense to update opponent's 'sacked' stat
+                $teamSacksRecorded = [];
                 if (!empty($defLines)) {
                     $nextDefId = (int)$conn->query("SELECT COALESCE(MAX(def_stat_id), 0) + 1 FROM def_statline")->fetchColumn();
                     $defStmt = $conn->prepare("INSERT INTO def_statline (def_stat_id, Player_ID, Game_ID, Team_ID, Pos_ID, Sack, INTR, FF, FR, TD, TFL, PDEF)
                     VALUES (:id, :pid, :gid, :tid, :posid, :sack, :intr, :ff, :fr, :td, :tfl, :pdef)");
                     foreach ($defLines as $line) {
                         $c = array_pad(array_map('trim', explode("\t", rtrim($line, "\r\n"))), 10, '');
-                        if (empty($c) || strtolower($c) === 'defensive') continue;
-                        [$pid, $posid, $tid] = $resolveIds($c, $c, $c);
-                        $sacks = (float)($c ?: 0);
+                        list($pName, $posAbbr, $teamAbbr, $rawSack, $rawIntr, $rawFf, $rawFr, $rawTd, $rawTfl, $rawPdef) = $c;
+                        if (empty($pName) || strtolower($pName) === 'defensive') continue;
+                        list($pid, $posid, $tid) = $resolveIds($pName, $posAbbr, $teamAbbr);
+                        $sacks = (float)($rawSack ?: 0);
                         $teamSacksRecorded[$tid] = ($teamSacksRecorded[$tid] ?? 0) + $sacks;
                         $defStmt->execute([
                             ':id' => $nextDefId++, ':pid' => $pid, ':gid' => $gameId, ':tid' => $tid, ':posid' => $posid,
                             ':sack' => $sacks,
-                            ':intr' => (int)($c ?: 0),
-                            ':ff'   => (int)($c ?: 0),
-                            ':fr'   => (int)($c ?: 0),
-                            ':td'   => (int)($c ?: 0),
-                            ':tfl'  => (int)($c ?: 0),
-                            ':pdef' => (int)($c ?: 0)
+                            ':intr' => (int)($rawIntr ?: 0),
+                            ':ff'   => (int)($rawFf ?: 0),
+                            ':fr'   => (int)($rawFr ?: 0),
+                            ':td'   => (int)($rawTd ?: 0),
+                            ':tfl'  => (int)($rawTfl ?: 0),
+                            ':pdef' => (int)($rawPdef ?: 0)
                         ]);
                         $counts['def']++;
                     }
-                    // Automatically update opponent's 'sacked' count in team_statline (always rounding down .5 sacks)
+                    // Always round down .5 sacks when updating opponent's 'sacked' count
                     $updateSacked = $conn->prepare("UPDATE team_statline SET sacked = :sacked WHERE game_id = :gid AND team_id <> :def_tid");
                     foreach ($teamSacksRecorded as $defTid => $totalSacks) {
                         $updateSacked->execute([
@@ -286,17 +294,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ]);
                     }
                 }
-
                 $conn->commit();
-                $message = "<p style='color:green;'><strong>Success! Imported stats for Game #{$gameId}:</strong> {$counts['pass']} Passing, {$counts['rush']} Rushing, {$counts['rec']} Receiving, {$counts['def']} Defensive rows.</p>";
-
+                $message = "Success! Imported stats for Game #{$gameId}: {$counts['pass']} Passing, {$counts['rush']} Rushing, {$counts['rec']} Receiving, {$counts['def']} Defensive rows.";
                 if (!empty($newPlayers)) {
-                    $message .= "<p style='color:#1b5e20;'><strong>New Players Added (" . count($newPlayers) . "):</strong> " . htmlspecialchars(implode(', ', $newPlayers)) . "</p>";
+                    $message .= "New Players Added (" . count($newPlayers) . "): " . htmlspecialchars(implode(', ', $newPlayers)) . "";
+                }
                 } catch (Exception $e) {
                     $conn->rollBack();
                     $message = "Database Error: " . htmlspecialchars($e->getMessage()) . "";
                 }
+            }
         }
     }
-}
 ?>
