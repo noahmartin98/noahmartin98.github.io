@@ -178,12 +178,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $teamLookup = $conn->query("SELECT Abbr, Team_ID FROM team")->fetchAll(PDO::FETCH_KEY_PAIR);
                 $posLookup  = $conn->query("SELECT Pos_Abbr, Pos_ID FROM pos")->fetchAll(PDO::FETCH_KEY_PAIR);
 
-                $findPlayer   = $conn->prepare("SELECT Player_ID FROM player WHERE Player_Name = :name LIMIT 1");
+                $findPlayer   = $conn->prepare("SELECT Player_ID FROM player WHERE LOWER(TRIM(Player_Name)) = LOWER(:name) LIMIT 1");
                 $insertPlayer = $conn->prepare("INSERT INTO player (Player_ID, Player_Name) VALUES (:id, :name)");
                 $nextPlayerId = (int)$conn->query("SELECT COALESCE(MAX(Player_ID), 0) + 1 FROM player")->fetchColumn();
                 $newPlayers   = [];
 
                 $resolveIds = function($playerName, $posAbbr, $teamAbbr) use ($findPlayer, $insertPlayer, &$nextPlayerId, &$newPlayers, $teamLookup, $posLookup) {
+                    // Normalize non-breaking spaces (\xC2\xA0) and extra whitespace from Google Sheets
+                    $playerName = trim(preg_replace('/\s+/u', ' ', str_replace("\xC2\xA0", ' ', $playerName)));
+                    $posAbbr    = trim(str_replace("\xC2\xA0", ' ', $posAbbr));
+                    $teamAbbr   = trim(str_replace("\xC2\xA0", ' ', $teamAbbr));
+
                     $teamId = $teamLookup[$teamAbbr] ?? null;
                     if (!$teamId) throw new Exception("Team abbreviation '$teamAbbr' not found in team table.");
 
@@ -197,6 +202,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $insertPlayer->execute([':id' => $playerId, ':name' => $playerName]);
                         $newPlayers[] = "$playerName ($posAbbr, $teamAbbr)";
                     }
+
                     return [$playerId, $posId, $teamId];
                 };
                 $counts = ['pass' => 0, 'rush' => 0, 'rec' => 0, 'def' => 0];
