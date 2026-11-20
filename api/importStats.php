@@ -194,7 +194,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <p class="margin-top-small">
         <label><strong>2. Paste Team Stats (2 rows from Team Name through Opponent):</strong></label><br>
-        <textarea name="team_data" rows="4" cols="110" placeholder="Green Bay Packers	10	206	36	170	9	1	1	5	0	0	0	0	2	1	1	0	0	13:54	New Orleans Saints	GB" required></textarea>
+        <textarea name="team_data" rows="4" cols="110" style="width: 100%; white-space: pre" placeholder="Green Bay Packers	10	206	36	170	9	1	1	5	0	0	0	0	2	1	1	0	0	13:54	New Orleans Saints	GB" required></textarea>
     </p>
 
     <button type="submit">Import Game & Team Stats</button>
