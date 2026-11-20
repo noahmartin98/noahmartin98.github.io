@@ -3,105 +3,102 @@ require 'databaseConnect.php';
 require 'navbar.php';
 
 $message = "";
-$importedGameId = "";
+$importedGameId = $_POST['game_id'] ?? '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (($_POST['passcode'] ?? '') !== 'madden98') {
         $message = "<p style='color:red;'><strong>Invalid passcode.</strong></p>";
     } elseif (($_POST['action'] ?? '') === 'import_game') {
+        // ==========================================
+        // STEP 1: IMPORT GAME & TEAM STATLINES
+        // ==========================================
         $gameLines = array_filter(array_map('trim', explode("\n", trim($_POST['game_data']))));
         $teamLines = array_filter(array_map('trim', explode("\n", trim($_POST['team_data']))));
 
         $findTeam = $conn->prepare("SELECT Team_ID FROM team WHERE Team_Name = :name LIMIT 1");
 
-        // Parse Box 1: Game Info (2 rows)
         $gameMeta = null;
         $teamsMap = [];
 
         foreach ($gameLines as $line) {
             $c = array_map('trim', explode("\t", $line));
-            if (count($c) < 18 || strtolower($c[0]) === 'game id') continue; // Skip header if copied
+            if (count($c) < 18 || strtolower($c) === 'game id') continue;
 
-            $gameId = (int)ltrim($c[0], '0');
-            $mad    = (int)$c[1];
-            $yr     = (int)$c[2];
+            $gameId = (int)ltrim($c, '0');
+            $mad    = (int)$c;
+            $yr     = (int)$c;
             $season = !empty($_POST['season_override']) ? (int)$_POST['season_override'] : (2000 + $mad - 1);
-            $dateFormatted = date('Y-m-d', strtotime($c[6]));
-            $otFlag = !empty($c[8]) ? 1 : 0;
+            $dateFormatted = date('Y-m-d', strtotime($c));
+            $otFlag = !empty($c) ? 1 : 0;
 
             if (!$gameMeta) {
                 $gameMeta = [
                     'game_id'    => $gameId,
                     'season'     => $season,
-                    'week'       => $c[3],
+                    'week'       => $c,
                     'game_date'  => $dateFormatted,
-                    'difficulty' => $c[5],
+                    'difficulty' => $c,
                     'OT'         => $otFlag,
                     'mad'        => $mad,
                     'yr'         => $yr
                 ];
             }
 
-            $teamName = $c[11];
+            $teamName = $c;
             $findTeam->execute([':name' => $teamName]);
             $teamId = $findTeam->fetchColumn();
 
             $teamsMap[$teamName] = [
                 'team_id'   => $teamId,
-                'team_user' => $c[4],
-                'home_away' => $c[7],
-                'seed'      => $c[10],
-                'q1'        => (int)$c[12],
-                'q2'        => (int)$c[13],
-                'q3'        => (int)$c[14],
-                'q4'        => (int)$c[15],
-                'ot'        => (int)$c[16],
-                'score'     => (int)$c[17]
+                'team_user' => $c,
+                'home_away' => $c,
+                'seed'      => $c,
+                'q1'        => (int)$c,
+                'q2'        => (int)$c,
+                'q3'        => (int)$c,
+                'q4'        => (int)$c,
+                'ot'        => (int)$c,
+                'score'     => (int)$c
             ];
         }
 
-        // Parse Box 2: Team Box Score Stats (2 rows)
         foreach ($teamLines as $line) {
             $c = array_map('trim', explode("\t", $line));
-            if (count($c) < 19 || empty($c[0]) || strtolower($c[1]) === 'score') continue; // Skip header rows
+            if (count($c) < 19 || empty($c) || strtolower($c) === 'score') continue;
 
-            $teamName = $c[0];
+            $teamName = $c;
             if (isset($teamsMap[$teamName])) {
-                $teamsMap[$teamName]['rush']      = (int)$c[3];
-                $teamsMap[$teamName]['pass']      = (int)$c[4];
-                $teamsMap[$teamName]['firsts']    = (int)$c[5];
-                $teamsMap[$teamName]['to']        = (int)$c[6];
-                $teamsMap[$teamName]['conv3']     = (int)$c[7];
-                $teamsMap[$teamName]['att3']      = (int)$c[8];
-                $teamsMap[$teamName]['conv4']     = (int)$c[9];
-                $teamsMap[$teamName]['att4']      = (int)$c[10];
-                $teamsMap[$teamName]['conv2']     = (int)$c[11];
-                $teamsMap[$teamName]['att2']      = (int)$c[12];
-                $teamsMap[$teamName]['rz_att']    = (int)$c[13];
-                $teamsMap[$teamName]['rz_rd']     = (int)$c[14];
-                $teamsMap[$teamName]['rz_fg']     = (int)$c[15];
-                $teamsMap[$teamName]['penalties'] = (int)$c[16];
-                $teamsMap[$teamName]['pen_yds']   = (int)$c[17];
-                $teamsMap[$teamName]['top']       = $c[18];
+                $teamsMap[$teamName]['rush']      = (int)$c;
+                $teamsMap[$teamName]['pass']      = (int)$c;
+                $teamsMap[$teamName]['firsts']    = (int)$c;
+                $teamsMap[$teamName]['to']        = (int)$c;
+                $teamsMap[$teamName]['conv3']     = (int)$c;
+                $teamsMap[$teamName]['att3']      = (int)$c;
+                $teamsMap[$teamName]['conv4']     = (int)$c;
+                $teamsMap[$teamName]['att4']      = (int)$c;
+                $teamsMap[$teamName]['conv2']     = (int)$c;
+                $teamsMap[$teamName]['att2']      = (int)$c;
+                $teamsMap[$teamName]['rz_att']    = (int)$c;
+                $teamsMap[$teamName]['rz_rd']     = (int)$c;
+                $teamsMap[$teamName]['rz_fg']     = (int)$c;
+                $teamsMap[$teamName]['penalties'] = (int)$c;
+                $teamsMap[$teamName]['pen_yds']   = (int)$c;
+                $teamsMap[$teamName]['top']       = $c;
             }
         }
 
-        // Validate and Insert into database
         if (!$gameMeta || count($teamsMap) !== 2) {
             $message = "<p style='color:red;'><strong>Error:</strong> Make sure both boxes contain the 2 team rows and matching team names.</p>";
         } else {
             try {
                 $conn->beginTransaction();
 
-                // 1. Insert into game table
                 $gameSql = "INSERT INTO game (game_id, season, week, game_date, difficulty, OT, mad, yr)
                             VALUES (:game_id, :season, :week, :game_date, :difficulty, :OT, :mad, :yr)";
                 $conn->prepare($gameSql)->execute($gameMeta);
 
-                // 2. Get the next available team_stat_id
                 $nextTsId = (int)$conn->query("SELECT COALESCE(MAX(team_stat_id), 0) + 1 FROM team_statline")->fetchColumn();
 
-                // 3. Insert both rows into team_statline
                 $tsSql = "INSERT INTO team_statline (
                             team_stat_id, game_id, team_id, seed, home_away, team_user,
                             q1, q2, q3, q4, ot, score,
@@ -161,48 +158,145 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $message = "<p style='color:red;'><strong>Database Error:</strong> " . htmlspecialchars($e->getMessage()) . "</p>";
             }
         }
+    } elseif (($_POST['action'] ?? '') === 'import_players') {
+        // ==========================================
+        // STEP 2: IMPORT PLAYER STATLINES
+        // ==========================================
+        $gameId = (int)ltrim(trim($_POST['game_id'] ?? ''), '0');
+
+        if (!$gameId) {
+            $message = "<p style='color:red;'><strong>Error:</strong> Please enter a valid Game ID.</p>";
+        } else {
+            try {
+                $conn->beginTransaction();
+
+                // Cache teams (Abbr => Team_ID) and positions (Pos_Abbr => Pos_ID)
+                $teamLookup = $conn->query("SELECT Abbr, Team_ID FROM team")->fetchAll(PDO::FETCH_KEY_PAIR);
+                $posLookup  = $conn->query("SELECT Pos_Abbr, Pos_ID FROM pos")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+                $findPlayer   = $conn->prepare("SELECT Player_ID FROM player WHERE Player_Name = :name LIMIT 1");
+                $insertPlayer = $conn->prepare("INSERT INTO player (Player_ID, Player_Name) VALUES (:id, :name)");
+                $nextPlayerId = (int)$conn->query("SELECT COALESCE(MAX(Player_ID), 0) + 1 FROM player")->fetchColumn();
+                $newPlayers   = []; // Track newly created players
+
+                // Helper to resolve Player_ID (auto-creating player if new), Team_ID, and Pos_ID
+                $resolveIds = function($playerName, $posAbbr, $teamAbbr) use ($findPlayer, $insertPlayer, &$nextPlayerId, &$newPlayers, $teamLookup, $posLookup) {
+                    $teamId = $teamLookup[$teamAbbr] ?? null;
+                    if (!$teamId) throw new Exception("Team abbreviation '$teamAbbr' not found in team table.");
+
+                    $posId = $posLookup[$posAbbr] ?? null;
+                    if (!$posId) throw new Exception("Position '$posAbbr' not found in pos table.");
+
+                    $findPlayer->execute([':name' => $playerName]);
+                    $playerId = $findPlayer->fetchColumn();
+                    if (!$playerId) {
+                        $playerId = $nextPlayerId++;
+                        $insertPlayer->execute([':id' => $playerId, ':name' => $playerName]);
+                        $newPlayers[] = "$playerName ($posAbbr, $teamAbbr)";
+                    }
+
+                    return [$playerId, $posId, $teamId];
+                };
+
+                $counts = ['pass' => 0, 'rush' => 0, 'rec' => 0, 'def' => 0];
+
+                // 1. PASSING
+                $passLines = array_filter(explode("\n", trim($_POST['pass_data'] ?? '')), 'trim');
+                if (!empty($passLines)) {
+                    $nextPassId = (int)$conn->query("SELECT COALESCE(MAX(pass_stat_id), 0) + 1 FROM pass_statline")->fetchColumn();
+                    $passStmt = $conn->prepare("INSERT INTO pass_statline (pass_stat_id, Player_ID, Game_ID, Team_ID, Pos_ID, Comp, Att, Yds, TD, INTR)
+                    VALUES (:id, :pid, :gid, :tid, :posid, :comp, :att, :yds, :td, :intr)");
+                foreach ($passLines as $line) {
+                    $c = array_map('trim', explode("\t", rtrim($line, "\r\n")));
+                    if (count($c) < 8 || strtolower($c) === 'passing') continue;
+                    [$pid, $posid, $tid] = $resolveIds($c, $c, $c);
+                    $passStmt->execute([
+                        ':id' => $nextPassId++, ':pid' => $pid, ':gid' => $gameId, ':tid' => $tid, ':posid' => $posid,
+                        ':comp' => (int)$c, ':att' => (int)$c, ':yds' => (int)$c, ':td' => (int)$c, ':intr' => (int)$c
+                    ]);
+                    $counts['pass']++;
+                }
+                }
+                // 2. RUSHING
+                $rushLines = array_filter(explode("\n", trim($_POST['rush_data'] ?? '')), 'trim');
+                if (!empty($rushLines)) {
+                    $nextRushId = (int)$conn->query("SELECT COALESCE(MAX(rush_stat_id), 0) + 1 FROM rush_statline")->fetchColumn();
+                    $rushStmt = $conn->prepare("INSERT INTO rush_statline (rush_stat_id, Player_ID, Game_ID, Team_ID, Pos_ID, Att, Yds, TD)
+                    VALUES (:id, :pid, :gid, :tid, :posid, :att, :yds, :td)");
+                    foreach ($rushLines as $line) {
+                        $c = array_map('trim', explode("\t", rtrim($line, "\r\n")));
+                        if (count($c) < 6 || strtolower($c) === 'rushing') continue;
+                        [$pid, $posid, $tid] = $resolveIds($c, $c, $c);
+                        $rushStmt->execute([
+                            ':id' => $nextRushId++, ':pid' => $pid, ':gid' => $gameId, ':tid' => $tid, ':posid' => $posid,
+                            ':att' => (int)$c, ':yds' => (int)$c, ':td' => (int)$c
+                        ]);
+                        $counts['rush']++;
+                    } 
+                }
+                // 3. RECEIVING
+                $recLines = array_filter(explode("\n", trim($_POST['rec_data'] ?? '')), 'trim');
+                if (!empty($recLines)) {
+                    $nextRecId = (int)$conn->query("SELECT COALESCE(MAX(rec_stat_id), 0) + 1 FROM rec_statline")->fetchColumn();
+                    $recStmt = $conn->prepare("INSERT INTO rec_statline (rec_stat_id, Player_ID, Game_ID, Team_ID, Pos_ID, Rec, Yds, TD)
+                    VALUES (:id, :pid, :gid, :tid, :posid, :rec, :yds, :td)");
+                    foreach ($recLines as $line) {
+                        $c = array_map('trim', explode("\t", rtrim($line, "\r\n")));
+                        if (count($c) < 6 || strtolower($c) === 'receiving') continue;
+                        [$pid, $posid, $tid] = $resolveIds($c, $c, $c);
+                        $recStmt->execute([
+                            ':id' => $nextRecId++, ':pid' => $pid, ':gid' => $gameId, ':tid' => $tid, ':posid' => $posid,
+                            ':rec' => (int)$c, ':yds' => (int)$c, ':td' => (int)$c
+                        ]);
+                        $counts['rec']++;
+                    }
+                }
+                // 4. DEFENSIVE (Pad trailing empty tabs so sparse rows work cleanly!)
+                $defLines = array_filter(explode("\n", trim($_POST['def_data'] ?? '')), 'trim');
+                $teamSacksRecorded = []; // Track sacks by each defense to update opponent's 'sacked' stat
+                if (!empty($defLines)) {
+                    $nextDefId = (int)$conn->query("SELECT COALESCE(MAX(def_stat_id), 0) + 1 FROM def_statline")->fetchColumn();
+                    $defStmt = $conn->prepare("INSERT INTO def_statline (def_stat_id, Player_ID, Game_ID, Team_ID, Pos_ID, Sack, INTR, FF, FR, TD, TFL, PDEF)
+                    VALUES (:id, :pid, :gid, :tid, :posid, :sack, :intr, :ff, :fr, :td, :tfl, :pdef)");
+                    foreach ($defLines as $line) {
+                        $c = array_pad(array_map('trim', explode("\t", rtrim($line, "\r\n"))), 10, '');
+                        if (empty($c) || strtolower($c) === 'defensive') continue;
+                        [$pid, $posid, $tid] = $resolveIds($c, $c, $c);
+                        $sacks = (float)($c ?: 0);
+                        $teamSacksRecorded[$tid] = ($teamSacksRecorded[$tid] ?? 0) + $sacks;
+                        $defStmt->execute([
+                            ':id' => $nextDefId++, ':pid' => $pid, ':gid' => $gameId, ':tid' => $tid, ':posid' => $posid,
+                            ':sack' => $sacks,
+                            ':intr' => (int)($c ?: 0),
+                            ':ff'   => (int)($c ?: 0),
+                            ':fr'   => (int)($c ?: 0),
+                            ':td'   => (int)($c ?: 0),
+                            ':tfl'  => (int)($c ?: 0),
+                            ':pdef' => (int)($c ?: 0)
+                        ]);
+                        $counts['def']++;
+                    }
+                    // Automatically update opponent's 'sacked' count in team_statline (always rounding down .5 sacks)
+                    $updateSacked = $conn->prepare("UPDATE team_statline SET sacked = :sacked WHERE game_id = :gid AND team_id <> :def_tid");
+                    foreach ($teamSacksRecorded as $defTid => $totalSacks) {
+                        $updateSacked->execute([
+                            ':sacked'  => (int)floor($totalSacks),
+                            ':gid'     => $gameId,
+                            ':def_tid' => $defTid
+                        ]);
+                    }
+                }
+
+                $conn->commit();
+                $message = "<p style='color:green;'><strong>Success! Imported stats for Game #{$gameId}:</strong> {$counts['pass']} Passing, {$counts['rush']} Rushing, {$counts['rec']} Receiving, {$counts['def']} Defensive rows.</p>";
+
+                if (!empty($newPlayers)) {
+                    $message .= "<p style='color:#1b5e20;'><strong>New Players Added (" . count($newPlayers) . "):</strong> " . htmlspecialchars(implode(', ', $newPlayers)) . "</p>";
+                } catch (Exception $e) {
+                    $conn->rollBack();
+                    $message = "Database Error: " . htmlspecialchars($e->getMessage()) . "";
+                }
+        }
     }
 }
 ?>
-
-<!DOCTYPE html>
-<html>
-<head>
-    <link rel="stylesheet" href="../mystyle.css">
-    <title>Import Game & Player Stats</title>
-</head>
-<body>
-
-<h1>Step 1: Import Game & Team Stats</h1>
-
-<?php echo $message; ?>
-
-<form method="post">
-    <input type="hidden" name="action" value="import_game">
-
-    <div class="flex-row">
-        <div>
-            <label><strong>Passcode:</strong></label><br>
-            <input type="password" name="passcode" value="<?php echo htmlspecialchars($_POST['passcode'] ?? ''); ?>" required>
-        </div>
-        <div>
-            <label><strong>Season Override (Optional):</strong></label><br>
-            <input type="number" name="season_override" placeholder="Auto: 2000 + Mad - 1">
-        </div>
-    </div>
-
-    <p class="margin-top-small">
-        <label><strong>1. Paste Game Info (2 rows from Game ID through F):</strong></label><br>
-        <textarea name="game_data" rows="4" cols="110" style="width: 100%; max-width: 1500px; white-space: pre; overflow-x: auto;" placeholder="0673	15	02	W8	CPU	All-Pro	11/19/26	Away		L	4-3	Green Bay Packers	0	0	0	10	0	10" required></textarea>
-    </p>
-
-    <p class="margin-top-small">
-        <label><strong>2. Paste Team Stats (2 rows from Team Name through Opponent):</strong></label><br>
-        <textarea name="team_data" rows="4" cols="110" style="width: 100%; max-width: 1500px; white-space: pre; overflow-x: auto;" placeholder="Green Bay Packers	10	206	36	170	9	1	1	5	0	0	0	0	2	1	1	0	0	13:54	New Orleans Saints	GB" required></textarea>
-    </p>
-
-    <button type="submit">Import Game & Team Stats</button>
-</form>
-
-</body>
-</html>
