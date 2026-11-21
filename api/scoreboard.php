@@ -9,6 +9,9 @@
 require 'databaseConnect.php';
 
 $season = $_GET['season'] ?? '2014';
+if($season == 'Total') {
+	$season = '2014';
+}
 
 require 'navbar.php';
 ?>
