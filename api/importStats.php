@@ -174,7 +174,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $conn->beginTransaction();
 
                 // Cache teams (Abbr => Team_ID) and positions (Pos_Abbr => Pos_ID)
-                $teamLookup = $conn->query("SELECT Abbr, Team_ID FROM team")->fetchAll(PDO::FETCH_KEY_PAIR);
+                $teamStmt = $conn->prepare("
+                    SELECT t.Abbr, t.Team_ID
+                    FROM team_statline ts
+                    INNER JOIN team t ON ts.team_id = t.Team_ID
+                    WHERE ts.game_id = :gid
+                ");
+                $teamStmt->execute([':gid' => $gameId]);
+                $teamLookup = $teamStmt->fetchAll(PDO::FETCH_KEY_PAIR);
                 $posLookup  = $conn->query("SELECT Pos_Abbr, Pos_ID FROM pos")->fetchAll(PDO::FETCH_KEY_PAIR);
 
                 // 1. Load all existing players into a normalized PHP lookup map [clean_lowercase_name => Player_ID]
