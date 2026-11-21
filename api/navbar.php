@@ -22,12 +22,13 @@
                     $navTeams = $conn->query("SELECT * FROM team ORDER BY Abbr ASC");
                     while ($t = $navTeams->fetch(PDO::FETCH_ASSOC)) {
                         $tId = $t['Team_ID'] ?? $t['team_id'];
-                        $tLabel = $t['Team_Name'] ?? $t['Full_Name'] ?? $t['Name'] ?? $t['Abbr'];
+                        $tLabel = $t['Team_Name'] ?? $t['Abbr'];
                         echo "<a href='/api/teamPage.php?teamid=" . urlencode($tId) . "'>" . htmlspecialchars($tLabel) . "</a>";
                     }
                 }
                 ?>
             </div>
         </li>
+        <li><a href="/api/importStats.php">Import Stats</a></li>
     </ul>
 </nav>
