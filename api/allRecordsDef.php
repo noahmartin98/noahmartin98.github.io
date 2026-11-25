@@ -30,7 +30,7 @@ $allSeasons = $conn->query("
 require 'navbar.php';
 ?>
 
-<div class="flex-row">
+<div class="flex-row" id="table-header-bar">
     <h1>Player Game Stats - Defense</h1>
     <?php seasonDropdownForm($allSeasons, $season, null, null, false); ?>
 </div>
