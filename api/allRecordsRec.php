@@ -9,7 +9,7 @@
 <script src="https://jquery.com"></script>
 <script src="https://datatables.net"></script>
 <script src="../myjavascript.js"></script>
-<title>Player Game Stats - Receiving</title>
+<title>Player Game Stats - Passing</title>
 </head>
 <body>
 
@@ -18,13 +18,13 @@ require 'databaseConnect.php';
 require 'functions.php';
 
 $season = $_GET['season'] ?? 'Total';
-$allSeasons = getSeasons($conn, 'rec_statline');
+$allSeasons = getSeasons($conn, 'pass_statline');
 
 require 'navbar.php';
 ?>
 
 <div class="flex-row" id="table-header-bar">
-    <h1>Player Game Stats - Receiving</h1>
+    <h1>Player Game Stats - Passing</h1>
     <?php seasonDropdownForm($allSeasons, $season, null, null, false); ?>
 </div>
 
@@ -39,10 +39,14 @@ require 'navbar.php';
             <th>User</th>
             <th>Player</th>
             <th>Pos</th>
-            <th>Rec</th>
+            <th>Cmp</th>
+            <th>Att</th>
             <th>Yds</th>
             <th>TD</th>
-            <th>Yds/Rec</th>
+            <th>INT</th>
+            <th>Comp%</th>
+            <th>Yds/Att</th>
+            <th>TD/INT</th>
         </tr>
     </thead>
     <tbody>
@@ -55,16 +59,16 @@ $sql = "SELECT game.game_id, game.season, game.week, game.game_date,
         pos.Pos_Abbr AS poss,
         team.Abbr AS team,
         ts.team_user,
-        rec_statline.Player_ID,
-        Rec, Yds, TD
-    FROM rec_statline
-    INNER JOIN player ON rec_statline.Player_ID = player.Player_ID
-    INNER JOIN team ON rec_statline.Team_ID = team.Team_ID
-    INNER JOIN pos ON rec_statline.Pos_ID = pos.Pos_ID
-    INNER JOIN game ON rec_statline.Game_ID = game.Game_ID
-    INNER JOIN team_statline ts ON rec_statline.Game_ID = ts.game_id AND rec_statline.Team_ID = ts.team_id
+        pass_statline.Player_ID,
+        Comp, Att, Yds, TD, INTR
+    FROM pass_statline
+    INNER JOIN player ON pass_statline.Player_ID = player.Player_ID
+    INNER JOIN team ON pass_statline.Team_ID = team.Team_ID
+    INNER JOIN pos ON pass_statline.Pos_ID = pos.Pos_ID
+    INNER JOIN game ON pass_statline.Game_ID = game.Game_ID
+    INNER JOIN team_statline ts ON pass_statline.Game_ID = ts.game_id AND pass_statline.Team_ID = ts.team_id
     $where_clause
-    ORDER BY Yds DESC, Rec DESC, TD DESC;";
+    ORDER BY Yds DESC, TD DESC;";
 
 $stmt = $conn->prepare($sql);
 
@@ -79,7 +83,10 @@ if ($stmt->rowCount() > 0) {
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $playerid = $row["Player_ID"];
         $gameid   = $row["game_id"];
-        $ypc      = ($row["Rec"] > 0) ? ($row["Yds"] / $row["Rec"]) : 0;
+
+        $compPct = ($row["Att"] > 0) ? ($row["Comp"] / $row["Att"]) * 100 : 0;
+        $ypa     = ($row["Att"] > 0) ? ($row["Yds"] / $row["Att"]) : 0;
+        $tdInt   = ($row["INTR"] > 0) ? sprintf('%.2f', $row["TD"] / $row["INTR"]) : '—';
 
         echo "<tr>";
         echo "<td>" . $cur_rank . "</td>";
@@ -88,12 +95,16 @@ if ($stmt->rowCount() > 0) {
         echo "<td class='link'><a class='leader' href='/api/gamePage.php?gameid=" . $gameid . "'>" . $row["week"] . "</a></td>";
         echo "<td>" . $row["game_date"] . "</td>";
         echo "<td>" . $row["team_user"] . "</td>";
-        echo "<td class='link'><a class='leader' href='/api/playerPageRec.php?playerid=" . $playerid . "'>" . $row["player_name"] . "</a></td>";
+        echo "<td class='link'><a class='leader' href='/api/playerPagePass.php?playerid=" . $playerid . "'>" . $row["player_name"] . "</a></td>";
         echo "<td>" . $row["poss"] . "</td>";
-        echo "<td>" . $row["Rec"] . "</td>";
+        echo "<td>" . $row["Comp"] . "</td>";
+        echo "<td>" . $row["Att"] . "</td>";
         echo "<td>" . $row["Yds"] . "</td>";
         echo "<td>" . $row["TD"] . "</td>";
-        echo "<td>" . sprintf('%.2f', $ypc) . "</td>";
+        echo "<td>" . $row["INTR"] . "</td>";
+        echo "<td>" . sprintf('%.1f%%', $compPct) . "</td>";
+        echo "<td>" . sprintf('%.2f', $ypa) . "</td>";
+        echo "<td>" . $tdInt . "</td>";
         echo "</tr>";
         $cur_rank++;
     }
