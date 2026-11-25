@@ -2,13 +2,14 @@
 <html>
 <head>
 <!-- DataTables CSS -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://datatables.net">
 <link rel="stylesheet" href="../mystyle.css">
 
 <!-- jQuery + DataTables JS -->
-<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://jquery.com"></script>
+<script src="https://datatables.net"></script>
 <script src="../myjavascript.js"></script>
+<title>Player Game Stats - Defense</title>
 </head>
 <body>
 
@@ -17,15 +18,7 @@ require 'databaseConnect.php';
 require 'functions.php';
 
 $season = $_GET['season'] ?? 'Total';
-
-// Fetch all seasons that have defensive stats, ordered by play order
-$allSeasons = $conn->query("
-    SELECT game.Season, MIN(game.Game_ID) AS first_game
-    FROM def_statline
-    INNER JOIN game ON def_statline.Game_ID = game.Game_ID
-    GROUP BY game.Season
-    ORDER BY first_game ASC
-")->fetchAll(PDO::FETCH_COLUMN);
+$allSeasons = getSeasons($conn, 'def_statline');
 
 require 'navbar.php';
 ?>
@@ -40,12 +33,12 @@ require 'navbar.php';
         <tr>
             <th>Rank</th>
             <th>Season</th>
+            <th>Team</th>
             <th>Week</th>
             <th>Date</th>
+            <th>User</th>
             <th>Player</th>
             <th>Pos</th>
-            <th>Team</th>
-            <th>User</th>
             <th>Sack</th>
             <th>INT</th>
             <th>FF</th>
@@ -93,12 +86,12 @@ if ($stmt->rowCount() > 0) {
         echo "<tr>";
         echo "<td>" . $cur_rank . "</td>";
         echo "<td>" . $row["season"] . "</td>";
+        echo "<td>" . $row["team"] . "</td>";
         echo "<td class='link'><a class='leader' href='/api/gamePage.php?gameid=" . $gameid . "'>" . $row["week"] . "</a></td>";
         echo "<td>" . $row["game_date"] . "</td>";
+        echo "<td>" . $row["team_user"] . "</td>";
         echo "<td class='link'><a class='leader' href='/api/playerPageDef.php?playerid=" . $playerid . "'>" . $row["player_name"] . "</a></td>";
         echo "<td>" . $row["poss"] . "</td>";
-        echo "<td>" . $row["team"] . "</td>";
-        echo "<td>" . $row["team_user"] . "</td>";
         echo "<td>" . $row["sack"] . "</td>";
         echo "<td>" . $row["intr"] . "</td>";
         echo "<td>" . $row["ff"] . "</td>";
