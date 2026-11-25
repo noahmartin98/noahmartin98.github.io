@@ -418,3 +418,36 @@ a.sort-toggle:hover {
   background-color: #e8f5e9;
   border-color: #81c784;
 }
+
+
+/* Player stat category navigation tabs---------------------------------------- */
+.stat-tabs {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  margin-bottom: 16px;
+}
+
+a.stat-tab {
+  background-color: #ffffff;
+  color: #1b5e20;
+  border: 1px solid #a5d6a7;
+  border-radius: 5px;
+  padding: 5px 14px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-decoration: none;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+}
+
+a.stat-tab:hover {
+  background-color: #e8f5e9;
+  border-color: #81c784;
+}
+
+a.stat-tab.active {
+  background-color: #04AA6D;
+  color: #ffffff;
+  border-color: #04AA6D;
+  cursor: default;
+}
