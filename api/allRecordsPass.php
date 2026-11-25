@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Player Game Stats - Passing</title>
+<link rel="stylesheet" href="../mystyle.css">
 
 <!-- DataTables CSS -->
-<link rel="stylesheet" href="https://jsdelivr.net">
-<link rel="stylesheet" href="/mystyle.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<!-- jQuery + DataTables JS -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
-<!-- jQuery + DataTables JS (loaded in strict synchronous order) -->
-<script src="https://jsdelivr.net"></script>
-<script src="https://jsdelivr.net"></script>
-<script src="/myjavascript.js"></script>
+<script src="../myjavascript.js"></script>
+<title>Player Game Stats - Passing</title>
 </head>
 <body>
 
@@ -38,6 +37,7 @@ require 'navbar.php';
             <th>Team</th>
             <th>Week</th>
             <th>Date</th>
+            <th>OT</th>
             <th>User</th>
             <th>Player</th>
             <th>Pos</th>
@@ -56,7 +56,7 @@ require 'navbar.php';
 <?php
 $where_clause = ($season !== "Total") ? " WHERE game.Season = :season" : "";
 
-$sql = "SELECT game.game_id, game.season, game.week, game.game_date,
+$sql = "SELECT game.game_id, game.season, game.week, game.game_date, game.ot,
         player.player_name,
         pos.Pos_Abbr AS poss,
         team.Abbr AS team,
@@ -96,6 +96,7 @@ if ($stmt->rowCount() > 0) {
         echo "<td>" . $row["team"] . "</td>";
         echo "<td class='link'><a class='leader' href='/api/gamePage.php?gameid=" . $gameid . "'>" . $row["week"] . "</a></td>";
         echo "<td>" . $row["game_date"] . "</td>";
+        echo "<td>" . $row["ot"] . "</td>";
         echo "<td>" . $row["team_user"] . "</td>";
         echo "<td class='link'><a class='leader' href='/api/playerPagePass.php?playerid=" . $playerid . "'>" . $row["player_name"] . "</a></td>";
         echo "<td>" . $row["poss"] . "</td>";
