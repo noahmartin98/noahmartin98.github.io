@@ -331,6 +331,11 @@ select.season-select.small {
   margin: 0px 50px 5px 30px;
 }
 
+#table-header-bar {
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
 #table-header-bar .dataTables_filter {
   float: none;
   margin-left: auto; /* Pushes search bar cleanly to the right side of the header row (or remove this line to keep it right next to the dropdown) */
