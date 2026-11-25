@@ -112,8 +112,7 @@ function getAllPlayersGames($conn, $season = 'Total') {
     return $stmt->fetchAll(PDO::FETCH_KEY_PAIR); // Returns [Player_ID => Gms]
 }
 
-function renderPlayerStatTabs($conn, $playerid, $activeTab) {
-    // Check which stat tables have data for this player in one single query
+function renderPlayerStatTabs($conn, $playerid, $activeTab, $season = 'Total') {
     $sql = "SELECT
                 EXISTS(SELECT 1 FROM pass_statline WHERE Player_ID = :p1) AS has_pass,
                 EXISTS(SELECT 1 FROM rush_statline WHERE Player_ID = :p2) AS has_rush,
@@ -130,11 +129,13 @@ function renderPlayerStatTabs($conn, $playerid, $activeTab) {
         'def'  => ['label' => 'Defense',   'url' => '/api/playerPageDef.php',  'show' => !empty($flags['has_def'])],
     ];
 
+    $seasonParam = ($season !== 'Total' && $season !== '') ? "&season=" . urlencode($season) : "";
+
     echo "<div class='stat-tabs'>";
     foreach ($tabs as $key => $tab) {
         if ($tab['show'] || $key === $activeTab) {
             $activeClass = ($key === $activeTab) ? 'active' : '';
-            $href = $tab['url'] . "?playerid=" . urlencode($playerid);
+            $href = $tab['url'] . "?playerid=" . urlencode($playerid) . $seasonParam;
             echo "<a class='stat-tab $activeClass' href='$href'>{$tab['label']}</a>";
         }
     }
