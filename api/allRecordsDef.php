@@ -34,12 +34,13 @@ require 'navbar.php';
         <tr>
             <th>Rank</th>
             <th>Season</th>
-            <th>Team</th>
             <th>Week</th>
             <th>Date</th>
             <th>User</th>
+            <th>OT</th>
             <th>Player</th>
             <th>Pos</th>
+            <th>Team</th>
             <th>Sack</th>
             <th>INT</th>
             <th>FF</th>
@@ -54,7 +55,7 @@ require 'navbar.php';
 <?php
 $where_clause = ($season !== "Total") ? " WHERE game.Season = :season" : "";
 
-$sql = "SELECT game.game_id, game.season, game.week, game.game_date,
+$sql = "SELECT game.game_id, game.season, game.week, game.game_date, game.ot,
         player.player_name,
         pos.Pos_Abbr AS poss,
         team.Abbr AS team,
@@ -87,12 +88,13 @@ if ($stmt->rowCount() > 0) {
         echo "<tr>";
         echo "<td>" . $cur_rank . "</td>";
         echo "<td>" . $row["season"] . "</td>";
-        echo "<td>" . $row["team"] . "</td>";
         echo "<td class='link'><a class='leader' href='/api/gamePage.php?gameid=" . $gameid . "'>" . $row["week"] . "</a></td>";
         echo "<td>" . $row["game_date"] . "</td>";
         echo "<td>" . $row["team_user"] . "</td>";
+        echo "<td>" . $row["ot"] . "</td>";
         echo "<td class='link'><a class='leader' href='/api/playerPageDef.php?playerid=" . $playerid . "'>" . $row["player_name"] . "</a></td>";
         echo "<td>" . $row["poss"] . "</td>";
+        echo "<td>" . $row["team"] . "</td>";
         echo "<td>" . $row["sack"] . "</td>";
         echo "<td>" . $row["intr"] . "</td>";
         echo "<td>" . $row["ff"] . "</td>";
