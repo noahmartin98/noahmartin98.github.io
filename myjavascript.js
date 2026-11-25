@@ -1,4 +1,3 @@
-
 $(document).ready(function() {
   $('#leaders').DataTable({
     paging: false,
@@ -11,4 +10,9 @@ $(document).ready(function() {
       }
     ]
   });
+
+  // Move DataTables search box into the top header row if #table-header-bar exists
+  if ($('#table-header-bar').length) {
+    $('#leaders_filter').appendTo('#table-header-bar');
+  }
 });
