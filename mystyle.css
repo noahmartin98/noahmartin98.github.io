@@ -424,8 +424,8 @@ a.sort-toggle:hover {
 .stat-tabs {
   display: flex;
   gap: 8px;
-  margin-top: 8px;
-  margin-bottom: 16px;
+  /*margin-top: 8px;
+  margin-bottom: 16px;*/
 }
 
 a.stat-tab {
