@@ -7,25 +7,23 @@
 
 <?php
 require 'databaseConnect.php';
+require 'functions.php';
 
-$season = $_GET['season'] ?? '2014';
-if($season == 'Total') {
-	$season = '2014';
+$allSeasons = getSeasons($conn);
+
+// Default to the most recently played season (or 2014 if none)
+$defaultSeason = !empty($allSeasons) ? end($allSeasons) : '2014';
+$season = $_GET['season'] ?? $defaultSeason;
+if ($season == 'Total') {
+    $season = $defaultSeason;
 }
 
 require 'navbar.php';
 ?>
 
-<div class="header-container">
-
+<div class="flex-row">
     <h1>Scores</h1>
-
-    <form method="get" action="scoreboard.php">
-        <select class="season-select" name="season" onchange="this.form.submit()">
-            <?php include 'seasonOptions.php'; ?>
-        </select>
-    </form>
-
+    <?php seasonDropdownForm($allSeasons, $season, null, null, false, false); ?>
 </div>
         
 
