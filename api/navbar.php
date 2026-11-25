@@ -33,7 +33,7 @@
 
         <li class="dropdown">
             <a href="#">Teams ▾</a>
-            <div class="dropdown-menu">
+            <div class="dropdown-menu teams-grid">
                 <?php
                 if (isset($conn)) {
                     $navTeams = $conn->query("SELECT * FROM team ORDER BY Abbr ASC");
