@@ -4,10 +4,10 @@
 <link rel="stylesheet" href="../mystyle.css">
 
 <!-- DataTables CSS -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://datatables.net">
 <!-- jQuery + DataTables JS -->
-<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://jquery.com"></script>
+<script src="https://datatables.net"></script>
 
 <script src="../myjavascript.js"></script>
 <title>Player Game Stats - Passing</title>
@@ -25,7 +25,7 @@ require 'navbar.php';
 ?>
 
 <div class="flex-row" id="table-header-bar">
-    <h1>Player Game Stats - Passing</h1>
+    <h1>Single Game Stats - Passing</h1>
     <?php seasonDropdownForm($allSeasons, $season, null, null, false); ?>
 </div>
 
@@ -34,13 +34,13 @@ require 'navbar.php';
         <tr>
             <th>Rank</th>
             <th>Season</th>
-            <th>Team</th>
             <th>Week</th>
             <th>Date</th>
-            <th>OT</th>
             <th>User</th>
+            <th>OT</th>
             <th>Player</th>
             <th>Pos</th>
+            <th>Team</th>
             <th>Cmp</th>
             <th>Att</th>
             <th>Yds</th>
@@ -93,13 +93,13 @@ if ($stmt->rowCount() > 0) {
         echo "<tr>";
         echo "<td>" . $cur_rank . "</td>";
         echo "<td>" . $row["season"] . "</td>";
-        echo "<td>" . $row["team"] . "</td>";
         echo "<td class='link'><a class='leader' href='/api/gamePage.php?gameid=" . $gameid . "'>" . $row["week"] . "</a></td>";
         echo "<td>" . $row["game_date"] . "</td>";
-        echo "<td>" . $row["ot"] . "</td>";
         echo "<td>" . $row["team_user"] . "</td>";
+        echo "<td>" . $row["ot"] . "</td>";
         echo "<td class='link'><a class='leader' href='/api/playerPagePass.php?playerid=" . $playerid . "'>" . $row["player_name"] . "</a></td>";
         echo "<td>" . $row["poss"] . "</td>";
+        echo "<td>" . $row["team"] . "</td>";
         echo "<td>" . $row["Comp"] . "</td>";
         echo "<td>" . $row["Att"] . "</td>";
         echo "<td>" . $row["Yds"] . "</td>";
