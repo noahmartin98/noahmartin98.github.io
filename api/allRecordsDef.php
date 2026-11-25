@@ -45,6 +45,7 @@ require 'navbar.php';
             <th>Player</th>
             <th>Pos</th>
             <th>Team</th>
+            <th>User</th>
             <th>Sack</th>
             <th>INT</th>
             <th>FF</th>
@@ -63,6 +64,7 @@ $sql = "SELECT game.game_id, game.season, game.week, game.game_date,
         player.player_name,
         pos.Pos_Abbr AS poss,
         team.Abbr AS team,
+        ts.team_user,
         def_statline.Player_ID,
         sack, intr, ff, fr, td, tfl, pdef
     FROM def_statline
@@ -70,6 +72,7 @@ $sql = "SELECT game.game_id, game.season, game.week, game.game_date,
     INNER JOIN team ON def_statline.Team_ID = team.Team_ID
     INNER JOIN pos ON def_statline.Pos_ID = pos.Pos_ID
     INNER JOIN game ON def_statline.Game_ID = game.Game_ID
+    INNER JOIN team_statline ts ON def_statline.Game_ID = ts.game_id AND def_statline.Team_ID = ts.team_id
     $where_clause
     ORDER BY sack DESC, intr DESC, tfl DESC;";
 
@@ -95,6 +98,7 @@ if ($stmt->rowCount() > 0) {
         echo "<td class='link'><a class='leader' href='/api/playerPageDef.php?playerid=" . $playerid . "'>" . $row["player_name"] . "</a></td>";
         echo "<td>" . $row["poss"] . "</td>";
         echo "<td>" . $row["team"] . "</td>";
+        echo "<td>" . $row["team_user"] . "</td>";
         echo "<td>" . $row["sack"] . "</td>";
         echo "<td>" . $row["intr"] . "</td>";
         echo "<td>" . $row["ff"] . "</td>";
