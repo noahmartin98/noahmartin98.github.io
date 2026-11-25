@@ -32,7 +32,7 @@ require 'navbar.php';
 
 <div class="flex-row">
     <h1>Player Game Stats - Defense</h1>
-    <?php seasonDropdownForm($allSeasons, $season); ?>
+    <?php seasonDropdownForm($allSeasons, $season, null, null, false); ?>
 </div>
 
 <table id="leaders">
