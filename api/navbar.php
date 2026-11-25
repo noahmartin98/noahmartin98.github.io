@@ -3,10 +3,27 @@
 <nav class="navbar">
     <ul class="nav-links">
         <li><a href="../home.html">Home</a></li>
-        <li><a href="/api/passingLeaders.php">Passing Leaders</a></li>
-        <li><a href="/api/rushingLeaders.php">Rushing Leaders</a></li>
-        <li><a href="/api/receivingLeaders.php">Receiving Leaders</a></li>
-        <li><a href="/api/defLeaders.php">Defensive Leaders</a></li>
+
+        <li class="dropdown">
+            <a href="#">Leaders ▾</a>
+            <div class="dropdown-menu">
+                <a href="/api/passingLeaders.php">Passing</a>
+                <a href="/api/rushingLeaders.php">Rushing</a>
+                <a href="/api/receivingLeaders.php">Receiving</a>
+                <a href="/api/defLeaders.php">Defense</a>
+            </div>
+        </li>
+
+        <li class="dropdown">
+            <a href="#">Game Records ▾</a>
+            <div class="dropdown-menu">
+                <a href="/api/allRecordsPass.php">Passing</a>
+                <a href="/api/allRecordsRush.php">Rushing</a>
+                <a href="/api/allRecordsRec.php">Receiving</a>
+                <a href="/api/allRecordsDef.php">Defense</a>
+            </div>
+        </li>
+
         <li>
             <a href="/api/scoreboard.php<?= $season ? '?season=' . urlencode($season) : '' ?>">
                 Scores
