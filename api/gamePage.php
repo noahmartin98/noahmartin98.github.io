@@ -7,6 +7,7 @@
 
 <?php
 require 'databaseConnect.php';
+require 'navbar.php';
 
 if (isset($_GET['gameid'])) {
     $gameid = $_GET['gameid'];
@@ -180,8 +181,6 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 }
 
 $conn = null;
-
-require 'navbar.php';
 ?>
 
 <div class="box-score-top">
