@@ -11,7 +11,7 @@
 require 'databaseConnect.php';
 require 'functions.php';
 
-// Fetch all seasons that have at least one playoff game, ordered by play order
+// Fetch all seasons that have at least one playoff game, newest played first
 $poSeasons = $conn->query("
     SELECT Season, MIN(game_id) AS first_game
     FROM game
@@ -20,20 +20,24 @@ $poSeasons = $conn->query("
     ORDER BY first_game DESC
 ")->fetchAll(PDO::FETCH_COLUMN);
 
-$season = $_GET['season'] ?? ($poSeasons[0] ?? '2014');
+$defaultPoSeason = $poSeasons[0] ?? '2014';
+$season = $_GET['season'] ?? $defaultPoSeason;
+if ($season === 'Total' || $season === '') {
+    $season = $defaultPoSeason;
+}
 
 require 'navbar.php';
 
-// Fetch all playoff games for the selected season
+// Fetch all playoff games for the selected season (Away team as team1, Home team as team2)
 $sql = "SELECT 
             g.game_id, g.week,
             t1.team_id AS team1_id, t1.seed AS team1_seed, tm1.Abbr AS team1_abbr, tm1.Team_Name AS team1_name, t1.score AS team1_score,
             t2.team_id AS team2_id, t2.seed AS team2_seed, tm2.Abbr AS team2_abbr, tm2.Team_Name AS team2_name, t2.score AS team2_score
         FROM game g
-        JOIN team_statline t1 ON g.game_id = t1.game_id
-        JOIN team_statline t2 ON g.game_id = t2.game_id AND t1.team_id < t2.team_id
-        JOIN team tm1 ON t1.team_id = tm1.team_id
-        JOIN team tm2 ON t2.team_id = tm2.team_id
+        JOIN team_statline t1 ON g.game_id = t1.game_id AND t1.home_away = 'Away'
+        JOIN team_statline t2 ON g.game_id = t2.game_id AND t2.home_away = 'Home'
+        JOIN team tm1 ON t1.team_id = tm1.Team_ID
+        JOIN team tm2 ON t2.team_id = tm2.Team_ID
         WHERE g.Season = :season
           AND g.week IN ('WC', 'DIV', 'CC', 'SB')
         ORDER BY g.game_id ASC;";
@@ -96,16 +100,7 @@ function renderMatchup($game, $season) {
 
 <div class="flex-row margin-top-small gap-large">
     <h1>Playoff Bracket</h1>
-
-    <form method="get">
-        <select class="season-select" name="season" onchange="this.form.submit()">
-            <?php foreach ($poSeasons as $yr): ?>
-                <option value="<?php echo $yr; ?>" <?php if ($season == $yr) echo 'selected'; ?>>
-                    <?php echo $yr; ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-    </form>
+    <?php seasonDropdownForm($poSeasons, $season, null, null, false, false); ?>
 </div>
 
 <?php if (empty($allPlayoffGames)): ?>
@@ -119,17 +114,29 @@ function renderMatchup($game, $season) {
         <div class="conference-rounds">
             <div class="bracket-round">
                 <div class="round-title">Wild Card</div>
-                <?php foreach ($left['WC'] as $g) renderMatchup($g, $season); ?>
+                <?php
+                if (!empty($left['WC'])) {
+                    foreach ($left['WC'] as $g) renderMatchup($g, $season);
+                } else {
+                    renderMatchup(null, $season);
+                }
+                ?>
             </div>
 
             <div class="bracket-round">
                 <div class="round-title">Divisional</div>
-                <?php foreach ($left['DIV'] as $g) renderMatchup($g, $season); ?>
+                <?php
+                if (!empty($left['DIV'])) {
+                    foreach ($left['DIV'] as $g) renderMatchup($g, $season);
+                } else {
+                    renderMatchup(null, $season);
+                }
+                ?>
             </div>
 
             <div class="bracket-round">
                 <div class="round-title">Conf. Champ</div>
-                <?php foreach ($left['CC'] as $g) renderMatchup($g, $season); ?>
+                <?php renderMatchup($left['CC'][0] ?? null, $season); ?>
             </div>
         </div>
     </div>
@@ -146,17 +153,29 @@ function renderMatchup($game, $season) {
         <div class="conference-rounds">
             <div class="bracket-round">
                 <div class="round-title">Conf. Champ</div>
-                <?php foreach ($right['CC'] as $g) renderMatchup($g, $season); ?>
+                <?php renderMatchup($right['CC'][0] ?? null, $season); ?>
             </div>
 
             <div class="bracket-round">
                 <div class="round-title">Divisional</div>
-                <?php foreach ($right['DIV'] as $g) renderMatchup($g, $season); ?>
+                <?php
+                if (!empty($right['DIV'])) {
+                    foreach ($right['DIV'] as $g) renderMatchup($g, $season);
+                } else {
+                    renderMatchup(null, $season);
+                }
+                ?>
             </div>
 
             <div class="bracket-round">
                 <div class="round-title">Wild Card</div>
-                <?php foreach ($right['WC'] as $g) renderMatchup($g, $season); ?>
+                <?php
+                if (!empty($right['WC'])) {
+                    foreach ($right['WC'] as $g) renderMatchup($g, $season);
+                } else {
+                    renderMatchup(null, $season);
+                }
+                ?>
             </div>
         </div>
     </div>
