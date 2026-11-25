@@ -18,6 +18,29 @@ function seasonDropdownForm($seasons, $selectedSeason, $paramName = null, $param
     <?php
 }
 
+function getSeasons($conn, $table = 'game') {
+    // Whitelist allowed tables so the query is 100% SQL-injection safe
+    $allowed = ['game', 'pass_statline', 'rush_statline', 'rec_statline', 'def_statline'];
+    if (!in_array($table, $allowed, true)) {
+        $table = 'game';
+    }
+
+    if ($table === 'game') {
+        $sql = "SELECT Season, MIN(Game_ID) AS first_game
+                FROM game
+                GROUP BY Season
+                ORDER BY first_game ASC";
+    } else {
+        $sql = "SELECT game.Season, MIN(game.Game_ID) AS first_game
+                FROM $table
+                INNER JOIN game ON $table.Game_ID = game.Game_ID
+                GROUP BY game.Season
+                ORDER BY first_game ASC";
+    }
+
+    return $conn->query($sql)->fetchAll(PDO::FETCH_COLUMN);
+}
+
 function getPlayerName($conn, $playerid) {
     if (!$playerid) {
         return "Player Not Found";
