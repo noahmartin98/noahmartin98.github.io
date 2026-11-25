@@ -19,17 +19,14 @@ require 'functions.php';
 
 $season = $_GET['season'] ?? 'Total';
 
+$allSeasons = getSeasons($conn, 'rush_statline');
+
 require 'navbar.php';
 ?>
 
-<div class="flex-row">
+<div class="flex-row" id="table-header-bar">
     <h1>Defensive Leaders</h1>
-
-    <form method="get" action="defLeaders.php">
-        <select class="season-select" name="season" onchange="this.form.submit()">
-            <?php include 'seasonOptions.php'; ?>
-        </select>
-    </form>
+    <?php seasonDropdownForm($allSeasons, $season, null, null, false); ?>
 </div>
 
 <table id="leaders">
