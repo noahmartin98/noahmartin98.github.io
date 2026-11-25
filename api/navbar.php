@@ -3,33 +3,16 @@
 <nav class="navbar">
     <ul class="nav-links">
         <li><a href="../home.html">Home</a></li>
-
-        <li class="dropdown">
-            <a href="#">Leaders ▾</a>
-            <div class="dropdown-menu">
-                <a href="/api/passingLeaders.php">Passing</a>
-                <a href="/api/rushingLeaders.php">Rushing</a>
-                <a href="/api/receivingLeaders.php">Receiving</a>
-                <a href="/api/defLeaders.php">Defense</a>
-            </div>
-        </li>
-
-        <li class="dropdown">
-            <a href="#">Game Records ▾</a>
-            <div class="dropdown-menu">
-                <a href="/api/allRecordsPass.php">Passing</a>
-                <a href="/api/allRecordsRush.php">Rushing</a>
-                <a href="/api/allRecordsRec.php">Receiving</a>
-                <a href="/api/allRecordsDef.php">Defense</a>
-            </div>
-        </li>
-
+        <li><a href="/api/passingLeaders.php">Passing</a></li>
+        <li><a href="/api/rushingLeaders.php">Rushing</a></li>
+        <li><a href="/api/receivingLeaders.php">Receiving</a></li>
+        <li><a href="/api/defLeaders.php">Defense</a></li>
         <li>
             <a href="/api/scoreboard.php<?= $season ? '?season=' . urlencode($season) : '' ?>">
                 Scores
             </a>
         </li>
-        <li><a href="/api/bracket.php">Playoff Brackets</a></li>
+        <li><a href="/api/bracket.php">Brackets</a></li>
 
         <li class="dropdown">
             <a href="#">Teams ▾</a>
@@ -46,6 +29,17 @@
                 ?>
             </div>
         </li>
+
+        <li class="dropdown">
+            <a href="#">Game Records ▾</a>
+            <div class="dropdown-menu">
+                <a href="/api/allRecordsPass.php">Passing</a>
+                <a href="/api/allRecordsRush.php">Rushing</a>
+                <a href="/api/allRecordsRec.php">Receiving</a>
+                <a href="/api/allRecordsDef.php">Defense</a>
+            </div>
+        </li>
+
         <li><a href="/api/importStats.php">Import Stats</a></li>
     </ul>
 </nav>
