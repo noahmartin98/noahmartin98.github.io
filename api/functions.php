@@ -112,5 +112,33 @@ function getAllPlayersGames($conn, $season = 'Total') {
     return $stmt->fetchAll(PDO::FETCH_KEY_PAIR); // Returns [Player_ID => Gms]
 }
 
+function renderPlayerStatTabs($conn, $playerid, $activeTab) {
+    // Check which stat tables have data for this player in one single query
+    $sql = "SELECT
+                EXISTS(SELECT 1 FROM pass_statline WHERE Player_ID = :p1) AS has_pass,
+                EXISTS(SELECT 1 FROM rush_statline WHERE Player_ID = :p2) AS has_rush,
+                EXISTS(SELECT 1 FROM rec_statline  WHERE Player_ID = :p3) AS has_rec,
+                EXISTS(SELECT 1 FROM def_statline  WHERE Player_ID = :p4) AS has_def";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([':p1' => $playerid, ':p2' => $playerid, ':p3' => $playerid, ':p4' => $playerid]);
+    $flags = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $tabs = [
+        'pass' => ['label' => 'Passing',   'url' => '/api/playerPagePass.php', 'show' => !empty($flags['has_pass'])],
+        'rush' => ['label' => 'Rushing',   'url' => '/api/playerPageRush.php', 'show' => !empty($flags['has_rush'])],
+        'rec'  => ['label' => 'Receiving', 'url' => '/api/playerPageRec.php',  'show' => !empty($flags['has_rec'])],
+        'def'  => ['label' => 'Defense',   'url' => '/api/playerPageDef.php',  'show' => !empty($flags['has_def'])],
+    ];
+
+    echo "<div class='stat-tabs'>";
+    foreach ($tabs as $key => $tab) {
+        if ($tab['show'] || $key === $activeTab) {
+            $activeClass = ($key === $activeTab) ? 'active' : '';
+            $href = $tab['url'] . "?playerid=" . urlencode($playerid);
+            echo "<a class='stat-tab $activeClass' href='$href'>{$tab['label']}</a>";
+        }
+    }
+    echo "</div>";
+}
 
 ?>
